@@ -1,21 +1,15 @@
 import React from 'react';
 import './App.css';
+import RDLogo from './images/RDLogo.svg'; 
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+          COMING SOON
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React Test 5
-        </a>
+        <img src={RDLogo} alt="Logo" />
       </header>
     </div>
   );
