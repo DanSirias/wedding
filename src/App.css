@@ -54,6 +54,13 @@ p, h1, h2, h3, h4, h5, h6 {
   pointer-events: none;
 }
 
+.logo {
+  height: 70vmin;
+  pointer-events: none;
+  fill: red !important; 
+  stroke: rgb(205, 203, 203) !important;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -61,7 +68,7 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #500000;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
