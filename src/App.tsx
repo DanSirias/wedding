@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import RDLogo from './images/RDLogo.svg'; 
+import logo from './images/us.jpg'; 
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
         <p>
           COMING SOON
         </p>
-        <img src={RDLogo} alt="Logo" />
+        <img src={logoogo} alt="Logo" />
       </header>
     </div>
   );
