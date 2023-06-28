@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import logo from './images/RDlogo.svg'; 
-import Navbar from './components/navbar'
+import {Navbar} from './components/navbar'
 
 function App() {
   return (
