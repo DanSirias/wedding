@@ -99,13 +99,13 @@ function Navbar() {
               {pages.map((page) => (
                 <MenuItem key={page.text} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
-                  <Link component={RouterLink} to={`/${page.href}`} style={{textDecoration: "None", color: "white"}} color="inherit" underline="none" sx={{ mx: 2 }}>{page.text}</Link>
+                  <Link component={RouterLink} to={`/${page.href}`} style={{textDecoration: "None", color: "maroon"}} color="inherit" underline="none" sx={{ mx: 2 }}>{page.text}</Link>
                   </Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          {/* LOGO */}
           <Typography
             variant="h5"
             noWrap
@@ -122,7 +122,7 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            R & D
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
