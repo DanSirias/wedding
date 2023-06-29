@@ -26,7 +26,7 @@
 }
 
 .content{
- background-color: #F8F0E3;
+ background-color: #faf4eb;
  height: 100vh;
 }
 
@@ -38,7 +38,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: #321115;
-  background-color: #F8F0E3;
+  background-color:  #faf4eb;
 }
 
 .signin {
