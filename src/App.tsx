@@ -5,6 +5,7 @@ import {Home} from './components/home';
 import {Events} from './components/events';
 import {Travel} from './components/travel';
 import {GiftRegistry} from './components/gift';
+import { Login } from "./components/login";
 import { RSVP } from './components/rsvp';
 import { WeddingParty } from './components/weddingparty';
 import { CssBaseline } from '@mui/material';
@@ -27,6 +28,7 @@ const App: React.FC = () => {
           <Route path="/weddingparty" element={<WeddingParty />} />
           <Route path="/travel" element={<Travel />} />
           <Route path="/gift" element={<GiftRegistry />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </div>
     </Router>
