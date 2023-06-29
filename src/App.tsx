@@ -7,7 +7,7 @@ import {Travel} from './components/travel';
 import {GiftRegistry} from './components/gift';
 import { RSVP } from './components/rsvp';
 import { WeddingParty } from './components/weddingparty';
-
+import { CssBaseline } from '@mui/material';
 import Navbar from './components/navbar';
 
 
@@ -17,6 +17,7 @@ import Navbar from './components/navbar';
 const App: React.FC = () => {
   return (
     <Router>
+      <CssBaseline />
       <Navbar />
       <div className="content">
         <Routes>

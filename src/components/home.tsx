@@ -2,5 +2,10 @@ import React from 'react';
 import "../App.css"
 
 export const Home: React.FC = () => {
-  return (<><h2 className="section">Home</h2></>)
+  return (<>
+  <div className="section">
+  <h2>Home</h2>
+  </div>
+
+  </>)
 };
