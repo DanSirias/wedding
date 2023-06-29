@@ -152,13 +152,17 @@ function Navbar() {
             </Menu>
           </Box>
           {/* LOGO */}
+{/*           <Avatar    sx={{
+                display: { xs: 'block', md: 'none' },
+                ml: 0,
+          }} alt="Default Avatar" src={Logo} /> */}
           <Typography
             variant="h5"
             noWrap
             component="a"
             href=""
             sx={{
-              mr: 2,
+              //mr: 2,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
               fontFamily: 'monospace',
@@ -166,11 +170,10 @@ function Navbar() {
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
+              marginLeft: 0, 
             }}
           >
-            R & D
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
