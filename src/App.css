@@ -1,8 +1,9 @@
 .App {
   text-align: center;
+  
 }
 
-.App-logo {
+.logo {
   height: 40vmin;
   pointer-events: none;
 }
@@ -24,8 +25,29 @@
   color: white;
 }
 
+
+.section {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.navbarlogo {
+  display: none;
+  margin-right: 1px;
+}
+
+
 .App-link {
   color: #61dafb;
+}
+
+.navbar {
+  background-color: maroon !important;
 }
 
 @keyframes App-logo-spin {
