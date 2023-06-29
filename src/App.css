@@ -47,7 +47,8 @@
 }
 
 .navbar {
-  background-color: #321115 !important;
+  background-color: #99AA8B !important; /* Maroon: 321115 */
+  color: #321115 !important; 
 }
 
 @keyframes App-logo-spin {
