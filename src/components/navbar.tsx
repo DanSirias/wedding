@@ -129,7 +129,7 @@ function Navbar() {
               <Button
                 key={page.text}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: '#321115', display: 'block' }}
+                sx={{ my: 2, color: '#321115', display: 'block' }} 
               >
                <Link component={RouterLink} to={`${page.href}`} style={{textDecoration: "None", color: "#321115"}} color="inherit" underline="none" sx={{ mx: 2 }}>{page.text}</Link>
               </Button>
