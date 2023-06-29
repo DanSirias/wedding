@@ -205,13 +205,13 @@ function Navbar() {
           <Tooltip title="Open settings">
           {user.email === 'danielsirias.88@gmail.com' ? (
             <Typography display="flex" alignItems="center">
-            <span style={{ paddingRight: '8px' }}>Welcome, Daniel</span>
+            <span style={{ paddingRight: '8px' }}>Howdy, Daniel</span>
             <Avatar alt="Daniel Sirias" src={Daniel} onClick={handleOpenUserMenu} sx={{ p: 0 }} />
             </Typography>
           ) : user.email === 'rbenne88@gmail.com' ? (
 
             <Typography display="flex" alignItems="center">
-            <span style={{ paddingRight: '8px' }}>Welcome, Rebecca</span>
+            <span style={{ paddingRight: '8px' }}>Howdy, Rebecca</span>
             <Avatar alt="Rebecca Sirias" src={Rebecca} onClick={handleOpenUserMenu} sx={{ p: 0 }} />
             </Typography>
 
