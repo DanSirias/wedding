@@ -4,7 +4,7 @@ import Logo from '../images/RDlogo_burgandy.svg'
 
 export const Home: React.FC = () => {
   return (<>
-  <div className="section">
+  <div className="section" style={{ padding: 10, height: "100%" }}>
   <img id="" className="logo" src={Logo}/>
   </div>
   </>)
