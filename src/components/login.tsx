@@ -22,6 +22,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { shadows } from '@mui/system';
 
 function Copyright(props: any) {
   return (
@@ -42,7 +43,14 @@ function Copyright(props: any) {
 }
 
 // TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#321115",
+      dark: "#847072"
+    }
+  }, 
+});
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -104,7 +112,7 @@ export const Login = () => {
 
       <div style={{ padding: 30 }}>
         <ThemeProvider theme={defaultTheme}>
-          <Container component="main" maxWidth="xs">
+          <Container sx={{border: 1, borderColor: "lightgray", boxShadow: 4 }} className="signin" component="main" maxWidth="xs" >
             <CssBaseline />
             <Box
               sx={{
@@ -155,6 +163,7 @@ export const Login = () => {
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
+                  color="primary"
                 >
                   Sign In
                 </Button>

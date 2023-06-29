@@ -41,6 +41,11 @@
   background-color: #F8F0E3;
 }
 
+.signin {
+  border-radius: 3;
+  border-color: red;
+}
+
 .navbarlogo {
   display: none;
   margin-right: 1px;
