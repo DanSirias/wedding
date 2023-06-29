@@ -16,7 +16,11 @@ import Logo from '../images/RDlogo_light.svg'
 
 const pages = [  
 { text: 'Home', href: '/' },
-{ text: 'RSVP', href: '/rsvp' }];
+{ text: 'RSVP', href: '/rsvp' },
+{ text: 'Wedding Party', href: '/weddingparty' },
+{ text: 'Travel', href: '/travel' },
+{ text: 'Gift Registry', href: '/gift' },
+];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar() {
