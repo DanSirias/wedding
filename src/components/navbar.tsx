@@ -184,7 +184,7 @@ function Navbar() {
           </Box>
 
           {!user ? (
-           <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
+           <Box sx={{ flexGrow: 0, display: { xs: 'block', md: 'flex' } }}>
             <Typography display="flex" alignItems="center" textAlign="center">
               <LoginIcon sx={{ marginRight: '0px' }} />
               <Link
@@ -201,7 +201,7 @@ function Navbar() {
           </Box>
           ) : (
 
-      <Box sx={{ flexGrow: 0 }}>
+         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Open settings">
           {user.email === 'danielsirias.88@gmail.com' ? (
             <Typography display="flex" alignItems="center">
