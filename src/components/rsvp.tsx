@@ -91,184 +91,185 @@ export const RSVP = () => {
         }; 
 
 
-  const signIn = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      console.log("User Signed In");
-      navigate("/");
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const logout = async () => {
-    try {
-      await signOut(auth);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   return (
-    <div className="section" style={{ padding: 30, height: "100%" }}>
-      <ThemeProvider theme={defaultTheme}>
-        <Container
-          sx={{ border: 1, borderColor: "lightgray", boxShadow: 4 }}
-          className="rsvp"
-          component="main"
-          maxWidth="xs"
-        >
-          <CssBaseline />
-          <Box
-            sx={{
-              marginTop: 2,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
+      <div className="" style={{ padding: 30, height: "100%" }}>
+        <ThemeProvider theme={defaultTheme}>
+          <Container
+            sx={{ border: 1, borderColor: "lightgray", boxShadow: 4 }}
+            className="rsvp"
+            component="main"
+            maxWidth="md"
           >
-            <Typography component="h1" variant="h5">
-              R.S.V.P
-            </Typography>
+            <CssBaseline />
             <Box
-              component="form"
-              onSubmit={handleSubmit}
-              noValidate
-              sx={{ mt: 1 }}
+              sx={{
+                marginTop: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
             >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            <FormControl fullWidth margin="normal" required>
-            <InputLabel id="attending">Are you attending?</InputLabel>
-            <Select               
-              required
-              id="Attending"
-              value={formData.attending}
-              onChange={handleChange}
-              label="Attending test"
-              name="attending"
-            >
-                <MenuItem value={"Yes"}>SHiiiiii Hell Yes... Whoop!</MenuItem>
-                <MenuItem value={"No"}>Fuck No</MenuItem>
-              </Select>
-            </FormControl>
-
-            <FormControl fullWidth margin="normal" required>
-            <InputLabel id="bringingGuest">Are you bringing a Guest?</InputLabel>
-            <Select
-              required
-              id="bringingGuest"
-              value={formData.bringingGuest}
-              onChange={handleChange}
-              label="bringingGuest"
-              name="bringingGuest"
-            >
-                <MenuItem value={"Yes"}>Yes</MenuItem>
-                <MenuItem value={"No"}>No</MenuItem>
-              </Select>
-            </FormControl>
-
-              {formData.bringingGuest === "Yes" && (
-                <>
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="guestFirstName"
-                    label="Guest First Name"
-                    name="guestFirstName"
-                    value={formData.guestFirstName}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="guestLastName"
-                    label="Guest Last Name"
-                    name="guestLastName"
-                    value={formData.guestLastName}
-                    onChange={handleChange}
-                  />
-                </>
-              )}
-
-            <FormControl fullWidth margin="normal" required>
-            <InputLabel id="bringingGuest">Main Course/Entrées Option</InputLabel>
-            <Select
-              required
-              id="mealOption"
-              label="Main Course/Entrées Option"
-              name="mealOption"
-              value={formData.mealOption}
-              onChange={handleChange}
-            >
-                <MenuItem value={"Yes"}>Beef</MenuItem>
-                <MenuItem value={"No"}>No</MenuItem>
-              </Select>
-            </FormControl>
-              <TextField
-                margin="normal"
-                fullWidth
-                id="foodRestrictions"
-                label="Any Food Restrictions?"
-                name="foodRestrictions"
-                value={formData.foodRestrictions}
-                onChange={handleChange}
-              />
-              <TextField
-                margin="normal"
-                fullWidth
-                id="questionsComments"
-                label="Questions or Comments?"
-                name="questionsComments"
-                value={formData.questionsComments}
-                onChange={handleChange}
-                multiline
-                rows={4}
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                color="primary"
+              <Typography component="h1" variant="h5">
+                R.S.V.P
+              </Typography>
+              <Box
+                component="form"
+                onSubmit={handleSubmit}
+                noValidate
+                sx={{ mt: 1 }}
               >
-                Submit
-              </Button>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="firstName"
+                      label="First Name"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="lastName"
+                      label="Last Name"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth margin="normal" required>
+                      <InputLabel id="attending">Are you attending?</InputLabel>
+                      <Select
+                        required
+                        id="Attending"
+                        value={formData.attending}
+                        onChange={handleChange}
+                        label="Attending test"
+                        name="attending"
+                      >
+                        <MenuItem value={"Yes"}>SHiiiiii Hell Yes... Whoop!</MenuItem>
+                        <MenuItem value={"No"}>Fuck No</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth margin="normal" required>
+                      <InputLabel id="bringingGuest">Are you bringing a Guest?</InputLabel>
+                      <Select
+                        required
+                        id="bringingGuest"
+                        value={formData.bringingGuest}
+                        onChange={handleChange}
+                        label="bringingGuest"
+                        name="bringingGuest"
+                      >
+                        <MenuItem value={"Yes"}>Yes</MenuItem>
+                        <MenuItem value={"No"}>No</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  {formData.bringingGuest === "Yes" && (
+                    <>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="guestFirstName"
+                          label="Guest First Name"
+                          name="guestFirstName"
+                          value={formData.guestFirstName}
+                          onChange={handleChange}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="guestLastName"
+                          label="Guest Last Name"
+                          name="guestLastName"
+                          value={formData.guestLastName}
+                          onChange={handleChange}
+                        />
+                      </Grid>
+                    </>
+                  )}
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth margin="normal" required>
+                      <InputLabel id="mealOption">Main Course/Entrées Option</InputLabel>
+                      <Select
+                        required
+                        id="mealOption"
+                        label="Main Course/Entrées Option"
+                        name="mealOption"
+                        value={formData.mealOption}
+                        onChange={handleChange}
+                      >
+                        <MenuItem value={"Yes"}>Beef</MenuItem>
+                        <MenuItem value={"No"}>No</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      margin="normal"
+                      fullWidth
+                      id="foodRestrictions"
+                      label="Any Food Restrictions?"
+                      name="foodRestrictions"
+                      value={formData.foodRestrictions}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      margin="normal"
+                      fullWidth
+                      id="questionsComments"
+                      label="Questions or Comments?"
+                      name="questionsComments"
+                      value={formData.questionsComments}
+                      onChange={handleChange}
+                      multiline
+                      rows={4}
+                    />
+                  </Grid>
+                </Grid>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  color="primary"
+                >
+                  Submit
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        </Container>
-      </ThemeProvider>
-    </div>
+          </Container>
+        </ThemeProvider>
+      </div>
   );
 };
 

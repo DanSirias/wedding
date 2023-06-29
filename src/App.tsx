@@ -18,9 +18,10 @@ import Navbar from './components/navbar';
 const App: React.FC = () => {
   return (
     <Router>
-      <CssBaseline />
+
+  <div className="" style={{ height: "100vh", width: "100%"}}>
+    <CssBaseline />
       <Navbar />
-      <div className="content">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/rsvp" element={<RSVP />} />
