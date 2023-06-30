@@ -24,6 +24,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { shadows } from '@mui/system';
 import Logo from '../images/RDlogo_sage.svg'; 
+import LetterLogo from '../images/names.svg';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -109,9 +110,13 @@ export const RSVP = () => {
                 alignItems: "center",
               }}
             >
-              <Typography component="h1" variant="h5">
+              <Typography component="h1" variant="h3">
                 R.S.V.P
               </Typography>
+              <Typography sx={{ mt: 1, fontSize: 15 }} className="rsvp">
+                Kindly reply for each guest by October 1st
+              </Typography>
+              <img id="" className="namelogo" src={LetterLogo}/>
               <Box
                 component="form"
                 onSubmit={handleSubmit}

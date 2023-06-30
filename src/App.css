@@ -1,3 +1,11 @@
+/* FONTS */
+
+
+/* font-family: 'Dawning of a New Day', cursive; */
+@import url('https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&display=swap'); 
+
+
+
 .App {
   text-align: center;
   
@@ -6,6 +14,15 @@
 .logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+.namelogo {
+  height: 8vmin;
+  pointer-events: none;
+}
+
+.rsvp {
+  font-family: 'Dawning of a New Day', cursive;
 }
 
 @media (prefers-reduced-motion: no-preference) {
