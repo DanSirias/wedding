@@ -23,6 +23,7 @@
 
 .rsvp {
   font-family: 'Dawning of a New Day', cursive;
+  
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -61,6 +62,18 @@
 .signin {
   border-radius: 3;
   border-color: red;
+}
+
+.rsvpForm {
+  background: linear-gradient(135deg, #99AA8B80 50%, transparent 0),linear-gradient(-135deg, #99AA8B80 50%, transparent 0);
+        background-size: 3em 3em;
+        background-color: #ffffff;
+        opacity: 0.5
+}
+
+.error{
+  border-color: red;
+  border-width: 2;
 }
 
 .navbarlogo {

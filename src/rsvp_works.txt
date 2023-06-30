@@ -33,14 +33,15 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from "@mui/material/FormControl";
 import Select from '@mui/material/Select';
 import { SelectChangeEvent } from '@mui/material';
+
+import * as yup from "yup";
 import date from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { addDoc, collection } from "firebase/firestore"; //this is how you add a document back to the database
 import { db } from "../backend/firebase-config";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
 import { serverTimestamp } from 'firebase/firestore'
-
-const createdOn_timestamp = serverTimestamp(); 
 
 interface RSVPFormData {
   firstName: string;
@@ -48,11 +49,11 @@ interface RSVPFormData {
   email: string;
   attending: string;
   bringingGuest: string;
-  guestFirstName: string | undefined;
-  guestLastName: string | undefined;
+  guestFirstName: string;
+  guestLastName: string;
   mealOption: string;
-  foodRestrictions: string | undefined;
-  questionsComments: string | undefined;
+  foodRestrictions: string;
+  questionsComments: string;
 }
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -66,44 +67,40 @@ const defaultTheme = createTheme({
 });
 
 export const RSVP = () => {
-const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [checked, setChecked] = React.useState(true);
 
-const schema = yup.object().shape({
-    firstName: yup.string().required("You Must Enter a Name"), 
-    lastName: yup.string().required("You Must Enter a Name"), 
-    email: yup.string().required("You Must Enter an Email"), 
-    attending: yup.string().required("Select an option"), 
-    bringingGuest: yup.string().required("Select an option"), 
-    guestFirstName: yup.string(), 
-    guestLastName: yup.string(), 
-    mealOption: yup.string().required("Select an option"), 
-    foodRestrictions: yup.string(), 
-    questionsComments: yup.string(), 
-}); 
+  const [formData, setFormData] = useState<RSVPFormData>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    attending: "",
+    bringingGuest: "",
+    guestFirstName: "",
+    guestLastName: "",
+    mealOption: "",
+    foodRestrictions: "",
+    questionsComments: "",
+  });
 
-const { register, handleSubmit, formState: {errors}, } = useForm<RSVPFormData> ({
-  resolver: yupResolver(schema), 
-});
 
-const postRef = collection(db, "rsvp");
 
-const onCreateRSVP = async (data: RSVPFormData) => {
-  await addDoc(postRef, {
-    firstName: data.firstName, 
-    lastName: data.lastName, 
-    email: data.email, 
-    attending: data.attending, 
-    bringingGuest: data.bringingGuest, 
-    guestFirstName: data.guestFirstName, 
-    guestLastName: data.guestLastName,
-    mealOption: data.mealOption, 
-    foodRestrictions: data.foodRestrictions, 
-    questionsComments: data.questionsComments,
-    rsvpOn: createdOn_timestamp,
-  }); 
-  console.log(data); 
-  navigate("/"); 
-};
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Handle form submission logic here
+    console.log(formData);
+  };
+
+        // const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        // const { name, value } = e.target;
+        // setFormData((prevformData) => ({ ...prevformData, [name as string]: value as string }));
+        // };
+
+        const handleChange = (e: any) => {
+          setFormData((prevformData) => ({ ...prevformData, [e.target.name]: e.target.value,}));
+        }; 
 
 
   return (
@@ -125,7 +122,7 @@ const onCreateRSVP = async (data: RSVPFormData) => {
               }}
             >
               <Typography component="h1" variant="h3">
-                R.S.V.P.
+                R.S.V.P
               </Typography>
               <Typography sx={{ mt: 1, fontSize: 15 }} className="rsvp">
                 Kindly reply for each guest by October 1st
@@ -133,7 +130,7 @@ const onCreateRSVP = async (data: RSVPFormData) => {
               <img id="" className="namelogo" src={LetterLogo}/>
               <Box
                 component="form"
-                onSubmit={handleSubmit(onCreateRSVP)}
+                onSubmit={handleSubmit}
                 noValidate
                 sx={{ mt: 1 }}
               >
@@ -145,9 +142,10 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                       fullWidth
                       id="firstName"
                       label="First Name"
-                      className={errors.firstName ? 'error' : ''}
-                      {...register("firstName")}
-                    />{/* <p style={{color:"red", fontSize:25,}}>{errors.firstName?.style({borderColor:"red"})}</p> */}
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleChange}
+                    />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
@@ -156,9 +154,10 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                       fullWidth
                       id="lastName"
                       label="Last Name"
-                      {...register("lastName")}
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleChange}
                     />
-                    {/* <p style={{color:"red", fontSize:25,}}>{errors.lastName?.message}</p> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
@@ -167,9 +166,10 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                       fullWidth
                       id="email"
                       label="Email Address"
-                      {...register("email")}
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
                     />
-                    {/* <p style={{color:"red", fontSize:25,}}>{errors.email?.message}</p> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <FormControl fullWidth margin="normal" required>
@@ -177,14 +177,15 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                       <Select
                         required
                         id="Attending"
-                        label="Attending"
-                        {...register("attending")}
+                        value={formData.attending}
+                        onChange={handleChange}
+                        label="Attending test"
+                        name="attending"
                       >
                         <MenuItem value={"Yes"}>SHiiiiii Hell Yes... Whoop!</MenuItem>
                         <MenuItem value={"No"}>Fuck No</MenuItem>
                       </Select>
                     </FormControl>
-                    {/* <p style={{color:"red", fontSize:25,}}>{errors.attending?.message}</p> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <FormControl fullWidth margin="normal" required>
@@ -192,16 +193,18 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                       <Select
                         required
                         id="bringingGuest"
+                        value={formData.bringingGuest}
+                        onChange={handleChange}
                         label="bringingGuest"
-                        {...register("bringingGuest")}
+                        name="bringingGuest"
                       >
                         <MenuItem value={"Yes"}>Yes</MenuItem>
                         <MenuItem value={"No"}>No</MenuItem>
                       </Select>
                     </FormControl>
-                    {/* <p style={{color:"red", fontSize:25,}}>{errors.bringingGuest?.message}</p> */}
                   </Grid>
-
+                  {formData.bringingGuest === "Yes" && (
+                    <>
                       <Grid item xs={12} sm={6}>
                         <TextField
                           margin="normal"
@@ -209,9 +212,10 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                           fullWidth
                           id="guestFirstName"
                           label="Guest First Name"
-                          {...register("guestFirstName")}
+                          name="guestFirstName"
+                          value={formData.guestFirstName}
+                          onChange={handleChange}
                         />
-                        {/* <p style={{color:"red", fontSize:25,}}>{errors.guestFirstName?.message}</p> */}
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <TextField
@@ -220,10 +224,13 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                           fullWidth
                           id="guestLastName"
                           label="Guest Last Name"
-                          {...register("guestLastName")}
+                          name="guestLastName"
+                          value={formData.guestLastName}
+                          onChange={handleChange}
                         />
-                        {/* <p style={{color:"red"}}>{errors.guestLastName?.message}</p> */}
                       </Grid>
+                    </>
+                  )}
                   <Grid item xs={12} sm={6}>
                     <FormControl fullWidth margin="normal" required>
                       <InputLabel id="mealOption">Main Course/Entrées Option</InputLabel>
@@ -231,14 +238,15 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                         required
                         id="mealOption"
                         label="Main Course/Entrées Option"
-                        {...register("mealOption")}
+                        name="mealOption"
+                        value={formData.mealOption}
+                        onChange={handleChange}
                       >
                         <MenuItem value={"Beef"}>Beef</MenuItem>
                         <MenuItem value={"Chicken"}>Chicken</MenuItem>
                         <MenuItem value={"Vegetarian"}>Vegetarian</MenuItem>
                       </Select>
                     </FormControl>
-                    {/* <p style={{color:"red", fontSize:25,}}>{errors.mealOption?.message}</p> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
@@ -246,27 +254,25 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                       fullWidth
                       id="foodRestrictions"
                       label="Any Food Restrictions?"
-                      {...register("foodRestrictions")}
+                      name="foodRestrictions"
+                      value={formData.foodRestrictions}
+                      onChange={handleChange}
                     />
-                    {/* <p style={{color:"red", fontSize:25,}}>{errors.foodRestrictions?.message}</p> */}
                   </Grid>
-                  
                   <Grid item xs={12}>
                     <TextField
                       margin="normal"
                       fullWidth
                       id="questionsComments"
                       label="Questions or Comments?"
+                      name="questionsComments"
+                      value={formData.questionsComments}
+                      onChange={handleChange}
                       multiline
                       rows={4}
-                      {...register("questionsComments")}
                     />
-                    {/* <p style={{color:"red", fontSize:25,}}>{errors.questionsComments?.message}</p> */}
                   </Grid>
                 </Grid>
-                <Typography sx={{ mt: 1, fontSize: 15, color: "grey" }} className="rsvp">
-                *required
-                </Typography>
                 <Button
                   type="submit"
                   fullWidth
