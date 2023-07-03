@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import hou from "../images/htx2.jpg";
 import iah from "../images/iah.jpg";
-import sal from '../images/syp.jpeg'; 
+import sal from '../images/syp.jpg'; 
 import seafood from '../images/goodseafood.jpg';
 import amalfi from '../images/alma2.jpg'
 import Card from "@mui/material/Card";
