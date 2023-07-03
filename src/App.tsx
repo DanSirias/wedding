@@ -10,8 +10,23 @@ import { RSVP } from './components/rsvp';
 import { WeddingParty } from './components/weddingparty';
 import { CssBaseline } from '@mui/material';
 import Navbar from './components/navbar';
+import Container from "@mui/material/Container";
 
 
+const styles = {
+  container: {
+    backgroundColor: "rgba(0,0,0,.4)"
+  },
+  containerMd: {
+    "&.MuiContainer-maxWidthMd": {
+      maxWidth: 2500
+    }
+  },
+
+  typography: {
+    height: "33.333vh"
+  }
+};
 
 
 
@@ -19,7 +34,7 @@ const App: React.FC = () => {
   return (
     <Router>
 
-  <div className="" style={{ height: "100vh", width: "100%"}}>
+  <div className="" style={{ height: "100vh",}}>
     <CssBaseline />
       <Navbar />
         <Routes>
@@ -31,7 +46,7 @@ const App: React.FC = () => {
           <Route path="/gift" element={<GiftRegistry />} />
           <Route path="/login" element={<Login />} />
         </Routes>
-      </div>
+          </div> 
     </Router>
   );
 };

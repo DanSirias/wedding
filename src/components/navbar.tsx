@@ -146,7 +146,7 @@ function Navbar() {
                 <MenuItem key={page.text} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
                   <Link component={RouterLink} to={`${page.href}`} style={{textDecoration: "None", color: "maroon"}} color="inherit" underline="none" sx={{ mx: 2 }}>{page.text}</Link>
-                  </Typography>
+                  </Typography>  
                 </MenuItem>
               ))}
             </Menu>

@@ -8,7 +8,6 @@
 
 .App {
   text-align: center;
-  
 }
 
 .logo {
@@ -41,6 +40,14 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.header-htx {
+  width: 100%; /* Adjust the width as needed */
+  height: 300px; /* Adjust the height as needed */
+  background-image: url('./images/htx2.jpg'); /* Replace 'path_to_your_image.jpg' with the actual path to your image */
+  background-size: cover;
+  background-position: center; /* This will show the upper portion of the image */
 }
 
 .content{
@@ -98,4 +105,37 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+
+@media (min-width:320px)  { /* smartphones, iPhone, portrait 480x320 phones */ 
+  #htx-title {
+    font-size: 30px;
+/*     font-family: 'Dawning of a New Day', cursive; */
+  }
+  #reccs {
+    margin-top: 15px;
+    font-size: 30px;
+    color:  #321115;
+    font-family: 'Dawning of a New Day', cursive;
+  }    
+
+}
+@media (min-width:481px)  { /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */ }
+@media (min-width:641px)  { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */ }
+@media (min-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */ }
+@media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */ }
+@media (min-width:1281px) { /* hi-res laptops and desktops */ 
+  #htx-title {
+    font-size: 50px;
+    color:  #321115;
+    /* font-family: 'Dawning of a New Day', cursive; */
+  }
+  #reccs {
+    font-size: 50px;
+    color:  #321115;
+    font-family: 'Dawning of a New Day', cursive;
+  }    
+
 }
