@@ -1,8 +1,17 @@
 /* FONTS */
-
-
 /* font-family: 'Dawning of a New Day', cursive; */
 @import url('https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&display=swap'); 
+
+/* Color Pallette 
+
+Maroon #321115
+Burgandy #701E25
+Sage #99AA8B
+Green #4F896D
+Rosee #FAB9AA
+Salmon #FDCDAA
+
+*/
 
 
 
@@ -39,7 +48,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #f2f2f2;
 }
 
 .header-htx {
