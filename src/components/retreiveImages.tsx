@@ -108,7 +108,7 @@ export const RetrivedImages = () => {
 return (
   <div className="" style={{ padding: 30, height: "100%" }}>
     <ThemeProvider theme={defaultTheme}>
-    <Container id="cardHolder" maxWidth={false} style={{ height: "100%", width: "70%" }}>
+    <Container id="cardHolder" maxWidth={false} style={{ height: "100%", width: "100%" }}>
             <Typography id="reccs" component="h2" variant="h5"
             sx={{
               width: "100%",
@@ -142,7 +142,7 @@ return (
                     <CardMedia
                       component="img"
                       alt={post.imageName}
-                      height="140"
+                      height="240"
                       image={post.imageURL}
                     />
                     <CardContent>
