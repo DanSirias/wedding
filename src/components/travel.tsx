@@ -71,6 +71,8 @@ export const Travel: React.FC = () => {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              marginLeft: 0, 
+              marginRight: 0 
             }}
             >
             <Typography id="" component="h2" variant="h5"
@@ -80,7 +82,7 @@ export const Travel: React.FC = () => {
                 justifyContent:"center",
                 alignItems:"center",
               }}>
-              <p style={{ fontSize: 20, marginTop: 0, width:"60%", textAlign: "center", alignContent:"center" }}>
+              <p id="htx-header">
                 Houston, the Space City, has set the stage for our special day,
                 and we couldn't be more excited to have you here. Together, let's
                 immerse ourselves in the city's Southern charm, vibrant energy,
@@ -101,8 +103,8 @@ export const Travel: React.FC = () => {
           </Container>
         </div>
         <div style={{ width: "100%", marginTop: 10 }}>
-          <Container maxWidth={false} style={{ height: "100%", width: "70%" }}>
-            <Grid item xs={12} md={6} lg={8}>
+          <Container id="cardHolder" maxWidth={false} style={{ height: "100%", width: "70%" }}>
+            <Grid className="cardsContainer" item xs={12} md={6} lg={8}>
             <Card sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
               <Card sx={{ display: 'flex' }}>
                 <CardContent sx={{ flex: 1 }}>

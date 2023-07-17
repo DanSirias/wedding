@@ -8,6 +8,7 @@ import {GiftRegistry} from './components/gift';
 import { Login } from "./components/login";
 import { RSVP } from './components/rsvp';
 import { WeddingParty } from './components/weddingparty';
+import { Images } from './components/images';
 import { CssBaseline } from '@mui/material';
 import Navbar from './components/navbar';
 import Container from "@mui/material/Container";
@@ -45,6 +46,7 @@ const App: React.FC = () => {
           <Route path="/travel" element={<Travel />} />
           <Route path="/gift" element={<GiftRegistry />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/images" element={<Images />} />
         </Routes>
           </div> 
     </Router>

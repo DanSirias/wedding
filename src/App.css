@@ -65,7 +65,6 @@ Salmon #FDCDAA
 }
 
 .section {
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -86,6 +85,8 @@ Salmon #FDCDAA
         background-color: #ffffff;
         opacity: 0.5
 }
+
+
 
 .error{
   border-color: red;
@@ -120,7 +121,8 @@ Salmon #FDCDAA
 
 @media (min-width:320px)  { /* smartphones, iPhone, portrait 480x320 phones */ 
   #htx-title {
-    font-size: 30px;
+    font-size: 25px;
+    text-align: center;
 /*     font-family: 'Dawning of a New Day', cursive; */
   }
   #reccs {
@@ -129,9 +131,24 @@ Salmon #FDCDAA
     color:  #321115;
     font-family: 'Dawning of a New Day', cursive;
   }    
+  #htx-header {
+    font-size: 8 !important;
+    margin: 0;
+    width: 100%;
+    text-align:left;
+    align-content: baseline;
+  }
 
+  #cardHolder{
+    width: 100% !important;
+  }
+  #cardsContainer{
+    width: 200% !important;
+    background-color: red;
+  }
 }
-@media (min-width:481px)  { /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */ }
+@media (min-width:481px)  { /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */ 
+}
 @media (min-width:641px)  { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */ }
 @media (min-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */ }
 @media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */ }
@@ -146,5 +163,11 @@ Salmon #FDCDAA
     color:  #321115;
     font-family: 'Dawning of a New Day', cursive;
   }    
-
+  #htx-header {
+    font-size: 20;
+    margin: 0;
+    width: 60%;
+    text-align: center;
+    align-content: center;
+  }
 }

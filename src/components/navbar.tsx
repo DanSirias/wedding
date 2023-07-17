@@ -25,6 +25,7 @@ import Rebecca from '../images/rebecca.jpg';
     { text: 'RSVP', href: '/rsvp' },
     { text: 'Wedding Party', href: '/weddingparty' },
     { text: 'Travel', href: '/travel' },
+    { text: 'Memories', href: '/images' },
     { text: 'Gift Registry', href: '/gift' },
     ];
     
