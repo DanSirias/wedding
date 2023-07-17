@@ -125,9 +125,15 @@ return (
         <CssBaseline />
 
         <Box sx={{ marginTop: 2, alignItems: "center" }}>
-          <Typography component="h1" variant="h3">
-            Making Memories Together
-          </Typography>
+          <Typography id="reccs" component="h2" variant="h5"
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent:"center",
+              alignItems:"center",
+            }}>
+               Making Memories Together
+            </Typography>
           <Typography sx={{ mt: 1, fontSize: 15 }} className="rsvp">
             Share your wedding pictures with us!
           </Typography>
@@ -136,7 +142,7 @@ return (
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <input type="file" accept="image/*" onChange={handleFileChange} />
-                <p>{percent}% done</p>
+                {/* <p>{percent}% done</p> */}
                 <TextField
                   margin="normal"
                   required
