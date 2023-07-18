@@ -19,6 +19,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import "../App.css";
 import Avatar from "@mui/material/Avatar";
+import cam from '../images/camera.svg'
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -50,6 +51,7 @@ import { serverTimestamp } from 'firebase/firestore';
 import { uuid } from 'uuidv4';
 import Dropzone from "react-dropzone";
 import {RetrivedImages} from './retreiveImages'
+import { Dialog, DialogTitle } from '@mui/material';
 
 const createdOn_timestamp = serverTimestamp(); 
 
@@ -69,8 +71,10 @@ export const Images = () => {
   const [lastName, setLastName] = useState("");
   const [comment, setComment] = useState("");
   const [percent, setPercent] = useState(0);
+  const [galleryKey, setGalleryKey] = useState(0); // Add galleryKey state
+  const [open, setOpen] = useState(false);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
@@ -102,12 +106,23 @@ const handleUpload = async (event: React.FormEvent) => {
       setLastName("");
       setComment("");
       setPercent(0);
-      alert("Image uploaded successfully!");
+      setOpen(true);
+      //alert("Image uploaded successfully!");
+      setTimeout(() => {
+        setOpen(false);
+      }, 3000);
+      setGalleryKey((prevKey) => prevKey + 1);
     } catch (error) {
       console.error(error);
       alert("An error occurred while uploading the image.");
     }
   };
+
+      const handleClose = () => {
+        setOpen(false);
+      };
+
+
 
 
 // Define your custom theme if needed
@@ -116,60 +131,96 @@ const theme = createTheme();
 return (
   <div className="" style={{ padding: 30, height: "100%" }}>
     <ThemeProvider theme={defaultTheme}>
-      <Container
-        sx={{ border: 1, borderColor: "lightgray", boxShadow: 4 }}
-        className="imageShare"
-        component="main"
-        maxWidth="md"
-      >
-        <CssBaseline />
+        <Container
+          sx={{
+            border: 1,
+            borderColor: "lightgray",
+            boxShadow: 4,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+          className="imageShare"
+          component="main"
+          maxWidth="sm"
+        >
+          <CssBaseline />
 
-        <Box sx={{ marginTop: 2, alignItems: "center" }}>
-          <Typography id="reccs" component="h2" variant="h5"
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent:"center",
-              alignItems:"center",
-            }}>
-               Making Memories Together
-            </Typography>
+          <Typography id="reccs" component="h2" variant="h5">
+            Making Memories Together
+          </Typography>
           <Typography sx={{ mt: 1, fontSize: 15 }} className="rsvp">
             Share your wedding pictures with us!
           </Typography>
-          {/* Add your logo component here */}
-          <Box component="form" onSubmit={handleUpload} noValidate sx={{ mt: 1 }}>
+
+          <Box component="form" onSubmit={handleUpload} noValidate 
+            sx={{ mt: 1, textAlign: 'center' }}>
+              <label htmlFor="upload-button">
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="upload-button"
+                  style={{ display: 'none' }}
+                  onChange={handleFileChange}
+                />
+                <span
+                  className="upload-button"
+                  style={{
+                    display: 'inline-block',
+                    cursor: 'pointer',
+                    padding: '25px',
+                    border: '1px dashed lightgray',
+                    borderRadius: '4px',
+                    textAlign: 'center',
+                    margin: 10,
+                  }}
+                >
+                    <img
+                      src={cam}
+                      alt="Upload"
+                      style={{
+                        width: '24px',
+                        height: '24px',
+                        marginRight: '8px',
+                        verticalAlign: 'middle',
+                      }}
+                    />
+                  {file ? file.name : 'Upload Image'}
+                </span>
+              </label>  
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <input type="file" accept="image/*" onChange={handleFileChange} />
-                {/* <p>{percent}% done</p> */}
+              <Grid item xs={12} sm={6}>
                 <TextField
-                  margin="normal"
+                  margin="none"
                   required
                   fullWidth
                   id="firstName"
                   label="First Name"
+                  size="small"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  margin="normal"
+                  margin="none"
                   required
                   fullWidth
                   id="lastName"
                   label="Last Name"
+                  size="small"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  margin="normal"
+                  margin="none"
                   fullWidth
                   id="questionsComments"
-                  label="Questions or Comments?"
+                  label="Leave a Note"
+                  size="small"
                   multiline
                   rows={4}
                   value={comment}
@@ -177,23 +228,26 @@ return (
                 />
               </Grid>
             </Grid>
-            <Typography sx={{ mt: 1, fontSize: 15, color: "grey" }} className="rsvp">
+            <Typography sx={{ mt: 0, fontSize: 15, color: "grey", textAlign: 'left' }} className="rsvp">
               *required
             </Typography>
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 0, mb: 2 }}
               color="primary"
             >
               Upload Image
             </Button>
+            <Dialog open={open} onClose={handleClose}>
+              <img id="" className="logo" src={Logo}/>
+              <DialogTitle>Thank you</DialogTitle>
+            </Dialog>
           </Box>
-        </Box>
-      </Container>
-      <Container>
-      <RetrivedImages />
+        </Container>
+      <Container  maxWidth="xl" style={{ height: "100%", width: "100%" }}>
+      <RetrivedImages key={galleryKey} />
       </Container>
     </ThemeProvider>
   </div>

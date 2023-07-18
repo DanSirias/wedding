@@ -53,6 +53,7 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import { Dialog, DialogContent } from '@mui/material';
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -80,6 +81,9 @@ export const RetrivedImages = () => {
  
   const postsRef = collection(db, "images"); //this is your database and the NOSQL docs
   const [postsList, setPostList] = useState< imagePost [] | null>(null); //Array of post make sure the [] is included
+  const [open, setOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+
   let [color, setColor] = useState("#ffffff");
 
 
@@ -95,6 +99,15 @@ export const RetrivedImages = () => {
       getPosts(); //calls the function and renders the data
     }, []); 
 
+    const handleImageClick = (imageURL: string) => {
+      setSelectedImage(imageURL);
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+
     const getFormattedDate = (dateUpload: any): string => {
       if (dateUpload instanceof Date) {
         return dateUpload.toLocaleDateString();
@@ -106,9 +119,9 @@ export const RetrivedImages = () => {
     };
 
 return (
-  <div className="" style={{ padding: 30, height: "100%" }}>
+  <div className="" style={{ padding: 0, height: "100%", width: "100%", backgroundColor: "#fff8e4", marginTop:30 }}>
     <ThemeProvider theme={defaultTheme}>
-    <Container id="cardHolder" maxWidth={false} style={{ height: "100%", width: "100%" }}>
+    <Container id="cardHolder" maxWidth="xl" style={{ height: "100%", width: "100%" }}>
             <Typography id="reccs" component="h2" variant="h5"
             sx={{
               width: "100%",
@@ -130,37 +143,29 @@ return (
 
             <Box   sx={{
                 width: "100%",
-                marginTop: 0, 
-                justifyContent:"center",
-                alignItems:"center",
-                align:"center"
+                marginTop: 2, 
               }}>
             <Grid container justifyContent="center" rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: "auto" }}>
               {postsList && postsList.map((post) => (
                 <Grid item xs={12} md={4} lg={'auto'} key={post.id}>
-                  <Card sx={{ maxWidth: 345, border: 1, borderColor: "lightgray", boxShadow: 2 }}>
+                  <Card sx={{ maxWidth: 345, border: 1, borderColor: "#fff8e4", boxShadow: 2 }} onClick={() => handleImageClick(post.imageURL)}>
                     <CardMedia
                       component="img"
                       alt={post.imageName}
                       height="240"
                       image={post.imageURL}
                     />
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
-                        {post.firstName} {post.lastName}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                      {post.comment} {/* Assuming `dateUpload` is a Firebase Timestamp */}
-                      </Typography>
-                    </CardContent>
-                    <CardActions>
-                      <Button href={post.imageURL} size="small">View Image</Button>
-                    </CardActions>
+
                   </Card>
                 </Grid>
               ))}
             </Grid>
             </Box>
+            <Dialog open={open} onClose={handleClose} maxWidth="md">
+            <DialogContent>
+              <img src={selectedImage} alt="Large Image" style={{ width: '100%', height: 'auto' }} />
+            </DialogContent>
+          </Dialog>
           </Container>
     </ThemeProvider>
   </div>
@@ -168,6 +173,18 @@ return (
 };
 /* 
   
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {post.firstName} {post.lastName}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                      {post.comment} 
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button href={post.imageURL} size="small">View Image</Button>
+                    </CardActions>
+
           <Container style={{ maxWidth: "500px" }} fluid>
         <Form className="mt-4">
           <Form.Group controlId="formEmail">
