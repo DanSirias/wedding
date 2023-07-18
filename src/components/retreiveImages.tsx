@@ -147,7 +147,20 @@ return (
               }}>
             <Grid container justifyContent="center" rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: "auto" }}>
               {postsList && postsList.map((post) => (
-                <Grid item xs={12} md={4} lg={'auto'} key={post.id}>
+                            <Grid
+                            className="fadein"
+                            item
+                            xs={12}
+                            md={4}
+                            lg={'auto'}
+                            key={post.id}
+                            style={{
+                              animation: 'fadein 3s',
+                              WebkitAnimation: 'fadein 3s',
+                              MozAnimation: 'fadein 3s',
+                              OAnimation: 'fadein 3s',
+                            }}
+                          >
                   <Card sx={{ maxWidth: 345, border: 1, borderColor: "#fff8e4", boxShadow: 2 }} onClick={() => handleImageClick(post.imageURL)}>
                     <CardMedia
                       component="img"
