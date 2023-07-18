@@ -193,11 +193,11 @@ return (
               <Grid item xs={12} sm={6}>
                 <TextField
                   margin="none"
+                  size="small"
                   required
                   fullWidth
                   id="firstName"
                   label="First Name"
-                  size="small"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                 />

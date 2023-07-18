@@ -140,7 +140,8 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      margin="normal"
+                       margin="none"
+                      size="small"
                       required
                       fullWidth
                       id="firstName"
@@ -151,7 +152,8 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      margin="normal"
+                                        margin="none"
+                  size="small"
                       required
                       fullWidth
                       id="lastName"
@@ -162,7 +164,8 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      margin="normal"
+                                        margin="none"
+                  size="small"
                       required
                       fullWidth
                       id="email"
@@ -172,7 +175,8 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                     {/* <p style={{color:"red", fontSize:25,}}>{errors.email?.message}</p> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth margin="normal" required>
+                    <FormControl fullWidth                   margin="none"
+                  size="small" required>
                       <InputLabel id="attending">Are you attending?</InputLabel>
                       <Select
                         required
@@ -187,7 +191,8 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                     {/* <p style={{color:"red", fontSize:25,}}>{errors.attending?.message}</p> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth margin="normal" required>
+                    <FormControl fullWidth                   margin="none"
+                  size="small" required>
                       <InputLabel id="bringingGuest">Are you bringing a Guest?</InputLabel>
                       <Select
                         required
@@ -204,7 +209,8 @@ const onCreateRSVP = async (data: RSVPFormData) => {
 
                       <Grid item xs={12} sm={6}>
                         <TextField
-                          margin="normal"
+                                            margin="none"
+                  size="small"
                           required
                           fullWidth
                           id="guestFirstName"
@@ -215,7 +221,8 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <TextField
-                          margin="normal"
+                                            margin="none"
+                  size="small"
                           required
                           fullWidth
                           id="guestLastName"
@@ -225,7 +232,8 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                         {/* <p style={{color:"red"}}>{errors.guestLastName?.message}</p> */}
                       </Grid>
                   <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth margin="normal" required>
+                    <FormControl fullWidth                   margin="none"
+                  size="small" required>
                       <InputLabel id="mealOption">Main Course/Entrées Option</InputLabel>
                       <Select
                         required
@@ -242,7 +250,8 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      margin="normal"
+                                        margin="none"
+                  size="small"
                       fullWidth
                       id="foodRestrictions"
                       label="Any Food Restrictions?"
@@ -253,7 +262,8 @@ const onCreateRSVP = async (data: RSVPFormData) => {
                   
                   <Grid item xs={12}>
                     <TextField
-                      margin="normal"
+                                        margin="none"
+                  size="small"
                       fullWidth
                       id="questionsComments"
                       label="Questions or Comments?"
