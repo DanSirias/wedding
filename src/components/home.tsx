@@ -9,6 +9,9 @@ export const Home: React.FC = () => {
   <img id="" className="logo" src={Logo}/>
   <img id="" className="namelogoPri" src={LetterLogo}/>
   </div>
+  <div className="section">
+
+  </div>
   </div>
   </>)
 };
