@@ -29,6 +29,12 @@ Salmon #FDCDAA
   pointer-events: none;
 }
 
+.namelogoPri {
+  height: 11vmin;
+  pointer-events: none;
+}
+
+
 .rsvp {
   font-family: 'Dawning of a New Day', cursive;
   
@@ -65,13 +71,13 @@ Salmon #FDCDAA
 }
 
 .section {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: #321115;
-  background-color:  #faf4eb;
 }
 
 .signin {
