@@ -27,6 +27,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { shadows } from '@mui/system';
 import Logo from '../images/RDlogo_sage.svg'; 
 import LetterLogo from '../images/names.svg';
+import bench from '../images/bench.jpg';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -107,7 +108,7 @@ const onCreateRSVP = async (data: RSVPFormData) => {
 
 
   return (
-      <div className="" style={{ padding: 30, height: "100%" }}>
+      <div className="rsvpBack" style={{ padding: 30, height: "100%" }}>
         <ThemeProvider theme={defaultTheme}>
           <Container
             sx={{ border: 1, borderColor: "lightgray", boxShadow: 4 }}

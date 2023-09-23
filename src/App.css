@@ -40,6 +40,13 @@ Salmon #FDCDAA
   z-index: -1; /* Position it behind the content of .home */
 }
 
+.rsvpBack {
+  background-image: url('../src/images/bench.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
 
 .logo {
   height: 40vmin;
@@ -62,7 +69,7 @@ Salmon #FDCDAA
 
 .rsvp {
   font-family: 'Dawning of a New Day', cursive;
-  
+  background-color: #f2f2f2;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -176,6 +183,23 @@ Salmon #FDCDAA
   #cardsContainer{
     width: 200% !important;
     background-color: red;
+  }
+
+  .home::before {
+    content: "";
+    background: 
+    linear-gradient(rgba(0, 0, 0, 0.309), rgba(0, 0, 0, 0.5)), /* This adds the dark overlay */
+    url('../src/images/couple.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.80; /* Adjust to your preferred opacity value */
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1; /* Position it behind the content of .home */
   }
 }
 @media (min-width:481px)  { /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */ 
