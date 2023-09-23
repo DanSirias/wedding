@@ -19,6 +19,13 @@ Salmon #FDCDAA
   text-align: center;
 }
 
+.home {
+  background-image: url('../src/images/treePic.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
 .logo {
   height: 40vmin;
   pointer-events: none;
