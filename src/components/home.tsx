@@ -6,7 +6,7 @@ import treeBackground from '../images/treePic.jpg';
 
 export const Home: React.FC = () => {
   return (<>
-  <div className="home" style={{ padding: 30, height: "100%" }}>
+  <div className="home" style={{ padding: 30, height: "100%"}}>
   <div className="section">
   <img id="" className="logo" src={Logo}/>
   <img id="" className="namelogoPri" src={LetterLogo}/>

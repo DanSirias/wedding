@@ -20,21 +20,39 @@ Salmon #FDCDAA
 }
 
 .home {
-  background-image: url('../src/images/treePic.jpg');
+  position: relative;
+}
+
+.home::before {
+  content: "";
+  background: 
+  linear-gradient(rgba(0, 0, 0, 0.309), rgba(0, 0, 0, 0.5)), /* This adds the dark overlay */
+  url('../src/images/couple.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  opacity: 0.80; /* Adjust to your preferred opacity value */
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1; /* Position it behind the content of .home */
 }
+
 
 .logo {
   height: 40vmin;
   pointer-events: none;
 }
 
+
+
 .namelogo {
   height: 8vmin;
   pointer-events: none;
 }
+
 
 .namelogoPri {
   height: 11vmin;

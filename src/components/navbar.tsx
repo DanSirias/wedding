@@ -111,7 +111,7 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            Sirias
+            R & D | 11.24.23
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
