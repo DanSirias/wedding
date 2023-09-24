@@ -180,6 +180,29 @@ Salmon #FDCDAA
     left: 0;
     z-index: -1; /* Position it behind the content of .home */
   }
+
+  .registry {
+    position: relative;
+  }
+  
+  .registry::before {
+    content: "";
+    background: 
+    
+    url('../src/images/ring.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.80; /* Adjust to your preferred opacity value */
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1; /* Position it behind the content of .home */
+  }
+
+
 }
 @media (min-width:481px)  { /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */ 
 }
@@ -217,7 +240,6 @@ Salmon #FDCDAA
   .registry::before {
     content: "";
     background: 
-    linear-gradient(rgba(0, 0, 0, 0.02),rgba(0, 0, 0, 0.0), rgba(238, 231, 201, 0.265)), /* This adds the dark overlay */
     url('../src/images/ring.jpg');
     background-repeat: no-repeat;
     background-size: cover;
