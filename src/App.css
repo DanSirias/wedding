@@ -19,27 +19,6 @@ Salmon #FDCDAA
   text-align: center;
 }
 
-.home {
-  position: relative;
-}
-
-.home::before {
-  content: "";
-  background: 
-  linear-gradient(rgba(180, 164, 87, 0.907), rgba(99, 90, 44, 0.83)), /* This adds the dark overlay */
-  url('../src/images/couple.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  opacity: 0.80; /* Adjust to your preferred opacity value */
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: -1; /* Position it behind the content of .home */
-}
-
 .rsvpBack {
   background-image: url('../src/images/bench.jpg');
   background-repeat: no-repeat;
@@ -208,6 +187,51 @@ Salmon #FDCDAA
 @media (min-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */ }
 @media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */ }
 @media (min-width:1281px) { /* hi-res laptops and desktops */ 
+
+
+  .home {
+    position: relative;
+  }
+  
+  .home::before {
+    content: "";
+    background: 
+    linear-gradient(rgba(0, 0, 0, 0.02),rgba(0, 0, 0, 0.09), rgba(238, 231, 201, 0.637)), /* This adds the dark overlay */
+    url('../src/images/couple.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.80; /* Adjust to your preferred opacity value */
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1; /* Position it behind the content of .home */
+  }
+
+  .registry {
+    position: relative;
+  }
+  
+  .registry::before {
+    content: "";
+    background: 
+    linear-gradient(rgba(0, 0, 0, 0.02),rgba(0, 0, 0, 0.0), rgba(238, 231, 201, 0.265)), /* This adds the dark overlay */
+    url('../src/images/ring.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.80; /* Adjust to your preferred opacity value */
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1; /* Position it behind the content of .home */
+  }
+
+
   #htx-title {
     font-size: 50px;
     color:  #321115;
@@ -217,7 +241,15 @@ Salmon #FDCDAA
     font-size: 50px;
     color:  #321115;
     font-family: 'Dawning of a New Day', cursive;
-  }    
+  }   
+  
+  #reccsHome {
+    width: fit-content;
+    font-size: 20px;
+    color:  #321115;
+    font-family: 'Dawning of a New Day', cursive;
+  }   
+  
   #htx-header {
     font-size: 20;
     margin: 0;
