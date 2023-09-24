@@ -23,6 +23,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { shadows } from '@mui/system';
 import Logo from '../images/RDlogo_sage.svg'; 
@@ -64,10 +65,24 @@ const defaultTheme = createTheme({
       dark: "#847072"
     }
   }, 
+  components: {
+    MuiStack: {
+      defaultProps: {
+        useFlexGap: true,
+      },
+    },
+  },
 });
 
 export const RSVP = () => {
 const navigate = useNavigate();
+const [attending, setAttending] = useState<string | null>(null);
+const [guestAttending, setguestAttending] = useState<string | null>(null);
+
+
+const handleAttendingChange = (e: ChangeEvent<{ value: unknown }>) => {
+  setAttending(e.target.value as string);
+};
 
 const schema = yup.object().shape({
     firstName: yup.string().required("You Must Enter a Name"), 
@@ -110,186 +125,210 @@ const onCreateRSVP = async (data: RSVPFormData) => {
   return (
       <div className="rsvpBack" style={{ padding: 30, height: "100%" }}>
         <ThemeProvider theme={defaultTheme}>
-          <Container
-            sx={{ border: 1, borderColor: "lightgray", boxShadow: 4 }}
-            className="rsvp"
-            component="main"
-            maxWidth="md"
-          >
-            <CssBaseline />
-            <Box
-              sx={{
-                marginTop: 2,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Typography component="h1" variant="h3">
-                R.S.V.P.
-              </Typography>
-              <Typography sx={{ mt: 1, fontSize: 15 }} className="rsvp">
-                Kindly reply for each guest by October 1st
-              </Typography>
-              <img id="" className="namelogo" src={LetterLogo}/>
-              <Box
-                component="form"
-                onSubmit={handleSubmit(onCreateRSVP)}
-                noValidate
-                sx={{ mt: 1 }}
-              >
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                       margin="none"
-                      size="small"
-                      required
-                      fullWidth
-                      id="firstName"
-                      label="First Name"
-                      className={errors.firstName ? 'error' : ''}
-                      {...register("firstName")}
-                    />{/* <p style={{color:"red", fontSize:25,}}>{errors.firstName?.style({borderColor:"red"})}</p> */}
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                                        margin="none"
-                  size="small"
-                      required
-                      fullWidth
-                      id="lastName"
-                      label="Last Name"
-                      {...register("lastName")}
-                    />
-                    {/* <p style={{color:"red", fontSize:25,}}>{errors.lastName?.message}</p> */}
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                                        margin="none"
-                  size="small"
-                      required
-                      fullWidth
-                      id="email"
-                      label="Email Address"
-                      {...register("email")}
-                    />
-                    {/* <p style={{color:"red", fontSize:25,}}>{errors.email?.message}</p> */}
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth                   margin="none"
-                  size="small" required>
-                      <InputLabel id="attending">Are you attending?</InputLabel>
-                      <Select
-                        required
-                        id="Attending"
-                        label="Attending"
-                        {...register("attending")}
-                      >
-                        <MenuItem value={"Yes"}>SHiiiiii Hell Yes... Whoop!</MenuItem>
-                        <MenuItem value={"No"}>Fuck No</MenuItem>
-                      </Select>
-                    </FormControl>
-                    {/* <p style={{color:"red", fontSize:25,}}>{errors.attending?.message}</p> */}
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth                   margin="none"
-                  size="small" required>
-                      <InputLabel id="bringingGuest">Are you bringing a Guest?</InputLabel>
-                      <Select
-                        required
-                        id="bringingGuest"
-                        label="bringingGuest"
-                        {...register("bringingGuest")}
-                      >
-                        <MenuItem value={"Yes"}>Yes</MenuItem>
-                        <MenuItem value={"No"}>No</MenuItem>
-                      </Select>
-                    </FormControl>
-                    {/* <p style={{color:"red", fontSize:25,}}>{errors.bringingGuest?.message}</p> */}
-                  </Grid>
+        <Container
+  sx={{ border: 1, borderColor: "lightgray", boxShadow: 4 }}
+  className="rsvp"
+  component="main"
+  maxWidth="md"
+>
+  <CssBaseline />
+  <Box
+    sx={{
+      marginTop: 2,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    }}
+  >
+    <Typography component="h1" variant="h3">
+      R.S.V.P.
+    </Typography>
+    <Typography sx={{ mt: 1, fontSize: 15 }} className="rsvp">
+      Kindly reply by October 1st 2024
+    </Typography>
+    <img id="" className="namelogo" src={LetterLogo} />
 
-                      <Grid item xs={12} sm={6}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onCreateRSVP)}
+      noValidate
+      sx={{ mt: 1, width: '100%' }}
+    >
+      <Stack    
+      direction={{ xs: 'column', sm: 'row' }}
+      spacing={{ xs: 1, sm: 2, md: 4 }}>
+      <TextField
+        margin="none"
+        size="small"
+        required
+        fullWidth
+        id="firstName"
+        label="First Name"
+        className={errors.firstName ? 'error' : ''}
+        {...register("firstName")}
+      />
+      <TextField
+        margin="none"
+        size="small"
+        required
+        fullWidth
+        id="lastName"
+        label="Last Name"
+        {...register("lastName")}
+      />
+      </Stack>
+
+      <Grid container sx={{ mt: 1, width: '100%' }}>
                         <TextField
-                                            margin="none"
-                  size="small"
+                          margin="none"
+                          size="small"
                           required
                           fullWidth
-                          id="guestFirstName"
-                          label="Guest First Name"
-                          {...register("guestFirstName")}
+                          id="email"
+                          label="Email Address"
+                          {...register("email")}
                         />
-                        {/* <p style={{color:"red", fontSize:25,}}>{errors.guestFirstName?.message}</p> */}
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                                            margin="none"
-                  size="small"
-                          required
-                          fullWidth
-                          id="guestLastName"
-                          label="Guest Last Name"
-                          {...register("guestLastName")}
-                        />
-                        {/* <p style={{color:"red"}}>{errors.guestLastName?.message}</p> */}
-                      </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth                   margin="none"
-                  size="small" required>
-                      <InputLabel id="mealOption">Main Course/Entrées Option</InputLabel>
-                      <Select
-                        required
-                        id="mealOption"
-                        label="Main Course/Entrées Option"
-                        {...register("mealOption")}
-                      >
-                        <MenuItem value={"Beef"}>Beef</MenuItem>
-                        <MenuItem value={"Chicken"}>Chicken</MenuItem>
-                        <MenuItem value={"Vegetarian"}>Vegetarian</MenuItem>
-                      </Select>
-                    </FormControl>
-                    {/* <p style={{color:"red", fontSize:25,}}>{errors.mealOption?.message}</p> */}
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
+      <FormControl fullWidth margin="none" size="small" required sx={{ mt: 1, width: '100%' }}>
+        <InputLabel id="attending">Are you attending?</InputLabel>
+        <Select
+          required
+          id="Attending"
+          label="Attending"
+          {...register("attending")}
+          onChange={(e) => setAttending(e.target.value as string)}
+        >
+          <MenuItem value={"Yes"}>Yes, I will be there. </MenuItem>
+          <MenuItem value={"No"}>No, I cannot make it. </MenuItem>
+        </Select>
+      </FormControl>
+
+      </Grid>
+
+      {attending === "Yes" && (
+        <>
+          <Grid container sx={{ mt: 1, width: '100%' }}>
+            <FormControl fullWidth margin="none" size="small" required sx={{ mt: 1, width: '100%' }}>
+              <InputLabel id="bringingGuest">Are you bringing a Guest?</InputLabel>
+              <Select
+                required
+                id="bringingGuest"
+                label="bringingGuest"
+                {...register("bringingGuest")}
+                onChange={(e) => setguestAttending(e.target.value as string)}
+              >
+                <MenuItem value={"Yes"}>Yes</MenuItem>
+                <MenuItem value={"No"}>No</MenuItem>
+              </Select>
+            </FormControl>
+
+            {guestAttending === "Yes" && (
+                <>
+              <Stack    
+                    direction={{ xs: 'column', sm: 'row' }}
+                    spacing={{ xs: 1, sm: 1, md: 4 }} sx={{ mt: 1, width: '100%' }}>
+                                    <Grid item xs={12} sm={6}>
+                                      <TextField
+                                                          margin="none"
+                                size="small"
+                                        required
+                                        fullWidth
+                                        id="guestFirstName"
+                                        label="Guest First Name"
+                                        {...register("guestFirstName")}
+                                      />
+                                      {/* <p style={{color:"red", fontSize:25,}}>{errors.guestFirstName?.message}</p> */}
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                      <TextField
                                         margin="none"
-                  size="small"
-                      fullWidth
-                      id="foodRestrictions"
-                      label="Any Food Restrictions?"
-                      {...register("foodRestrictions")}
-                    />
-                    {/* <p style={{color:"red", fontSize:25,}}>{errors.foodRestrictions?.message}</p> */}
-                  </Grid>
-                  
+                                        size="small"
+                                        required
+                                        fullWidth
+                                        id="guestLastName"
+                                        label="Guest Last Name"
+                                        {...register("guestLastName")}
+                                      />
+                                      {/* <p style={{color:"red"}}>{errors.guestLastName?.message}</p> */}
+                                    </Grid>
+
+              </Stack>
+              </>
+            )}
+
+            <Stack    
+                    direction={{ xs: 'column', sm: 'row' }}
+                    spacing={{ xs: 1, sm: 1, md: 4 }} sx={{ mt: 1, width: '100%' }}>
+            <Grid container item sx={{ mt: 1, width: '100%' }}>
+              
+              {/* This Grid item will hold the Typography */}
+              <Grid item xs={6}>
+                <Typography sx={{ mt: 1, fontSize: 15, color: "grey" }} className="rsvp">
+                  *Main Entrée For All Guests: Filet Mignon Steak <br></br>
+                  Kindly inform us of any dietary requirements. 
+                </Typography>
+              </Grid>
+              
+              {/* This Grid item will hold the FormControl */}
+              <Grid item xs={6}>
+                <FormControl 
+                  fullWidth                   
+                  margin="none"
+                  size="small" 
+                  required>
+                  <InputLabel id="mealOptionLabel">Food Restrictions Choice?</InputLabel>
+                  <Select
+                    required
+                    id="mealOption"
+                    label="Main Course/Entrées Option"
+                    {...register("mealOption")}
+                  >
+                    <MenuItem value={"Chicken"}>Chicken</MenuItem>
+                    <MenuItem value={"Vegan"}>Vegan</MenuItem>
+                    <MenuItem value={"Vegetarian"}>Vegetarian</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              
+              {/* Uncomment this if you want to show error messages */}
+              {/* <Grid item xs={12}>
+                <p style={{color:"red", fontSize:25}}>{errors.mealOption?.message}</p>
+              </Grid> */}
+            </Grid>
+            </Stack>
                   <Grid item xs={12}>
                     <TextField
-                                        margin="none"
-                  size="small"
+                      margin="none"
+                      size="small"
                       fullWidth
                       id="questionsComments"
-                      label="Questions or Comments?"
+                      label="Questions, Children Names, or Comments?"
                       multiline
                       rows={4}
                       {...register("questionsComments")}
                     />
                     {/* <p style={{color:"red", fontSize:25,}}>{errors.questionsComments?.message}</p> */}
                   </Grid>
-                </Grid>
-                <Typography sx={{ mt: 1, fontSize: 15, color: "grey" }} className="rsvp">
-                *required
-                </Typography>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                  color="primary"
-                >
-                  Submit
-                </Button>
-              </Box>
-            </Box>
-          </Container>
+          </Grid>
+        </>
+      )}
+  
+                  
+      <Typography sx={{ mt: 1, fontSize: 15, color: "grey" }} className="rsvp">
+        *required
+      </Typography>
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        color="primary"
+      >
+        Submit
+      </Button>
+
+    </Box>
+  </Box>
+</Container>
         </ThemeProvider>
       </div>
   );
@@ -322,3 +361,11 @@ const onCreateRSVP = async (data: RSVPFormData) => {
         </Form>
       </Container>
   */
+
+
+
+      /* 
+      
+      
+      
+      */

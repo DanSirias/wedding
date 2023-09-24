@@ -1,0 +1,182 @@
+          <Container
+            sx={{ border: 1, borderColor: "lightgray", boxShadow: 4 }}
+            className="rsvp"
+            component="main"
+            maxWidth="md"
+          >
+            <CssBaseline />
+            <Box
+              sx={{
+                marginTop: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Typography component="h1" variant="h3">
+                R.S.V.P.
+              </Typography>
+              <Typography sx={{ mt: 1, fontSize: 15 }} className="rsvp">
+                Kindly reply by October 1st 2024
+              </Typography>
+              <img id="" className="namelogo" src={LetterLogo}/>
+              <Box
+                component="form"
+                onSubmit={handleSubmit(onCreateRSVP)}
+                noValidate
+                sx={{ mt: 1 }}
+              >
+                <Grid container spacing={1}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                       margin="none"
+                      size="small"
+                      required
+                      fullWidth
+                      id="firstName"
+                      label="First Name"
+                      className={errors.firstName ? 'error' : ''}
+                      {...register("firstName")}
+                    />{/* <p style={{color:"red", fontSize:25,}}>{errors.firstName?.style({borderColor:"red"})}</p> */}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                  <TextField
+                  margin="none"
+                  size="small"
+                      required
+                      fullWidth
+                      id="lastName"
+                      label="Last Name"
+                      {...register("lastName")}
+                    />
+                    {/* <p style={{color:"red", fontSize:25,}}>{errors.lastName?.message}</p> */}
+                  </Grid>
+             
+
+                  <Grid item xs={12} sm={6}>
+                  <TextField
+                  margin="none"
+                  size="small"
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      {...register("email")}
+                    />
+                    {/* <p style={{color:"red", fontSize:25,}}>{errors.email?.message}</p> */}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth                   margin="none"
+                  size="small" required>
+                      <InputLabel id="attending">Are you attending?</InputLabel>
+                      <Select
+                        required
+                        id="Attending"
+                        label="Attending"
+                        {...register("attending")}
+                      >
+                        <MenuItem value={"Yes"}>SHiiiiii Hell Yes... Whoop!</MenuItem>
+                        <MenuItem value={"No"}>Fuck No</MenuItem>
+                      </Select>
+                    </FormControl>
+                    {/* <p style={{color:"red", fontSize:25,}}>{errors.attending?.message}</p> */}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth                   margin="none"
+                  size="small" required>
+                      <InputLabel id="bringingGuest">Are you bringing a Guest?</InputLabel>
+                      <Select
+                        required
+                        id="bringingGuest"
+                        label="bringingGuest"
+                        {...register("bringingGuest")}
+                      >
+                        <MenuItem value={"Yes"}>Yes</MenuItem>
+                        <MenuItem value={"No"}>No</MenuItem>
+                      </Select>
+                    </FormControl>
+                    {/* <p style={{color:"red", fontSize:25,}}>{errors.bringingGuest?.message}</p> */}
+                  </Grid>
+
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                                            margin="none"
+                  size="small"
+                          required
+                          fullWidth
+                          id="guestFirstName"
+                          label="Guest First Name"
+                          {...register("guestFirstName")}
+                        />
+                        {/* <p style={{color:"red", fontSize:25,}}>{errors.guestFirstName?.message}</p> */}
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                                            margin="none"
+                  size="small"
+                          required
+                          fullWidth
+                          id="guestLastName"
+                          label="Guest Last Name"
+                          {...register("guestLastName")}
+                        />
+                        {/* <p style={{color:"red"}}>{errors.guestLastName?.message}</p> */}
+                      </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth                   margin="none"
+                  size="small" required>
+                      <InputLabel id="mealOption">Main Course/Entrées Option</InputLabel>
+                      <Select
+                        required
+                        id="mealOption"
+                        label="Main Course/Entrées Option"
+                        {...register("mealOption")}
+                      >
+                        <MenuItem value={"Beef"}>Beef</MenuItem>
+                        <MenuItem value={"Chicken"}>Chicken</MenuItem>
+                        <MenuItem value={"Vegetarian"}>Vegetarian</MenuItem>
+                      </Select>
+                    </FormControl>
+                    {/* <p style={{color:"red", fontSize:25,}}>{errors.mealOption?.message}</p> */}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                                        margin="none"
+                  size="small"
+                      fullWidth
+                      id="foodRestrictions"
+                      label="Any Food Restrictions?"
+                      {...register("foodRestrictions")}
+                    />
+                    {/* <p style={{color:"red", fontSize:25,}}>{errors.foodRestrictions?.message}</p> */}
+                  </Grid>
+                  
+                  <Grid item xs={12}>
+                    <TextField
+                                        margin="none"
+                  size="small"
+                      fullWidth
+                      id="questionsComments"
+                      label="Questions or Comments?"
+                      multiline
+                      rows={4}
+                      {...register("questionsComments")}
+                    />
+                    {/* <p style={{color:"red", fontSize:25,}}>{errors.questionsComments?.message}</p> */}
+                  </Grid>
+                </Grid>
+                <Typography sx={{ mt: 1, fontSize: 15, color: "grey" }} className="rsvp">
+                *required
+                </Typography>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  color="primary"
+                >
+                  Submit
+                </Button>
+              </Box>
+            </Box>
+          </Container>

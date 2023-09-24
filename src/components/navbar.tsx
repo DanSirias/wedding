@@ -111,7 +111,7 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            R & D | 11.24.23
+            R & D | 11.10.24
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
