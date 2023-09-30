@@ -122,8 +122,21 @@ Salmon #FDCDAA
   color: #61dafb;
 }
 
+/* Maroon #321115
+Burgandy #701E25
+Sage #99AA8B
+Green #4F896D
+Rosee #FAB9AA
+Salmon #FDCDAA 
+Light #F9F6F1
+Light 2 #F3EDE2
+*/
+
+
+
 .navbar {
-  background-color: #99AA8B !important; /* Maroon: 321115 */
+  /*background-color: #99AA8B !important;  Maroon: 321115 */
+  background-color: #F9F6F1 !important; /* Maroon: 321115 */
   color: #321115 !important; 
 }
 

@@ -35,22 +35,21 @@ const styles = {
 const App: React.FC = () => {
   return (
     <Router>
-
-  <div className="" style={{ height: "100vh",}}>
-    <CssBaseline />
-      <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/rsvp" element={<RSVP />} />
-          <Route path="/guests" element={<Guests />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/weddingparty" element={<WeddingParty />} />
-          <Route path="/travel" element={<Travel />} />
-          <Route path="/gift" element={<GiftRegistry />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/images" element={<Images />} />
-        </Routes>
-          </div> 
+        <div className="" style={{ height: "100vh",}}>
+              <CssBaseline />
+                <Navbar />
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/rsvp" element={<RSVP />} />
+                    <Route path="/guests" element={<Guests />} />
+                    <Route path="/events" element={<Events />} />
+                    <Route path="/weddingparty" element={<WeddingParty />} />
+                    <Route path="/travel" element={<Travel />} />
+                    <Route path="/gift" element={<GiftRegistry />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/images" element={<Images />} />
+                  </Routes>
+      </div> 
     </Router>
   );
 };

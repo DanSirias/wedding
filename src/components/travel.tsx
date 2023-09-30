@@ -50,7 +50,8 @@ export const Travel: React.FC = () => {
       <ThemeProvider theme={defaultTheme}>
         <div className="header-htx"></div>
         <div style={{ width: "100%", marginTop:0 }}>
-          <Container maxWidth={false} style={{ height: "100%", width: "100%" }} 
+
+          <Container maxWidth={false} style={{ height: "100%", width: "100%"}} 
           sx={{ border: 0, borderColor: "lightgray", boxShadow: 4,
                 /* backgroundImage: `url(${hou})`, */
                 backgroundColor: "#f2f2f2", 
@@ -61,6 +62,7 @@ export const Travel: React.FC = () => {
               id="htx-title"
               component="div"
               align="center"
+              
             >
               Welcome to Houston, Texas
               <p style={{ fontSize: 15, marginTop: 0}}><em>"The Fourth Largest City in the USA"</em></p>
@@ -94,7 +96,7 @@ export const Travel: React.FC = () => {
             <Button
               type="submit"
               variant="contained"
-              sx={{ mt: 0, mb: 2 }}
+              sx={{ mt: 3, mb: 2 }}
               href="https://www.visithoustontexas.com/"
             >
               Explore
@@ -102,8 +104,8 @@ export const Travel: React.FC = () => {
             </Box>
           </Container>
         </div>
-        <div style={{ width: "100%", marginTop: 10 }}>
-          <Container id="cardHolder" maxWidth={false} style={{ height: "100%", width: "70%" }}>
+        <div style={{marginTop: 20,  marginLeft: 40, marginRight: 40   }}>
+          <Container id="cardHolder" maxWidth={false} style={{ height: "100%", width: "100%" }}>
             <Grid className="cardsContainer" item xs={12} md={6} lg={8}>
             <Card sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
               <Card sx={{ display: 'flex' }}>
@@ -314,7 +316,7 @@ export const Travel: React.FC = () => {
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                   Houston Museum of Natural Science
+                   Museum of Natural Science
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                   Discover Texas wildlife, dinosaurs, Planets, and more in the heart of Houston's Museum District.
@@ -335,7 +337,7 @@ export const Travel: React.FC = () => {
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                  NASA Space Center Houston
+                  NASA Space Center
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                    Houston, We Have a Problem... Visit NASA, where it all happened! 
