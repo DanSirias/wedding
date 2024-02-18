@@ -16,7 +16,7 @@ export const GiftRegistry: React.FC = () => {
             >
               Our Registry
               <p style={{ fontSize: 20, marginTop: 0}}><em>Please know that your presence at our wedding is the greatest gift of all, <br></br> 
-                However, if you wish to honor us with a gift, we ahve registered at the following stores: </em></p>
+                However, if you wish to honor us with a gift, we have registered at the following stores: </em></p>
             </Typography>
   <GiftRegistryCards />
   </div>
