@@ -151,7 +151,13 @@ Light 2 #F3EDE2
 
 
 
-@media (min-width:320px)  { /* smartphones, iPhone, portrait 480x320 phones */ 
+@media (min-width:375px)  { /* smartphones, iPhone, portrait 480x320 phones */ 
+  body {
+    margin: 0; /* Remove default body margin */
+    overflow: hidden; /* Prevent scrolling on smaller screens */
+  }
+
+
   #htx-title {
     font-size: 25px;
     text-align: center;
@@ -184,15 +190,9 @@ Light 2 #F3EDE2
     background: 
     linear-gradient(rgba(0, 0, 0, 0.02),rgba(0, 0, 0, 0.09), rgba(238, 231, 201, 0.637)), /* This adds the dark overlay */
     url('../src/images/couple.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    opacity: 0.80; /* Adjust to your preferred opacity value */
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover; /* Maintain aspect ratio and cover the whole container */
     z-index: -1; /* Position it behind the content of .home */
   }
 
@@ -202,9 +202,7 @@ Light 2 #F3EDE2
   
   .registry::before {
     content: "";
-    background: 
-    
-    url('../src/images/ring.jpg');
+    background: url('../src/images/ring.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -219,6 +217,10 @@ Light 2 #F3EDE2
 
 
 }
+
+
+
+
 @media (min-width:481px)  { /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */ 
 }
 @media (min-width:641px)  { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */ }
@@ -336,3 +338,36 @@ Light 2 #F3EDE2
     -moz-animation: fadein 3s;
     -o-animation: fadein 3s;
   }
+
+  /* Gift Registry Card Styles */
+.gift-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 50px; /* Assuming theme.spacing(2) is equivalent to 16px */
+}
+
+.gift-logo {
+  max-width: 100%;
+  height: 50px;
+  display: none;
+}
+
+.gift-title {
+  margin-top: 16px; /* Assuming theme.spacing(2) is equivalent to 16px */
+}
+
+.gift-store-button {
+  margin-top: 16px; /* Assuming theme.spacing(2) is equivalent to 16px */
+}
+
+.gift-card .gift-logo {
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .gift-card .gift-logo {
+    display: block;
+  }
+}
