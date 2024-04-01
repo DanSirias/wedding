@@ -38,8 +38,9 @@ export const Home: React.FC = () => {
   <Button
     fullWidth
     variant="contained"
-    sx={{ mt: 3, mb: 2 }}
+    sx={{ mt: 3, mb: 2, fontSize: '1.2rem' }}
     color="primary"
+    size="large"
   >
     RVSP
   </Button>
