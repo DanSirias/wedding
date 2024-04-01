@@ -20,15 +20,26 @@ import { signOut } from "firebase/auth";
 import LoginIcon from '@mui/icons-material/Login';
 import Daniel from '../images/daniel.jpg'; 
 import Rebecca from '../images/rebecca.jpg'; 
-  const pages = [  
-    { text: 'Home', href: '/' },
-    { text: 'RSVP', href: '/rsvp' },
-    { text: 'Wedding Party', href: '/weddingparty' },
-    { text: 'Travel', href: '/travel' },
-    { text: 'Memories', href: '/images' },
-    { text: 'Gift Registry', href: '/gift' },
-    ];
+import { Home, ConfirmationNumber, People, Flight, PhotoLibrary, CardGiftcard } from '@mui/icons-material';
+
+
+const pages = [
+  { text: 'Home', href: '/', icon: Home },
+  { text: 'RSVP', href: '/rsvp', icon: ConfirmationNumber },
+  { text: 'Wedding Party', href: '/weddingparty', icon: People },
+  { text: 'Travel', href: '/travel', icon: Flight },
+  { text: 'Memories', href: '/images', icon: PhotoLibrary },
+  { text: 'Gift Registry', href: '/gift', icon: CardGiftcard },
+];
     
+const iconMapping = {
+  home: Home,
+  rsvp: ConfirmationNumber,
+  wedding_party: People,
+  travel: Flight,
+  memories: PhotoLibrary,
+  gift: CardGiftcard,
+};
   const settings = ['Profile', 'Account', 'Dashboard', 'Log Out'];
     
     
@@ -103,18 +114,18 @@ function Navbar() {
             href="/"
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              display: { xs: "none", md: "flex" },
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
             R & D | 11.10.24
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" }, alignItems: "center" }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -129,31 +140,41 @@ function Navbar() {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: "bottom",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: "block", md: "none" },
               }}
             >
               {pages.map((page) => (
                 <MenuItem key={page.text} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
-                  <Link component={RouterLink} to={`${page.href}`} style={{textDecoration: "None", color: "maroon"}} color="inherit" underline="none" sx={{ mx: 2 }}>{page.text}</Link>
-                  </Typography>  
+                    <Link
+                      component={RouterLink}
+                      to={`${page.href}`}
+                      style={{ textDecoration: "None", color: "#321115" }}
+                      color="inherit"
+                      underline="none"
+                      sx={{ mx: 2 }}
+                    >
+                      <page.icon sx={{ marginRight: 1 }} /> {/* Render the icon */}
+                      {page.text}
+                    </Link>
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
           {/* LOGO */}
-{/*           <Avatar    sx={{
+          {/*           <Avatar    sx={{
                 display: { xs: 'block', md: 'none' },
                 ml: 0,
           }} alt="Default Avatar" src={Logo} /> */}
@@ -164,92 +185,120 @@ function Navbar() {
             href=""
             sx={{
               //mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: 'monospace',
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-              marginLeft: 0, 
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
+              marginLeft: 0,
+            }}
+          ></Typography>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex" },
+              alignItems: "center", // Align items vertically centered
             }}
           >
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page.text}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: '#321115', display: 'block' }} 
+                sx={{ my: 2, color: "#321115", display: "block", textAlign: "left" }} // Align text to the left
               >
-               <Link component={RouterLink} to={`${page.href}`} style={{textDecoration: "None", color: "#321115"}} color="inherit" underline="none" sx={{ mx: 2 }}>{page.text}</Link>
+                <Link
+                  component={RouterLink}
+                  to={page.href}
+                  style={{ textDecoration: "none", color: "#321115", display: "flex", alignItems: "center" }} // Align items horizontally centered
+                  color="inherit"
+                  underline="none"
+                  sx={{ mx: 2 }}
+                >
+                  <page.icon sx={{ marginRight: 1 }} /> {/* Render the icon */}
+                  {page.text}
+                </Link>{" "}
               </Button>
             ))}
           </Box>
 
           {!user ? (
-           <Box sx={{ flexGrow: 0, display: { xs: 'block', md: 'flex' } }}>
-            <Typography display="flex" alignItems="center" textAlign="center">
-              <LoginIcon sx={{ marginRight: '0px' }} />
-              <Link
-                component={RouterLink}
-                to="/login"
-                style={{ textDecoration: "None", color: "#321115" }}
-                color="inherit"
-                underline="none"
-                sx={{ mx: 2 }}
+            <Box sx={{ flexGrow: 0, display: { xs: "block", md: "flex" } }}>
+              <Typography display="flex" alignItems="center" textAlign="center">
+                <LoginIcon sx={{ marginRight: "0px" }} />
+                <Link
+                  component={RouterLink}
+                  to="/login"
+                  style={{ textDecoration: "None", color: "#321115" }}
+                  color="inherit"
+                  underline="none"
+                  sx={{ mx: 2 }}
+                >
+                  Log In
+                </Link>
+              </Typography>
+            </Box>
+          ) : (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                {user.email === "danielsirias.88@gmail.com" ? (
+                  <Typography display="flex" alignItems="center">
+                    <span style={{ paddingRight: "8px" }}>Howdy, Daniel</span>
+                    <Avatar
+                      alt="Daniel Sirias"
+                      src={Daniel}
+                      onClick={handleOpenUserMenu}
+                      sx={{ p: 0 }}
+                    />
+                  </Typography>
+                ) : user.email === "rbenne88@gmail.com" ? (
+                  <Typography display="flex" alignItems="center">
+                    <span style={{ paddingRight: "8px" }}>Howdy, Rebecca</span>
+                    <Avatar
+                      alt="Rebecca Sirias"
+                      src={Rebecca}
+                      onClick={handleOpenUserMenu}
+                      sx={{ p: 0 }}
+                    />
+                  </Typography>
+                ) : (
+                  <Avatar
+                    alt="Default Avatar"
+                    src="/static/images/avatar/default.jpg"
+                  />
+                )}
+              </Tooltip>
+
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
               >
-                Log In
-              </Link>
-            </Typography>
-          </Box>
-          ) : (
-
-         <Box sx={{ flexGrow: 0 }}>
-          <Tooltip title="Open settings">
-          {user.email === 'danielsirias.88@gmail.com' ? (
-            <Typography display="flex" alignItems="center">
-            <span style={{ paddingRight: '8px' }}>Howdy, Daniel</span>
-            <Avatar alt="Daniel Sirias" src={Daniel} onClick={handleOpenUserMenu} sx={{ p: 0 }} />
-            </Typography>
-          ) : user.email === 'rbenne88@gmail.com' ? (
-
-            <Typography display="flex" alignItems="center">
-            <span style={{ paddingRight: '8px' }}>Howdy, Rebecca</span>
-            <Avatar alt="Rebecca Sirias" src={Rebecca} onClick={handleOpenUserMenu} sx={{ p: 0 }} />
-            </Typography>
-
-          ) : (
-            <Avatar alt="Default Avatar" src="/static/images/avatar/default.jpg" />
+                {settings.map((setting, index) => (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography
+                      textAlign="center"
+                      onClick={onClickFunctions[index]}
+                    >
+                      {setting}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
           )}
-          </Tooltip>
-
-          <Menu
-            sx={{ mt: '45px' }}
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-          >
-            {settings.map((setting, index) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center" onClick={onClickFunctions[index]}>{setting}</Typography>
-              </MenuItem>
-            ))}
-          </Menu>
-      </Box>
-
-)}
-
         </Toolbar>
       </Container>
     </AppBar>
