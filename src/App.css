@@ -180,7 +180,7 @@ Light 2 #F3EDE2
     content: "";
     background: 
     linear-gradient(rgba(0, 0, 0, 0.02),rgba(0, 0, 0, 0.09), rgba(238, 231, 201, 0.637)), /* This adds the dark overlay */
-    url('../src/images/Together.jpg');
+    url('../src/images/treePic2.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
