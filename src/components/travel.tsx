@@ -25,6 +25,7 @@ import CardActionArea from '@mui/material/CardActionArea';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import VideoBackground from '../components/video'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -48,16 +49,10 @@ export const Travel: React.FC = () => {
   return (
     <>
       <ThemeProvider theme={defaultTheme}>
-        <div className="header-htx"></div>
+        <VideoBackground />
+        {/* <div className="header-htx"></div> */}
         <div style={{ width: "100%", marginTop:0 }}>
-
-          <Container maxWidth={false} style={{ height: "100%", width: "100%"}} 
-          sx={{ border: 0, borderColor: "lightgray", boxShadow: 4,
-                /* backgroundImage: `url(${hou})`, */
-                backgroundColor: "#f2f2f2", 
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',}}>
-            <Typography
+        <Typography
               gutterBottom
               id="htx-title"
               component="div"
@@ -67,6 +62,14 @@ export const Travel: React.FC = () => {
               Welcome to Houston, Texas
               <p style={{ fontSize: 15, marginTop: 0}}><em>"The Fourth Largest City in the USA"</em></p>
             </Typography>
+
+          <Container maxWidth={false} style={{ height: "100%", width: "100%", marginTop:250}} 
+          sx={{ border: 0, borderColor: "lightgray", boxShadow: 4,
+                /* backgroundImage: `url(${hou})`, */
+                backgroundColor: "#f2f2f2", 
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',}}>
+              
             <Box
             sx={{
               width: '100%',
