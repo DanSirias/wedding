@@ -224,9 +224,12 @@ Light 2 #F3EDE2
 
   .home::before {
     content: "";
-    background: url('../src/images/couple.jpg');
+    background: 
+    linear-gradient(rgba(0, 0, 0, 0.02),rgba(0, 0, 0, 0.09), rgba(238, 231, 201, 0.637)), /* This adds the dark overlay */
+    url('../src/images/couple.jpg');
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
     opacity: 0.80; /* Adjust to your preferred opacity value */
     position: absolute;
     top: 0;
@@ -234,7 +237,7 @@ Light 2 #F3EDE2
     bottom: 0;
     left: 0;
     z-index: -1; /* Position it behind the content of .home */
-    background-position: calc(center - 40px) top; /* Move 10px to the left */
+    /* background-position: calc(cover -100px) top !important; */
     background-attachment: fixed; /* Stop scrolling */
   }
 
