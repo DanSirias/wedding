@@ -14,7 +14,6 @@ Salmon #FDCDAA
 */
 
 
-
 .App {
   text-align: center;
 }
@@ -32,19 +31,15 @@ Salmon #FDCDAA
   pointer-events: none;
 }
 
-
-
 .namelogo {
   height: 8vmin;
   pointer-events: none;
 }
 
-
 .namelogoPri {
   height: 11vmin;
   pointer-events: none;
 }
-
 
 .rsvp {
   font-family: 'Dawning of a New Day', cursive;
@@ -105,8 +100,6 @@ Salmon #FDCDAA
         opacity: 0.5
 }
 
-
-
 .error{
   border-color: red;
   border-width: 2;
@@ -132,8 +125,6 @@ Light #F9F6F1
 Light 2 #F3EDE2
 */
 
-
-
 .navbar {
   /*background-color: #99AA8B !important;  Maroon: 321115 */
   background-color: #F9F6F1 !important; /* Maroon: 321115 */
@@ -154,7 +145,7 @@ Light 2 #F3EDE2
 @media (min-width:375px)  { /* smartphones, iPhone, portrait 480x320 phones */ 
   body {
     margin: 0; /* Remove default body margin */
-    overflow: hidden; /* Prevent scrolling on smaller screens */
+    /*overflow: hidden;  Prevent scrolling on smaller screens */
   }
 
 
@@ -226,8 +217,10 @@ Light 2 #F3EDE2
 @media (min-width:641px)  { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */ }
 @media (min-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */ }
 @media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */ }
-@media (min-width:1281px) { /* hi-res laptops and desktops */ 
 
+
+
+@media (min-width:1281px) { /* hi-res laptops and desktops */ 
 
   .home {
     position: relative;
