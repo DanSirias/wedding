@@ -160,36 +160,41 @@ export const Travel: React.FC = () => {
             </Grid>
 
             <Grid item xs={12} md={4} lg={8} sx={{
-                width: { sm: '100%', md: '60%' },
-                display: 'flex',
-                flexDirection: 'column',
-                marginLeft: 0, 
-                marginRight: 0, 
-                marginTop: 5, 
-                justifyContent: "center",
-                alignItems: "center", // Center children horizontally
+              width: { sm: '100%', md: '60%' },
+              display: 'flex',
+              flexDirection: 'column',
+              marginLeft: 0,
+              marginRight: 0,
+              marginTop: 5,
+              justifyContent: "center",
+              alignItems: "center", // Center children horizontally
             }}>
-            <Card sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
-              <Card sx={{ display: 'flex' }}>
-                <CardContent sx={{ flex: 1 }}>
-                  <Typography component="h2" variant="h5">
-                  Where to Stay
-                  </Typography>
-                  <Typography variant="subtitle1" color="text.secondary" paragraph>
-                  We have room blocks for our guests at the Houston Marriott West Loop by The Galleria. Feel free to reserved one of the blocked rooms under the wedding name in your invitaion or find accommodations nearby.
-                  </Typography>
-                  <Typography variant="subtitle1" color="primary">
-                    <Button href="https://www.marriott.com/en-us/hotels/houwl-houston-marriott-west-loop-by-the-galleria/overview/" size="small">View Hotel...</Button>
-                  </Typography>
-                </CardContent>
-                <CardMedia
-                  component="img"
-                  sx={{ width: 250, display: { xs: 'none', sm: 'block' } }}
-                  image={marriott}
-                  alt="TEST"
-                />
+              <Card sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
+                <Card sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
+                  <CardMedia
+                    component="img"
+                    sx={{
+                      width: { xs: 'auto', sm: 450 }, // Set width to 'auto' for mobile and 250 for other screen sizes
+                      height: 'auto',
+                      display: 'block', // Always show image
+                      marginBottom: { xs: 2, sm: 0 }, // Add margin bottom in mobile view
+                    }}
+                    image={marriott}
+                    alt="TEST"
+                  />
+                  <CardContent sx={{ flex: 1 }}>
+                    <Typography component="h2" variant="h5">
+                      Where to Stay
+                    </Typography>
+                    <Typography variant="subtitle1" color="text.secondary" paragraph>
+                      We have room blocks for our guests at the Houston Marriott West Loop by The Galleria. Feel free to reserve one of the blocked rooms under the wedding name in your invitation or find accommodations nearby.
+                    </Typography>
+                    <Typography variant="subtitle1" color="primary">
+                      <Button href="https://www.marriott.com/en-us/hotels/houwl-houston-marriott-west-loop-by-the-galleria/overview/" size="small">View Hotel...</Button>
+                    </Typography>
+                  </CardContent>
+                </Card>
               </Card>
-            </Card>
             </Grid>
 
 
