@@ -12,6 +12,7 @@ import whata from '../images/whata.jpg'
 import galleria from '../images/galleria.jpg'
 import natsci from '../images/natsci.jpg'
 import waterfall from '../images/waterfall.jpg'
+import rooftop from '../images/zon23.jpg'
 import nasa from '../images/nasa.jpg'
 import post from '../images/post.jpg'
 import Card from "@mui/material/Card";
@@ -25,7 +26,6 @@ import CardActionArea from '@mui/material/CardActionArea';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import VideoBackground from '../components/video'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -49,45 +49,50 @@ export const Travel: React.FC = () => {
   return (
     <>
       <ThemeProvider theme={defaultTheme}>
-        <VideoBackground />
-        {/* <div className="header-htx"></div> */}
-        <div style={{ width: "100%", marginTop:0 }}>
-        <Typography
+        <div className="header-htx"></div>
+        <div style={{ marginTop: 0}}>
+        <Container maxWidth={false} style={{ height: "100%"}} 
+          sx={{
+              pt: { xs: 4, sm: 6, md:2 },
+              pb: { xs: 8, sm:8,  md:2 },
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: { xs: 2, sm: 1 },
+              border: 0, borderColor: "lightgray", boxShadow: 4,
+              /* backgroundImage: `url(${hou})`, */
+              backgroundColor: "#f2f2f2", 
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}>
+            <Typography
               gutterBottom
               id="htx-title"
               component="div"
               align="center"
-              
             >
               Welcome to Houston, Texas
               <p style={{ fontSize: 15, marginTop: 0}}><em>"The Fourth Largest City in the USA"</em></p>
             </Typography>
-
-          <Container maxWidth={false} style={{ height: "100%", width: "100%", marginTop:250}} 
-          sx={{ border: 0, borderColor: "lightgray", boxShadow: 4,
-                /* backgroundImage: `url(${hou})`, */
-                backgroundColor: "#f2f2f2", 
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',}}>
-              
             <Box
             sx={{
-              width: '100%',
+              width: { sm: '100%', md: '60%' },
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              marginTop: 0,
               marginLeft: 0, 
               marginRight: 0 
             }}
             >
             <Typography id="" component="h2" variant="h5"
               sx={{
-                width: "100%",
                 display: "flex",
                 justifyContent:"center",
                 alignItems:"center",
               }}>
-              <p id="htx-header">
+              <p style={{ fontSize: 20, marginTop: 0}}>
                 Houston, the Space City, has set the stage for our special day,
                 and we couldn't be more excited to have you here. Together, let's
                 immerse ourselves in the city's Southern charm, vibrant energy,
@@ -107,9 +112,27 @@ export const Travel: React.FC = () => {
             </Box>
           </Container>
         </div>
-        <div style={{marginTop: 20,  marginLeft: 40, marginRight: 40   }}>
-          <Container id="cardHolder" maxWidth={false} style={{ height: "100%", width: "100%" }}>
-            <Grid className="cardsContainer" item xs={12} md={6} lg={8}>
+        <div style={{marginTop: 2,  }}>
+        <Container id="cardHolder" maxWidth={false}       
+              sx={{
+                  pt: { xs: 4, sm: 12 },
+                  pb: { xs: 8, sm: 16 },
+                  position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center', // Center children horizontally
+              }}
+          >
+            <Grid item xs={12} md={4} lg={8} sx={{
+                width: { sm: '100%', md: '60%' },
+                display: 'flex',
+                flexDirection: 'column',
+                marginLeft: 0, 
+                marginRight: 0, 
+                marginTop: 0, 
+                justifyContent: "center",
+                alignItems: "center", // Center children horizontally
+            }}>
             <Card sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
               <Card sx={{ display: 'flex' }}>
                 <CardContent sx={{ flex: 1 }}>
@@ -135,7 +158,7 @@ export const Travel: React.FC = () => {
             </Grid>
             <Typography id="reccs" component="h2" variant="h5"
             sx={{
-              width: "100%",
+
               display: "flex",
               justifyContent:"center",
               alignItems:"center",
@@ -144,24 +167,24 @@ export const Travel: React.FC = () => {
             </Typography>
             <Typography id="" component="h5" variant="h5"   
             sx={{
-                width: "100%",
-                marginTop: 0, 
-                display: "flex",
-                justifyContent:"left",
-                alignItems:"left",
+              width: "60%",
+              marginTop: 4, 
+              display: "flex",
+              justifyContent:"left",
+              alignItems:"left",
+              fontWeight: "bold", 
               }}>
                Food: 
             </Typography>
 
-            <Box   sx={{
-                width: "100%",
-                marginTop: 0, 
-                justifyContent:"center",
-                alignItems:"center",
-                align:"center"
-              }}>
-            <Grid container justifyContent="center" rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3, lg:"auto"}}>
-              <Grid item xs={12}  md={4} lg={'auto'}>
+            <Box sx={{
+                width: { sm: '100%', md: '60%' },
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: "center", // Center children horizontally
+            }}>
+    <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: "auto" }}>
+              <Grid item xs={12}  md={6} lg={'auto'}>
                 <Card sx={{ maxWidth: 345, border: 1, borderColor: "lightgray", boxShadow: 2 }}>
                 <CardMedia
                   component="img"
@@ -182,7 +205,7 @@ export const Travel: React.FC = () => {
                 </CardActions>
               </Card>
               </Grid>
-              <Grid item xs={12}  md={4} lg={'auto'}>
+              <Grid item xs={12}  md={6} lg={'auto'}>
               <Card sx={{ maxWidth: 345, border: 1, borderColor: "lightgray", boxShadow: 2 }}>
               <CardMedia
                   component="img"
@@ -203,7 +226,7 @@ export const Travel: React.FC = () => {
                 </CardActions>
               </Card>
               </Grid>
-              <Grid item xs={12} md={4} lg={'auto'}>
+              <Grid item xs={12} md={6} lg={'auto'}>
                 <Card sx={{ maxWidth: 345, border: 1, borderColor: "lightgray", boxShadow: 2 }}>
                 <CardMedia
                   component="img"
@@ -224,7 +247,7 @@ export const Travel: React.FC = () => {
                 </CardActions>
               </Card>
               </Grid>
-              <Grid item xs={12} md={4} lg={'auto'}>
+              <Grid item xs={12} md={6} lg={'auto'}>
                 <Card sx={{ maxWidth: 345, border: 1, borderColor: "lightgray", boxShadow: 2 }}>
                 <CardMedia
                   component="img"
@@ -245,13 +268,34 @@ export const Travel: React.FC = () => {
                 </CardActions>
               </Card>
               </Grid>
+              <Grid item xs={12} md={6} lg={'auto'}>
+                <Card sx={{ maxWidth: 345, border: 1, borderColor: "lightgray", boxShadow: 2 }}>
+                <CardMedia
+                  component="img"
+                  alt="rooftop"
+                  height="140"
+                  image={rooftop}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                  Z on 23 Rooftop
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                   Visit Houston’s highest open-air rooftop bar in Downtown.
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button href="https://www.zon23rooftop.com/" size="small">View...</Button>
+                </CardActions>
+              </Card>
+              </Grid>
             </Grid>
             </Box>
 
 
             <Typography id="" component="h5" variant="h5"   
             sx={{
-                width: "100%",
+                width: "60%",
                 marginTop: 8, 
                 display: "flex",
                 justifyContent:"left",
@@ -259,14 +303,13 @@ export const Travel: React.FC = () => {
               }}>
                Sights and Attractions: 
             </Typography>
-            <Box   sx={{
-                width: "100%",
-                marginTop: 0, 
-                justifyContent:"center",
-                alignItems:"center",
-                align:"center"
-              }}>
-            <Grid container justifyContent="center" rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3, lg:"auto"}}>
+            <Box sx={{
+              width: { sm: '100%', md: '60%' },
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: "center", // Center children horizontally
+            }}>
+          <Grid container justifyContent="center" rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: "auto" }}>
               <Grid item xs={12}  md={4} lg={'auto'}>
                 <Card sx={{ maxWidth: 345, border: 1, borderColor: "lightgray", boxShadow: 2 }}>
                 <CardMedia
