@@ -449,13 +449,13 @@ export const Travel: React.FC = () => {
                   alt="Nasa"
                   height="140"
                   image={nasa}
-                />
+                /> 
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
                   NASA Space Center
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                   Houston, We Have a Problem... Visit NASA, where it all happened! 
+                   Houston, We Have a Wedding... Visit NASA, where it all happened! 
                   </Typography>
                 </CardContent>
                 <CardActions>
