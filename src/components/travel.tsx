@@ -125,25 +125,25 @@ export const Travel: React.FC = () => {
                   alignItems: 'center', // Center children horizontally
               }}
           >
-            <Grid item xs={12} md={4} lg={8} sx={{
-                width: { sm: '100%', md: '60%' },
-                display: 'flex',
-                flexDirection: 'column',
-                marginLeft: 0, 
-                marginRight: 0, 
-                marginTop: 0, 
-                justifyContent: "center",
-                alignItems: "center", // Center children horizontally
-            }}>
+          <Grid item xs={12} md={4} lg={8} sx={{
+            width: { sm: '100%', md: '60%' },
+            display: 'flex',
+            flexDirection: 'column',
+            marginLeft: 0,
+            marginRight: 0,
+            marginTop: 0,
+            justifyContent: "center",
+            alignItems: "center", // Center children horizontally
+          }}>
             <Card sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
-              <Card sx={{ display: 'flex' }}>
+              <Card sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
                 <CardContent sx={{ flex: 1 }}>
                   <Typography component="h2" variant="h5">
-                  Getting To and Around Houston
+                    Getting To and Around Houston
                   </Typography>
                   <Typography variant="subtitle1" color="text.secondary" paragraph>
-                  We have two primary airports in the city: George Bush Intercontinental (IAH) and William P. Hobby (HOU). 
-                  Our wedding venue and chosen hotel are conveniently located just a 10-minute drive away from IAH. However, the choice of airport and airline is entirely up to you and your preferences.
+                    We have two primary airports in the city: George Bush Intercontinental (IAH) and William P. Hobby (HOU). 
+                    Our wedding venue and chosen hotel are conveniently located just a 10-minute drive away from IAH. However, the choice of airport and airline is entirely up to you and your preferences.
                   </Typography>
                   <Typography variant="subtitle1" color="primary">
                     <Button href="https://fly2houston.com/iah/airlines" size="small">View IAH...</Button>
@@ -151,13 +151,18 @@ export const Travel: React.FC = () => {
                 </CardContent>
                 <CardMedia
                   component="img"
-                  sx={{ width: 250, display: { xs: 'none', sm: 'block' } }}
+                  sx={{
+                    width: { xs: 350, sm: 450  }, // Set width to 'auto' for mobile and 250 for other screen sizes
+                    height: 'auto',
+                    display: 'block', // Always show image
+                    marginBottom: { xs: 2, sm: 0 }, // Add margin bottom in mobile view
+                  }}
                   image={iah}
                   alt="TEST"
                 />
               </Card>
             </Card>
-            </Grid>
+          </Grid>
 
             <Grid item xs={12} md={4} lg={8} sx={{
               width: { sm: '100%', md: '60%' },
@@ -174,7 +179,7 @@ export const Travel: React.FC = () => {
                   <CardMedia
                     component="img"
                     sx={{
-                      width: { xs: 'auto', sm: 450 }, // Set width to 'auto' for mobile and 250 for other screen sizes
+                      width: { xs: 350, sm: 450 }, // Set width to 'auto' for mobile and 250 for other screen sizes
                       height: 'auto',
                       display: 'block', // Always show image
                       marginBottom: { xs: 2, sm: 0 }, // Add margin bottom in mobile view
@@ -458,6 +463,28 @@ export const Travel: React.FC = () => {
                 </CardActions>
               </Card>
               </Grid>
+              <Grid item xs={12} md={4} lg={'auto'}>
+                <Card sx={{ maxWidth: 345, border: 1, borderColor: "lightgray", boxShadow: 2 }}>
+                <CardMedia
+                  component="img"
+                  alt="waterfall"
+                  height="140"
+                  image={waterfall}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                  Waterwall Park
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                   Located a short walk from the hotel, visit one of Houston's most iconic landmark! 
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button href="https://www.visithoustontexas.com/listings/water-wall/20713/" size="small">View...</Button>
+                </CardActions>
+              </Card>
+              </Grid>
+
             </Grid>
             </Box>
           </Container>
