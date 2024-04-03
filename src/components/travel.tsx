@@ -14,6 +14,7 @@ import natsci from '../images/natsci.jpg'
 import waterfall from '../images/waterfall.jpg'
 import rooftop from '../images/zon23.jpg'
 import nasa from '../images/nasa.jpg'
+import marriott from '../images/marriott.jpg'
 import post from '../images/post.jpg'
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -21,6 +22,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import CardActionArea from '@mui/material/CardActionArea';
 import { styled } from '@mui/material/styles';
@@ -156,6 +158,50 @@ export const Travel: React.FC = () => {
               </Card>
             </Card>
             </Grid>
+
+            <Grid item xs={12} md={4} lg={8} sx={{
+                width: { sm: '100%', md: '60%' },
+                display: 'flex',
+                flexDirection: 'column',
+                marginLeft: 0, 
+                marginRight: 0, 
+                marginTop: 5, 
+                justifyContent: "center",
+                alignItems: "center", // Center children horizontally
+            }}>
+            <Card sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
+              <Card sx={{ display: 'flex' }}>
+                <CardContent sx={{ flex: 1 }}>
+                  <Typography component="h2" variant="h5">
+                  Where to Stay
+                  </Typography>
+                  <Typography variant="subtitle1" color="text.secondary" paragraph>
+                  We have room blocks for our guests at the Houston Marriott West Loop by The Galleria. Feel free to reserved one of the blocked rooms under the wedding name in your invitaion or find accommodations nearby.
+                  </Typography>
+                  <Typography variant="subtitle1" color="primary">
+                    <Button href="https://www.marriott.com/en-us/hotels/houwl-houston-marriott-west-loop-by-the-galleria/overview/" size="small">View Hotel...</Button>
+                  </Typography>
+                </CardContent>
+                <CardMedia
+                  component="img"
+                  sx={{ width: 250, display: { xs: 'none', sm: 'block' } }}
+                  image={marriott}
+                  alt="TEST"
+                />
+              </Card>
+            </Card>
+            </Grid>
+
+
+            <Divider
+              sx={{
+                margin: "20px 0",
+                backgroundImage: "linear-gradient(to right, transparent, red, transparent)",
+                backgroundSize: "100% 2px",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
+
             <Typography id="reccs" component="h2" variant="h5"
             sx={{
 
@@ -165,17 +211,24 @@ export const Travel: React.FC = () => {
             }}>
                Our Top Recommendations for You: 
             </Typography>
+
+            <Box sx={{
+                width: { sm: '100%', md: '60%' },
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: "left", // Center children horizontally
+            }}>
             <Typography id="" component="h5" variant="h5"   
             sx={{
-              width: "60%",
               marginTop: 4, 
-              display: "flex",
               justifyContent:"left",
               alignItems:"left",
               fontWeight: "bold", 
               }}>
                Food: 
             </Typography>
+            </Box>
+
 
             <Box sx={{
                 width: { sm: '100%', md: '60%' },
@@ -183,7 +236,7 @@ export const Travel: React.FC = () => {
                 flexDirection: 'column',
                 alignItems: "center", // Center children horizontally
             }}>
-    <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: "auto" }}>
+            <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: "auto" }}>
               <Grid item xs={12}  md={6} lg={'auto'}>
                 <Card sx={{ maxWidth: 345, border: 1, borderColor: "lightgray", boxShadow: 2 }}>
                 <CardMedia
@@ -292,24 +345,30 @@ export const Travel: React.FC = () => {
             </Grid>
             </Box>
 
-
+            <Box sx={{
+                width: { sm: '100%', md: '60%' },
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: "left", // Center children horizontally
+            }}>
             <Typography id="" component="h5" variant="h5"   
             sx={{
-                width: "60%",
                 marginTop: 8, 
                 display: "flex",
                 justifyContent:"left",
                 alignItems:"left",
+                fontWeight: "bold",
               }}>
                Sights and Attractions: 
             </Typography>
+            </Box>
             <Box sx={{
-              width: { sm: '100%', md: '60%' },
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: "center", // Center children horizontally
+                width: { sm: '100%', md: '60%' },
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: "center", // Center children horizontally
             }}>
-          <Grid container justifyContent="center" rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: "auto" }}>
+           <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: "auto" }}>
               <Grid item xs={12}  md={4} lg={'auto'}>
                 <Card sx={{ maxWidth: 345, border: 1, borderColor: "lightgray", boxShadow: 2 }}>
                 <CardMedia
