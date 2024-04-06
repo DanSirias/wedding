@@ -9,10 +9,12 @@ import { Login } from "./components/login";
 import { RSVP } from './components/rsvp';
 import { Guests } from './components/guests';
 import { WeddingParty } from './components/weddingparty';
+import { Schedule } from "./components/schedule";
 import { Images } from './components/images';
 import { CssBaseline } from '@mui/material';
 import Navbar from './components/navbar';
 import Container from "@mui/material/Container";
+
 
 
 const styles = {
@@ -45,6 +47,7 @@ const App: React.FC = () => {
                     <Route path="/events" element={<Events />} />
                     <Route path="/weddingparty" element={<WeddingParty />} />
                     <Route path="/travel" element={<Travel />} />
+                    <Route path="/schedule" element={<Schedule />} />
                     <Route path="/gift" element={<GiftRegistry />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/images" element={<Images />} />

@@ -11,6 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AdbIcon from '@mui/icons-material/Adb';
 import Logo from '../images/RDlogo_light.svg'
 import { useNavigate } from "react-router-dom";
@@ -28,6 +29,7 @@ const pages = [
   { text: 'RSVP', href: '/rsvp', icon: ConfirmationNumber },
   { text: 'Wedding Party', href: '/weddingparty', icon: People },
   { text: 'Travel', href: '/travel', icon: Flight },
+  { text: 'Schedule', href: '/schedule', icon: CalendarTodayIcon},
   { text: 'Memories', href: '/images', icon: PhotoLibrary },
   { text: 'Gift Registry', href: '/gift', icon: CardGiftcard },
 ];
@@ -37,6 +39,7 @@ const iconMapping = {
   rsvp: ConfirmationNumber,
   wedding_party: People,
   travel: Flight,
+  schedule: CalendarTodayIcon, 
   memories: PhotoLibrary,
   gift: CardGiftcard,
 };
@@ -127,7 +130,7 @@ function Navbar() {
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" }, alignItems: "center" }}>
             <IconButton
-              size="large"
+              size="medium"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
@@ -160,12 +163,12 @@ function Navbar() {
                     <Link
                       component={RouterLink}
                       to={`${page.href}`}
-                      style={{ textDecoration: "None", color: "#321115" }}
+                      style={{ textDecoration: "None", color: "#321115", fontSize: 16 }}
                       color="inherit"
                       underline="none"
                       sx={{ mx: 2 }}
                     >
-                      <page.icon sx={{ marginRight: 1 }} /> {/* Render the icon */}
+                      <page.icon sx={{ marginRight: 1, fontSize: 16 }} /> {/* Render the icon */}
                       {page.text}
                     </Link>
                   </Typography>
@@ -206,17 +209,17 @@ function Navbar() {
               <Button
                 key={page.text}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "#321115", display: "block", textAlign: "left" }} // Align text to the left
+                sx={{ my: 1, color: "#321115", display: "block", textAlign: "left" }} // Align text to the left
               >
                 <Link
                   component={RouterLink}
                   to={page.href}
-                  style={{ textDecoration: "none", color: "#321115", display: "flex", alignItems: "center" }} // Align items horizontally centered
+                  style={{ textDecoration: "none", color: "#321115", display: "flex", alignItems: "center", fontSize:11 }} // Align items horizontally centered
                   color="inherit"
                   underline="none"
                   sx={{ mx: 2 }}
                 >
-                  <page.icon sx={{ marginRight: 1 }} /> {/* Render the icon */}
+                  <page.icon sx={{ marginRight: 1, fontSize:16 }} /> {/* Render the icon */}
                   {page.text}
                 </Link>{" "}
               </Button>
