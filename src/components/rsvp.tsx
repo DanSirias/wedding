@@ -90,7 +90,7 @@ export const RSVP: React.FC = () => {
       // Handle form submission logic here
       console.log('Form Submitted', data);
     } catch (err) {
-      setError('Error submitting RSVP. Please try again.');
+      setError('Error submitting RSVP. Please try again or contact us.');
     }
   };
 
