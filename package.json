@@ -1,5 +1,5 @@
 {
-  "homepage": "https://rebeccaanddaniel.com/",
+  "homepage": "http://dansirias.github.io/wedding",
   "name": "wedding",
   "version": "0.1.0",
   "private": true,
@@ -34,7 +34,7 @@
   "scripts": {
     "start": "react-scripts start",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -b build",
+    "deploy": "gh-pages -b main -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
