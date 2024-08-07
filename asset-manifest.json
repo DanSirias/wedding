@@ -1,0 +1,42 @@
+{
+  "files": {
+    "main.css": "/wedding/static/css/main.bcf12865.css",
+    "main.js": "/wedding/static/js/main.890f2713.js",
+    "static/media/waterfall.jpg": "/wedding/static/media/waterfall.4175ee1f96eb8d0b81dc.jpg",
+    "static/media/daniel.jpg": "/wedding/static/media/daniel.c58c57ea71850e8b7124.jpg",
+    "static/media/treePic2.jpg": "/wedding/static/media/treePic2.c535042de28ffecab74a.jpg",
+    "static/media/htx2.jpg": "/wedding/static/media/htx2.1024da8f805bf6f4f11e.jpg",
+    "static/media/galleria.jpg": "/wedding/static/media/galleria.dad539619883843255ce.jpg",
+    "static/media/cocktail.jpg": "/wedding/static/media/cocktail.a04030c48f2660ae61ea.jpg",
+    "static/media/ring.jpg": "/wedding/static/media/ring.e38ae0cc7aa5ca983287.jpg",
+    "static/media/topgolf.jpg": "/wedding/static/media/topgolf.7870036219e3a2ad76a2.jpg",
+    "static/media/bench.jpg": "/wedding/static/media/bench.bad6dad66c800df6f705.jpg",
+    "static/media/zon23.jpg": "/wedding/static/media/zon23.4038a92312c25092c1bc.jpg",
+    "static/media/couple.jpg": "/wedding/static/media/couple.8af32e5d63769a5c44af.jpg",
+    "static/media/syp.jpg": "/wedding/static/media/syp.8e26de867ee9ae23ef15.jpg",
+    "static/media/nasa.jpg": "/wedding/static/media/nasa.c20bb96158707c199df0.jpg",
+    "static/media/postino.jpg": "/wedding/static/media/postino.d16a8d3a1876f96cc0e8.jpg",
+    "static/media/post.jpg": "/wedding/static/media/post.aa681146ecde9d47a70b.jpg",
+    "static/media/marriott.jpg": "/wedding/static/media/marriott.a633271e1ec2187bee73.jpg",
+    "static/media/thebell.jpg": "/wedding/static/media/thebell.9143a88c1b1e9ab4d4fc.jpg",
+    "static/media/alma2.jpg": "/wedding/static/media/alma2.b76550989588d04ee761.jpg",
+    "static/media/whata.jpg": "/wedding/static/media/whata.b5e272381d4804d6a69d.jpg",
+    "static/media/natsci.jpg": "/wedding/static/media/natsci.86c0123387763d84a77d.jpg",
+    "static/media/iah.jpg": "/wedding/static/media/iah.5df73d9b817714a74848.jpg",
+    "static/media/goodseafood.jpg": "/wedding/static/media/goodseafood.83f1cfd246fb64b1ae96.jpg",
+    "static/media/rebecca.jpg": "/wedding/static/media/rebecca.dfa19e8f1d9155b8307c.jpg",
+    "static/media/RDlogo_burgandy.svg": "/wedding/static/media/RDlogo_burgandy.7de42acc10f07a1d6728e17399f09d0e.svg",
+    "static/media/RDlogo_sage.svg": "/wedding/static/media/RDlogo_sage.3fa800b404ffc49f73011a8998f06fd2.svg",
+    "static/media/names.svg": "/wedding/static/media/names.3885f134d1ebe4293551261915cbf681.svg",
+    "static/media/WS.jpg": "/wedding/static/media/WS.7e9aa3f43788989e7a2d.jpg",
+    "static/media/AMZ.jpg": "/wedding/static/media/AMZ.4e30735b5f5f5d6f9e9b.jpg",
+    "static/media/camera.svg": "/wedding/static/media/camera.9ee49b549660e622dbf14419ea48f1b9.svg",
+    "index.html": "/wedding/index.html",
+    "main.bcf12865.css.map": "/wedding/static/css/main.bcf12865.css.map",
+    "main.890f2713.js.map": "/wedding/static/js/main.890f2713.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.bcf12865.css",
+    "static/js/main.890f2713.js"
+  ]
+}
