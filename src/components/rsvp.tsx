@@ -129,7 +129,7 @@ export const RSVP: React.FC = () => {
               )}
               disabled={loading}
             >
-              {loading ? 'Loading...' : 'View Invite'}
+              {loading ? 'Loading...' : 'View Invite Now'}
             </Button>
             {error && <Typography color="error">{error}</Typography>}
             {formData && (
