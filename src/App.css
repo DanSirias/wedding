@@ -393,3 +393,33 @@ Light 2 #F3EDE2
     display: block;
   }
 }
+
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  position: relative;
+  opacity: 0;
+  animation: fadeSlideIn 1s ease forwards; /* Apply animation */
+}
+
+.reveal.active {
+  opacity: 1;
+  animation: fadeSlideIn 1s ease forwards; /* Apply animation */
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+  animation: fadeSlideIn 2s ease; /* Apply animation */
+  animation-duration: 3s; 
+  animation-delay: 1s;
+}

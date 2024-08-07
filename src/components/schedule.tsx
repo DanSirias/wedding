@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useRef } from 'react';
+
 import "../App.css";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -9,18 +10,21 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
+import { styled, Theme } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Golf  from "../images/topgolf.jpg";
 import Rehersal  from "../images/postino.jpg";
 import Bell from "../images/thebell.jpg";
 import Waterfall from "../images/cocktail.jpg";
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  color: theme.palette.text.secondary,
+import ScrollAnimation from 'react-animate-on-scroll'; 
+import 'animate.css';
+
+const Item = styled(Paper)<{ theme: Theme }>((props: any) => ({
+  backgroundColor: props.theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...props.theme.typography.body2,
+  padding: props.theme.spacing(1),
+  color: props.theme.palette.text.secondary,
 }));
 
 
@@ -36,10 +40,10 @@ const defaultTheme = createTheme({
 
 const events = [
   {
-    title: "Welcome Party",
+    title: "Welcome Gathering",
     date: "April 10, 2024",
     time: "6:30PM-8:30PM",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    description: "We invite those of you who will be in Houston on Friday evening to gather with us! Come join for some food and drinks as we welcome you to the Texas.",
     address: "123 Event Street, City, Country",
     image: Golf,
   },
@@ -79,6 +83,29 @@ const events = [
 
 
 export const Schedule: React.FC = () => {
+  useEffect(() => {
+    const reveal = () => {
+      const reveals = document.querySelectorAll(".reveal");
+
+      reveals.forEach(element => {
+        const windowHeight = window.innerHeight;
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+
+        if (elementTop < windowHeight - elementVisible) {
+          element.classList.add("active");
+        } else {
+          element.classList.remove("active");
+        }
+      });
+    };
+    reveal(); // Call reveal function once when component mounts
+    window.addEventListener("scroll", reveal);
+    return () => {
+      window.removeEventListener("scroll", reveal); // Clean up event listener on unmount
+    };
+  }, []);
+
   return (
     <>
       <ThemeProvider theme={defaultTheme}>
@@ -149,7 +176,9 @@ export const Schedule: React.FC = () => {
               }}
           >
 
+
         <Grid container spacing={3}>
+
                 {events.map((event, index) => (
                   <Grid item xs={12} md={12} lg={12} key={index} sx={{
                     width: { sm: '100%', md: '60%' },
@@ -161,7 +190,7 @@ export const Schedule: React.FC = () => {
                     justifyContent: "center",
                     alignItems: "center", // Center children horizontally
                   }}>
-                    <Card sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
+                    <Card className="reveal" sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
                       <Card sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
                         <CardMedia
                           component="img"
@@ -181,7 +210,7 @@ export const Schedule: React.FC = () => {
                           <Typography variant="subtitle1" color="text.secondary" paragraph>
                             {event.date} | {event.time}
                           </Typography>
-                          <Typography variant="body2" gutterBottom>
+                          <Typography variant="body2" gutterBottom >
                             {event.description}
                           </Typography>
                           <Typography variant="body2" color="textSecondary">
@@ -192,9 +221,11 @@ export const Schedule: React.FC = () => {
                     </Card>
                   </Grid>
                 ))}
-              </Grid>
 
+              </Grid>
           </Container>
+
+
       </ThemeProvider>
     </>
   );
