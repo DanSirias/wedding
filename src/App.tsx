@@ -1,6 +1,6 @@
 import React from 'react';
 import "./App.css"
-import { HashRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, } from "react-router-dom";
 import {Home} from './components/home';
 import {Events} from './components/events';
 import {Travel} from './components/travel';
@@ -36,24 +36,24 @@ const styles = {
 
 const App: React.FC = () => {
   return (
-    <Router basename={process.env.PUBLIC_URL}>
-        <div className="" style={{ height: "100vh",}}>
-              <CssBaseline />
-                <Navbar />
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/rsvp" element={<RSVP />} />
-                    <Route path="/guests" element={<Guests />} />
-                    <Route path="/events" element={<Events />} />
-                    <Route path="/weddingparty" element={<WeddingParty />} />
-                    <Route path="/travel" element={<Travel />} />
-                    <Route path="/schedule" element={<Schedule />} />
-                    <Route path="/gift" element={<GiftRegistry />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/images" element={<Images />} />
-                  </Routes>
-      </div> 
-    </Router>
+      <Router basename={process.env.PUBLIC_URL}>
+        <div className="" style={{ height: "100vh" }}>
+          <CssBaseline />
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/rsvp" element={<RSVP />} />
+            <Route path="/guests" element={<Guests />} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/weddingparty" element={<WeddingParty />} />
+            <Route path="/travel" element={<Travel />} />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/gift" element={<GiftRegistry />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/images" element={<Images />} />
+          </Routes>
+        </div>
+      </Router>
   );
 };
 
