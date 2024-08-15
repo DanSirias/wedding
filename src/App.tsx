@@ -1,6 +1,6 @@
 import React from 'react';
 import "./App.css"
-import { HashRouter as Router, Route, Routes, } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, } from "react-router-dom";
 import {Home} from './components/home';
 import {Events} from './components/events';
 import {Travel} from './components/travel';
@@ -36,7 +36,7 @@ const styles = {
 
 const App: React.FC = () => {
   return (
-      <Router basename={process.env.PUBLIC_URL}>
+      <Router>
         <div className="" style={{ height: "100vh" }}>
           <CssBaseline />
           <Navbar />
