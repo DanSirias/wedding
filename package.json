@@ -1,8 +1,7 @@
 {
-  "homepage": "https://DanSirias.github.io/wedding",
   "name": "wedding",
   "version": "0.1.0",
-  "private": false,
+  "private": true,
   "dependencies": {
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
@@ -32,8 +31,6 @@
     "yup": "^1.4.0"
   },
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
