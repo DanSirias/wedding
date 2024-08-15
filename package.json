@@ -24,7 +24,7 @@
     "react-firebase-hooks": "^5.1.1",
     "react-router-dom": "^6.26.0",
     "react-scripts": "5.0.1",
-    "typescript": "^5.5.4",
+    "typescript": "^4.9.5",
     "uuid": "^10.0.0",
     "uuidv4": "^6.2.13",
     "web-vitals": "^4.2.3",
