@@ -62,7 +62,7 @@ export const RSVP: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD?pin=${pin}&lastName=${lastName}`);
+      const response = await fetch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?pin=${pin}&lastName=${lastName}`);
       
       if (!response.ok) {
         throw new Error('Error fetching data. Please check your PIN and Last Name.');
