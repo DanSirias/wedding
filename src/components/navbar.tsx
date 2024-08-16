@@ -163,7 +163,7 @@ function Navbar() {
                     <Link
                       component={RouterLink}
                       to={`${page.href}`}
-                      style={{ textDecoration: "None", color: "#321115", fontSize: 16 }}
+                      style={{ textDecoration: "None", color: "#321115", fontSize: 20 }}
                       color="inherit"
                       underline="none"
                       sx={{ mx: 2 }}
@@ -309,23 +309,3 @@ function Navbar() {
 }
 export default Navbar;
 
-
-
-{/* <Link component={RouterLink} to="/" color="inherit" underline="none" sx={{ mx: 2 }}>
-Home
-</Link>
-<Link component={RouterLink} to="/rsvp" color="inherit" underline="none" sx={{ mx: 2 }}>
-RSVP
-</Link>
-<Link component={RouterLink} to="/events" color="inherit" underline="none" sx={{ mx: 2 }}>
-Events
-</Link>
-<Link component={RouterLink} to="/wedding-party" color="inherit" underline="none" sx={{ mx: 2 }}>
-Wedding Party
-</Link>
-<Link component={RouterLink} to="/travel" color="inherit" underline="none" sx={{ mx: 2 }}>
-Travel
-</Link>
-<Link component={RouterLink} to="/gift-registry" color="inherit" underline="none" sx={{ mx: 2 }}>
-Gift Registry
-</Link> */}
