@@ -38,13 +38,13 @@ const schema = yup.object().shape({
   lastName: yup.string().required('Last Name is required'),
   email: yup.string().email('Invalid email format').required('Email is required'),
   phone: yup.string().required('Phone number is required'),
+  comments: yup.string(),
   guests: yup.array().of(
     yup.object().shape({
       firstName: yup.string().required('First Name is required'),
       lastName: yup.string().required('Last Name is required'),
       attending: yup.string().required('Attending status is required'),
       foodRestrictions: yup.string().oneOf(['None', 'Chicken', 'Vegan', 'Vegetarian']),
-      comments: yup.string(),
     })
   ).required(),
 });
@@ -156,6 +156,15 @@ export const RSVP: React.FC = () => {
                   error={!!errors.phone}
                   helperText={errors.phone?.message}
                 />
+                <TextField
+                  label="Comments"
+                  {...register('comments')}
+                  error={!!errors.comments}
+                  helperText={errors.comments?.message}
+                  fullWidth
+                  multiline
+                  rows={2}
+                />
                 <Typography variant="h6">Guests List</Typography>
                 {formData.guests.map((guest, index) => (
                   <Box key={index} sx={{ border: 1, borderColor: 'lightgray', p: 2, mb: 2 }}>
@@ -204,16 +213,6 @@ export const RSVP: React.FC = () => {
                           </FormControl>
                         </Grid>
                       )}
-                      <Grid item xs={12}>
-                        <TextField
-                          label="Comments"
-                          {...register(`guests.${index}.comments` as const)}
-                          defaultValue={guest.comments}
-                          fullWidth
-                          multiline
-                          rows={2}
-                        />
-                      </Grid>
                     </Grid>
                   </Box>
                 ))}
