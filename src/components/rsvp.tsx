@@ -18,23 +18,23 @@ import {
 } from '@mui/material';
 
 interface Guest {
-  firstName: string;
-  lastName: string;
-  foodRestrictions: string;
-  isAttending: boolean;
+  firstName: string; // Must be a string, cannot be undefined
+  lastName: string; // Must be a string, cannot be undefined
+  foodRestrictions?: string; // Optional, can be undefined
+  attending: string; // Must be a string, cannot be undefined
 }
 
 interface FormData {
-  rsvpId: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  comments: string;
-  guests: Guest[];
+  rsvpId: string; // Must be a string, cannot be undefined
+  lastName: string; // Must be a string, cannot be undefined
+  email: string; // Must be a string, cannot be undefined
+  phone: string; // Must be a string, cannot be undefined
+  comments?: string; // Optional, can be undefined
+  guests: Guest[]; // Must be an array of Guest objects
 }
 
 const schema = yup.object().shape({
-  rsvpId: yup.string().required('RSVP ID is required'),
+  rsvpId: yup.string().required('RSVP Pin is required'),
   lastName: yup.string().required('Last Name is required'),
   email: yup.string().email('Invalid email format').required('Email is required'),
   phone: yup.string().required('Phone number is required'),
@@ -43,14 +43,14 @@ const schema = yup.object().shape({
     yup.object().shape({
       firstName: yup.string().required('First Name is required'),
       lastName: yup.string().required('Last Name is required'),
-      foodRestrictions: yup.string().oneOf(['none', 'Chicken', 'Vegan', 'Vegetarian']),
-      isAttending: yup.boolean().required('Attending status is required'),
+      attending: yup.string().required('Attending status is required'),
+      foodRestrictions: yup.string().oneOf(['None', 'Chicken', 'Vegan', 'Vegetarian']),
     })
   ).required(),
 });
 
 export const RSVP: React.FC = () => {
-  const [formData, setFormData] = useState<FormData | null>(null);
+  const [formData, setFormData] = useState<FormData | any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,44 +58,29 @@ export const RSVP: React.FC = () => {
     resolver: yupResolver(schema),
   });
 
-  const fetchRSVPData = async (pin: string, lastName: string) => {
+  const fetchRSVPData = async (rsvpId: string, lastName: string) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?pin=${pin}&lastName=${lastName}`);
+      const response = await fetch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?pin=${rsvpId}&lastName=${lastName}`);
       
       if (!response.ok) {
         throw new Error('Error fetching data. Please check your PIN and Last Name.');
       }
-
-      const data = await response.json();
-      const parsedData: FormData = {
-        rsvpId: data[0].rsvpId.S,
-        lastName: data[0].lastName.S,
-        email: data[0].email.S,
-        phone: data[0].phone.S,
-        comments: data[0].comments.S,
-        guests: data[0].guests.L.map((guest: any) => ({
-          firstName: guest.M.firstName.S,
-          lastName: guest.M.lastName.S,
-          foodRestrictions: guest.M.foodRestrictions.S,
-          isAttending: guest.M.isAttending.BOOL,
-        }))
-      };
-      
-      setFormData(parsedData);
+  
+      const data: FormData = await response.json();
+      console.log(data); 
+      setFormData(data);
       
       // Populate form fields with fetched data
-      setValue('rsvpId', parsedData.rsvpId);
-      setValue('lastName', parsedData.lastName);
-      setValue('email', parsedData.email);
-      setValue('phone', parsedData.phone);
-      setValue('comments', parsedData.comments);
-      parsedData.guests.forEach((guest, index) => {
+      setValue('email', data.email);
+      setValue('phone', data.phone);
+      setValue('comments', data.comments);
+      data.guests.forEach((guest: Guest, index: number) => {
         setValue(`guests.${index}.firstName`, guest.firstName);
         setValue(`guests.${index}.lastName`, guest.lastName);
+        setValue(`guests.${index}.attending`, guest.attending);
         setValue(`guests.${index}.foodRestrictions`, guest.foodRestrictions);
-        setValue(`guests.${index}.isAttending`, guest.isAttending);
       });
     } catch (err) {
       setError((err as Error).message);
@@ -128,7 +113,7 @@ export const RSVP: React.FC = () => {
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Stack spacing={2} sx={{ width: '100%' }}>
             <TextField
-              label="RSVP ID"
+              label="RSVP Pin"
               {...register('rsvpId')}
               error={!!errors.rsvpId}
               helperText={errors.rsvpId?.message}
@@ -155,7 +140,7 @@ export const RSVP: React.FC = () => {
               <>
                 <Typography variant="h6">General Info</Typography>
                 <TextField
-                  label="RSVP ID"
+                  label="RSVP Pin"
                   value={formData.rsvpId}
                   InputProps={{ readOnly: true }}
                 />
@@ -181,7 +166,7 @@ export const RSVP: React.FC = () => {
                   rows={2}
                 />
                 <Typography variant="h6">Guests List</Typography>
-                {formData.guests.map((guest, index) => (
+                {formData.guests.map((guest : any, index : any) => (
                   <Box key={index} sx={{ border: 1, borderColor: 'lightgray', p: 2, mb: 2 }}>
                     <Grid container spacing={2}>
                       <Grid item xs={6}>
@@ -204,15 +189,15 @@ export const RSVP: React.FC = () => {
                         <FormControl fullWidth>
                           <InputLabel>Attending?</InputLabel>
                           <Select
-                            {...register(`guests.${index}.isAttending` as const)}
-                            defaultValue={guest.isAttending ? "Yes" : "No"}
+                            {...register(`guests.${index}.attending` as const)}
+                            defaultValue={guest.attending}
                           >
                             <MenuItem value="Yes">Yes</MenuItem>
                             <MenuItem value="No">No</MenuItem>
                           </Select>
                         </FormControl>
                       </Grid>
-                      {guest.isAttending && (
+                      {guest.attending === 'Yes' && (
                         <Grid item xs={6}>
                           <FormControl fullWidth>
                             <InputLabel>Food Restrictions</InputLabel>
@@ -220,7 +205,7 @@ export const RSVP: React.FC = () => {
                               {...register(`guests.${index}.foodRestrictions` as const)}
                               defaultValue={guest.foodRestrictions}
                             >
-                              <MenuItem value="none">None</MenuItem>
+                              <MenuItem value="None">None</MenuItem>
                               <MenuItem value="Chicken">Chicken</MenuItem>
                               <MenuItem value="Vegan">Vegan</MenuItem>
                               <MenuItem value="Vegetarian">Vegetarian</MenuItem>
