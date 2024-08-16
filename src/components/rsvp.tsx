@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -63,11 +62,15 @@ export const RSVP: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD', {
-        params: { pin, lastName },
-      });
-      const data = response.data as FormData;
+      const response = await fetch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD?pin=${pin}&lastName=${lastName}`);
+      
+      if (!response.ok) {
+        throw new Error('Error fetching data. Please check your PIN and Last Name.');
+      }
+
+      const data = await response.json() as FormData;
       setFormData(data);
+      
       // Populate form fields with fetched data
       setValue('email', data.email);
       setValue('phone', data.phone);
@@ -79,7 +82,7 @@ export const RSVP: React.FC = () => {
         setValue(`guests.${index}.comments`, guest.comments);
       });
     } catch (err) {
-      setError('Error fetching data. Please check your PIN and Last Name.');
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }
