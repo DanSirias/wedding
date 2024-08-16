@@ -22,7 +22,6 @@ interface Guest {
   lastName: string;
   attending: string;
   foodRestrictions?: string;
-  comments?: string;
 }
 
 interface FormData {
@@ -30,6 +29,7 @@ interface FormData {
   lastName: string;
   email: string;
   phone: string;
+  comments?: string;
   guests: Guest[];
 }
 
@@ -69,17 +69,18 @@ export const RSVP: React.FC = () => {
       }
 
       const data = await response.json() as FormData;
+      console.log(data); 
       setFormData(data);
       
       // Populate form fields with fetched data
       setValue('email', data.email);
       setValue('phone', data.phone);
+      setValue('comments', data.comments);
       data.guests.forEach((guest, index) => {
         setValue(`guests.${index}.firstName`, guest.firstName);
         setValue(`guests.${index}.lastName`, guest.lastName);
         setValue(`guests.${index}.attending`, guest.attending);
         setValue(`guests.${index}.foodRestrictions`, guest.foodRestrictions);
-        setValue(`guests.${index}.comments`, guest.comments);
       });
     } catch (err) {
       setError((err as Error).message);
