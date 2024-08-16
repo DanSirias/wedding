@@ -16,6 +16,24 @@ import {
   Select,
   MenuItem,
 } from '@mui/material';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+// TODO remove, this demo shouldn't need to reset the theme.
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#321115",
+      dark: "#847072"
+    }
+  }, 
+  components: {
+    MuiStack: {
+      defaultProps: {
+        useFlexGap: true,
+      },
+    },
+  },
+});
 
 interface Guest {
   firstName: string; // Must be a string, cannot be undefined
@@ -122,6 +140,8 @@ export const RSVP: React.FC = () => {
   };
 
   return (
+    <div className="rsvpBack" style={{ padding: 30, height: "100%" }}>
+    <ThemeProvider theme={defaultTheme}>
     <Container maxWidth="md">
       <CssBaseline />
       <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -256,6 +276,8 @@ export const RSVP: React.FC = () => {
         </form>
       </Box>
     </Container>
+    </ThemeProvider>
+    </div>
   );
 };
 
