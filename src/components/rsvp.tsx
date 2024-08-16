@@ -68,15 +68,33 @@ export const RSVP: React.FC = () => {
         throw new Error('Error fetching data. Please check your PIN and Last Name.');
       }
   
-      const data: FormData = await response.json();
-      console.log(data); 
-      setFormData(data);
-      
+      const dynamoData = await response.json();
+  
+      // Assuming the response is an array with one object
+      const data = dynamoData[0];
+  
+      const parsedData: FormData = {
+        rsvpId: data.rsvpId.S,
+        lastName: data.lastName.S,
+        email: data.email.S,
+        phone: data.phone.S,
+        comments: data.comments?.S,
+        guests: data.guests.L.map((guest: any) => ({
+          firstName: guest.M.firstName.S,
+          lastName: guest.M.lastName.S,
+          foodRestrictions: guest.M.foodRestrictions.S,
+          attending: guest.M.attending.BOOL ? "Yes" : "No",
+        })),
+      };
+  
+      console.log(parsedData); 
+      setFormData(parsedData);
+  
       // Populate form fields with fetched data
-      setValue('email', data.email);
-      setValue('phone', data.phone);
-      setValue('comments', data.comments);
-      data.guests.forEach((guest: Guest, index: number) => {
+      setValue('email', parsedData.email);
+      setValue('phone', parsedData.phone);
+      setValue('comments', parsedData.comments);
+      parsedData.guests.forEach((guest, index) => {
         setValue(`guests.${index}.firstName`, guest.firstName);
         setValue(`guests.${index}.lastName`, guest.lastName);
         setValue(`guests.${index}.attending`, guest.attending);
