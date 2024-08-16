@@ -20,21 +20,21 @@ import {
 interface Guest {
   firstName: string;
   lastName: string;
-  attending: string;
-  foodRestrictions?: string;
+  foodRestrictions: string;
+  isAttending: boolean;
 }
 
 interface FormData {
-  pin: string;
+  rsvpId: string;
   lastName: string;
   email: string;
   phone: string;
-  comments?: string;
+  comments: string;
   guests: Guest[];
 }
 
 const schema = yup.object().shape({
-  pin: yup.string().required('RSVP Pin is required'),
+  rsvpId: yup.string().required('RSVP ID is required'),
   lastName: yup.string().required('Last Name is required'),
   email: yup.string().email('Invalid email format').required('Email is required'),
   phone: yup.string().required('Phone number is required'),
@@ -43,8 +43,8 @@ const schema = yup.object().shape({
     yup.object().shape({
       firstName: yup.string().required('First Name is required'),
       lastName: yup.string().required('Last Name is required'),
-      attending: yup.string().required('Attending status is required'),
-      foodRestrictions: yup.string().oneOf(['None', 'Chicken', 'Vegan', 'Vegetarian']),
+      foodRestrictions: yup.string().oneOf(['none', 'Chicken', 'Vegan', 'Vegetarian']),
+      isAttending: yup.boolean().required('Attending status is required'),
     })
   ).required(),
 });
@@ -68,19 +68,34 @@ export const RSVP: React.FC = () => {
         throw new Error('Error fetching data. Please check your PIN and Last Name.');
       }
 
-      const data = await response.json() as FormData;
-      console.log(data); 
-      setFormData(data);
+      const data = await response.json();
+      const parsedData: FormData = {
+        rsvpId: data[0].rsvpId.S,
+        lastName: data[0].lastName.S,
+        email: data[0].email.S,
+        phone: data[0].phone.S,
+        comments: data[0].comments.S,
+        guests: data[0].guests.L.map((guest: any) => ({
+          firstName: guest.M.firstName.S,
+          lastName: guest.M.lastName.S,
+          foodRestrictions: guest.M.foodRestrictions.S,
+          isAttending: guest.M.isAttending.BOOL,
+        }))
+      };
+      
+      setFormData(parsedData);
       
       // Populate form fields with fetched data
-      setValue('email', data.email);
-      setValue('phone', data.phone);
-      setValue('comments', data.comments);
-      data.guests.forEach((guest, index) => {
+      setValue('rsvpId', parsedData.rsvpId);
+      setValue('lastName', parsedData.lastName);
+      setValue('email', parsedData.email);
+      setValue('phone', parsedData.phone);
+      setValue('comments', parsedData.comments);
+      parsedData.guests.forEach((guest, index) => {
         setValue(`guests.${index}.firstName`, guest.firstName);
         setValue(`guests.${index}.lastName`, guest.lastName);
-        setValue(`guests.${index}.attending`, guest.attending);
         setValue(`guests.${index}.foodRestrictions`, guest.foodRestrictions);
+        setValue(`guests.${index}.isAttending`, guest.isAttending);
       });
     } catch (err) {
       setError((err as Error).message);
@@ -113,10 +128,10 @@ export const RSVP: React.FC = () => {
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Stack spacing={2} sx={{ width: '100%' }}>
             <TextField
-              label="RSVP Pin"
-              {...register('pin')}
-              error={!!errors.pin}
-              helperText={errors.pin?.message}
+              label="RSVP ID"
+              {...register('rsvpId')}
+              error={!!errors.rsvpId}
+              helperText={errors.rsvpId?.message}
             />
             <TextField
               label="Last Name"
@@ -128,7 +143,7 @@ export const RSVP: React.FC = () => {
               variant="contained"
               color="primary"
               onClick={() => fetchRSVPData(
-                (document.querySelector('input[name="pin"]') as HTMLInputElement).value,
+                (document.querySelector('input[name="rsvpId"]') as HTMLInputElement).value,
                 (document.querySelector('input[name="lastName"]') as HTMLInputElement).value
               )}
               disabled={loading}
@@ -140,8 +155,8 @@ export const RSVP: React.FC = () => {
               <>
                 <Typography variant="h6">General Info</Typography>
                 <TextField
-                  label="RSVP Pin"
-                  value={formData.pin}
+                  label="RSVP ID"
+                  value={formData.rsvpId}
                   InputProps={{ readOnly: true }}
                 />
                 <TextField
@@ -189,15 +204,15 @@ export const RSVP: React.FC = () => {
                         <FormControl fullWidth>
                           <InputLabel>Attending?</InputLabel>
                           <Select
-                            {...register(`guests.${index}.attending` as const)}
-                            defaultValue={guest.attending}
+                            {...register(`guests.${index}.isAttending` as const)}
+                            defaultValue={guest.isAttending ? "Yes" : "No"}
                           >
                             <MenuItem value="Yes">Yes</MenuItem>
                             <MenuItem value="No">No</MenuItem>
                           </Select>
                         </FormControl>
                       </Grid>
-                      {guest.attending === 'Yes' && (
+                      {guest.isAttending && (
                         <Grid item xs={6}>
                           <FormControl fullWidth>
                             <InputLabel>Food Restrictions</InputLabel>
@@ -205,7 +220,7 @@ export const RSVP: React.FC = () => {
                               {...register(`guests.${index}.foodRestrictions` as const)}
                               defaultValue={guest.foodRestrictions}
                             >
-                              <MenuItem value="None">None</MenuItem>
+                              <MenuItem value="none">None</MenuItem>
                               <MenuItem value="Chicken">Chicken</MenuItem>
                               <MenuItem value="Vegan">Vegan</MenuItem>
                               <MenuItem value="Vegetarian">Vegetarian</MenuItem>
