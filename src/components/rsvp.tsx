@@ -63,7 +63,7 @@ export const RSVP: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('https://us-east4-wedding-f87da.cloudfunctions.net/function-rsvp', {
+      const response = await axios.get('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD', {
         params: { pin, lastName },
       });
       const data = response.data as FormData;
