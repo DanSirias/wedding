@@ -214,12 +214,12 @@ function Navbar() {
                 <Link
                   component={RouterLink}
                   to={page.href}
-                  style={{ textDecoration: "none", color: "#321115", display: "flex", alignItems: "center", fontSize:11 }} // Align items horizontally centered
+                  style={{ textDecoration: "none", color: "#321115", display: "flex", alignItems: "center", fontSize:14 }} // Align items horizontally centered
                   color="inherit"
                   underline="none"
                   sx={{ mx: 2 }}
                 >
-                  <page.icon sx={{ marginRight: 1, fontSize:16 }} /> {/* Render the icon */}
+                  <page.icon sx={{ marginRight: 1, fontSize:18 }} /> {/* Render the icon */}
                   {page.text}
                 </Link>{" "}
               </Button>

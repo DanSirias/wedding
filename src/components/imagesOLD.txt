@@ -1,0 +1,256 @@
+import React, { SyntheticEvent, ChangeEvent, FormEvent, ChangeEventHandler } from "react";
+import { useForm } from "react-hook-form";
+import { useState, useEffect } from 'react';
+import * as yup from "yup";
+import { auth, googleProvider } from "../backend/firebase-config";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  listAll,
+  list,UploadTask, UploadTaskSnapshot
+} from "firebase/storage";
+import { useNavigate } from "react-router-dom";
+import "../App.css";
+import Avatar from "@mui/material/Avatar";
+import cam from '../images/camera.svg'
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { shadows } from '@mui/system';
+import Logo from '../images/RDlogo_sage.svg'; 
+import LetterLogo from '../images/names.svg';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from "@mui/material/FormControl";
+import Select from '@mui/material/Select';
+import { SelectChangeEvent } from '@mui/material';
+import date from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { addDoc, collection } from "firebase/firestore"; //this is how you add a document back to the database
+import { db } from "../backend/firebase-config";
+import { storage } from "../backend/firebase-config";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { serverTimestamp } from 'firebase/firestore'; 
+import { uuid } from 'uuidv4';
+import Dropzone from "react-dropzone";
+import {RetrivedImages} from './retreiveImages'
+import { Dialog, DialogTitle } from '@mui/material';
+
+const createdOn_timestamp = serverTimestamp(); 
+
+// TODO remove, this demo shouldn't need to reset the theme.
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#321115",
+      dark: "#847072"
+    }
+  }, 
+});
+
+export const Images = () => {
+  const [file, setFile] = useState<File | null>(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [comment, setComment] = useState("");
+  const [percent, setPercent] = useState(0);
+  const [galleryKey, setGalleryKey] = useState(0); // Add galleryKey state
+  const [open, setOpen] = useState(false);
+
+const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    }
+  };
+
+const handleUpload = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!file) {
+      alert("Please select an image.");
+      return;
+    }
+    try {
+      const imageRef = ref(storage, `eventImages/${file.name}`);
+      await uploadBytes(imageRef, file);
+      const downloadURL = await getDownloadURL(imageRef);
+      const imageData = {
+        firstName,
+        lastName,
+        comment,
+        imageName: file.name,
+        dateUpload: new Date().toISOString(),
+        imageURL: downloadURL,
+      };
+      await addDoc(collection(db, "images"), imageData);
+      // Reset form
+      setFile(null);
+      setFirstName("");
+      setLastName("");
+      setComment("");
+      setPercent(0);
+      setOpen(true);
+      //alert("Image uploaded successfully!");
+      setTimeout(() => {
+        setOpen(false);
+      }, 3000);
+      setGalleryKey((prevKey) => prevKey + 1);
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while uploading the image.");
+    }
+  };
+
+      const handleClose = () => {
+        setOpen(false);
+      };
+
+
+
+
+// Define your custom theme if needed
+const theme = createTheme();
+
+return (
+  <div className="" style={{ padding: 30, height: "100%" }}>
+    <ThemeProvider theme={defaultTheme}>
+        <Container
+          sx={{
+            border: 1,
+            borderColor: "lightgray",
+            boxShadow: 4,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+          className="imageShare"
+          component="main"
+          maxWidth="sm"
+        >
+          <CssBaseline />
+
+          <Typography id="reccs" component="h2" variant="h5">
+            Making Memories Together
+          </Typography>
+          <Typography sx={{ mt: 1, fontSize: 15 }} className="rsvp">
+            Share your wedding pictures with us!
+          </Typography>
+
+          <Box component="form" onSubmit={handleUpload} noValidate 
+            sx={{ mt: 1, textAlign: 'center' }}>
+              <label htmlFor="upload-button">
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="upload-button"
+                  style={{ display: 'none' }}
+                  onChange={handleFileChange}
+                />
+                <span
+                  className="upload-button"
+                  style={{
+                    display: 'inline-block',
+                    cursor: 'pointer',
+                    padding: '25px',
+                    border: '1px dashed lightgray',
+                    borderRadius: '4px',
+                    textAlign: 'center',
+                    margin: 10,
+                  }}
+                >
+                    <img
+                      src={cam}
+                      alt="Upload"
+                      style={{
+                        width: '24px',
+                        height: '24px',
+                        marginRight: '8px',
+                        verticalAlign: 'middle',
+                      }}
+                    />
+                  {file ? file.name : 'Upload Image'}
+                </span>
+              </label>  
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  margin="none"
+                  size="small"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  margin="none"
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  size="small"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  margin="none"
+                  fullWidth
+                  id="questionsComments"
+                  label="Leave a Note"
+                  size="small"
+                  multiline
+                  rows={4}
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                />
+              </Grid>
+            </Grid>
+            <Typography sx={{ mt: 0, fontSize: 15, color: "grey", textAlign: 'left' }} className="rsvp">
+              *required
+            </Typography>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 0, mb: 2 }}
+              color="primary"
+            >
+              Upload Image
+            </Button>
+            <Dialog open={open} onClose={handleClose}>
+              <img id="" className="logo" src={Logo}/>
+              <DialogTitle>Thank you</DialogTitle>
+            </Dialog>
+          </Box>
+        </Container>
+      <Container  maxWidth="xl" style={{ height: "100%", width: "100%" }}>
+      <RetrivedImages key={galleryKey} />
+      </Container>
+    </ThemeProvider>
+  </div>
+);
+};
+

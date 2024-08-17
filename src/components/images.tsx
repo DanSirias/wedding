@@ -1,61 +1,17 @@
-import React, { SyntheticEvent, ChangeEvent, FormEvent, ChangeEventHandler } from "react";
-import { useForm } from "react-hook-form";
-import { useState, useEffect } from 'react';
-import * as yup from "yup";
-import { auth, googleProvider } from "../backend/firebase-config";
-import {
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  signInWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  listAll,
-  list,UploadTask, UploadTaskSnapshot
-} from "firebase/storage";
-import { useNavigate } from "react-router-dom";
-import "../App.css";
-import Avatar from "@mui/material/Avatar";
-import cam from '../images/camera.svg'
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { shadows } from '@mui/system';
-import Logo from '../images/RDlogo_sage.svg'; 
-import LetterLogo from '../images/names.svg';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from "@mui/material/FormControl";
-import Select from '@mui/material/Select';
-import { SelectChangeEvent } from '@mui/material';
-import date from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { addDoc, collection } from "firebase/firestore"; //this is how you add a document back to the database
-import { db } from "../backend/firebase-config";
-import { storage } from "../backend/firebase-config";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { serverTimestamp } from 'firebase/firestore'; 
-import { uuid } from 'uuidv4';
-import Dropzone from "react-dropzone";
-import {RetrivedImages} from './retreiveImages'
 import { Dialog, DialogTitle } from '@mui/material';
+import cam from '../images/camera.svg';
+import "../App.css";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { RetrivedImages } from './retreiveImages';
 
-const createdOn_timestamp = serverTimestamp(); 
-
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme({
   palette: {
     primary: {
@@ -65,72 +21,71 @@ const defaultTheme = createTheme({
   }, 
 });
 
+// Replace this with your actual API Gateway endpoint
+const API_GATEWAY_URL = "https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images";
+
 export const Images = () => {
   const [file, setFile] = useState<File | null>(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [comment, setComment] = useState("");
-  const [percent, setPercent] = useState(0);
   const [galleryKey, setGalleryKey] = useState(0); // Add galleryKey state
   const [open, setOpen] = useState(false);
 
-const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
     }
   };
 
-const handleUpload = async (event: React.FormEvent) => {
+  const handleUpload = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!file) {
       alert("Please select an image.");
       return;
     }
     try {
-      const imageRef = ref(storage, `eventImages/${file.name}`);
-      await uploadBytes(imageRef, file);
-      const downloadURL = await getDownloadURL(imageRef);
-      const imageData = {
-        firstName,
-        lastName,
-        comment,
-        imageName: file.name,
-        dateUpload: new Date().toISOString(),
-        imageURL: downloadURL,
-      };
-      await addDoc(collection(db, "images"), imageData);
-      // Reset form
-      setFile(null);
-      setFirstName("");
-      setLastName("");
-      setComment("");
-      setPercent(0);
-      setOpen(true);
-      //alert("Image uploaded successfully!");
-      setTimeout(() => {
-        setOpen(false);
-      }, 3000);
-      setGalleryKey((prevKey) => prevKey + 1);
+      // Create form data to send in the POST request
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("firstName", firstName);
+      formData.append("lastName", lastName);
+      formData.append("comment", comment);
+      formData.append("dateUpload", new Date().toISOString());
+
+      const response = await fetch(API_GATEWAY_URL, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        // Reset form
+        setFile(null);
+        setFirstName("");
+        setLastName("");
+        setComment("");
+        setOpen(true);
+        setTimeout(() => {
+          setOpen(false);
+        }, 3000);
+        setGalleryKey((prevKey) => prevKey + 1);
+      } else {
+        alert("An error occurred while uploading the image.");
+      }
     } catch (error) {
       console.error(error);
       alert("An error occurred while uploading the image.");
     }
   };
 
-      const handleClose = () => {
-        setOpen(false);
-      };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-
-
-
-// Define your custom theme if needed
-const theme = createTheme();
-
-return (
-  <div className="" style={{ padding: 30, height: "100%" }}>
-    <ThemeProvider theme={defaultTheme}>
+  return (
+    <div className="" style={{ padding: 30, height: "100%" }}>
+      <ThemeProvider theme={defaultTheme}>
         <Container
           sx={{
             border: 1,
@@ -154,41 +109,40 @@ return (
             Share your wedding pictures with us!
           </Typography>
 
-          <Box component="form" onSubmit={handleUpload} noValidate 
-            sx={{ mt: 1, textAlign: 'center' }}>
-              <label htmlFor="upload-button">
-                <input
-                  type="file"
-                  accept="image/*"
-                  id="upload-button"
-                  style={{ display: 'none' }}
-                  onChange={handleFileChange}
-                />
-                <span
-                  className="upload-button"
+          <Box component="form" onSubmit={handleUpload} noValidate sx={{ mt: 1, textAlign: 'center' }}>
+            <label htmlFor="upload-button">
+              <input
+                type="file"
+                accept="image/*"
+                id="upload-button"
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
+              <span
+                className="upload-button"
+                style={{
+                  display: 'inline-block',
+                  cursor: 'pointer',
+                  padding: '25px',
+                  border: '1px dashed lightgray',
+                  borderRadius: '4px',
+                  textAlign: 'center',
+                  margin: 10,
+                }}
+              >
+                <img
+                  src={cam}
+                  alt="Upload"
                   style={{
-                    display: 'inline-block',
-                    cursor: 'pointer',
-                    padding: '25px',
-                    border: '1px dashed lightgray',
-                    borderRadius: '4px',
-                    textAlign: 'center',
-                    margin: 10,
+                    width: '24px',
+                    height: '24px',
+                    marginRight: '8px',
+                    verticalAlign: 'middle',
                   }}
-                >
-                    <img
-                      src={cam}
-                      alt="Upload"
-                      style={{
-                        width: '24px',
-                        height: '24px',
-                        marginRight: '8px',
-                        verticalAlign: 'middle',
-                      }}
-                    />
-                  {file ? file.name : 'Upload Image'}
-                </span>
-              </label>  
+                />
+                {file ? file.name : 'Upload Image'}
+              </span>
+            </label>  
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -241,42 +195,14 @@ return (
               Upload Image
             </Button>
             <Dialog open={open} onClose={handleClose}>
-              <img id="" className="logo" src={Logo}/>
               <DialogTitle>Thank you</DialogTitle>
             </Dialog>
           </Box>
         </Container>
-      <Container  maxWidth="xl" style={{ height: "100%", width: "100%" }}>
-      <RetrivedImages key={galleryKey} />
-      </Container>
-    </ThemeProvider>
-  </div>
-);
+        <Container maxWidth="xl" style={{ height: "100%", width: "100%" }}>
+          <RetrivedImages key={galleryKey} />
+        </Container>
+      </ThemeProvider>
+    </div>
+  );
 };
-/* 
-  
-          <Container style={{ maxWidth: "500px" }} fluid>
-        <Form className="mt-4">
-          <Form.Group controlId="formEmail">
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" placeholder="email" />
-          </Form.Group>
-          <Form.Group controlId="formPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="password" />
-          </Form.Group>
-          <Form.Row>
-            <Col xs={6}>
-              <Button type="button" block>
-                Sign Up
-              </Button>
-            </Col>
-            <Col xs={6}>
-              <Button type="button" variant="secondary" block>
-                Sign In
-              </Button>
-            </Col>
-          </Form.Row>
-        </Form>
-      </Container>
-  */
