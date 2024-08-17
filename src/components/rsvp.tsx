@@ -15,10 +15,17 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-// TODO remove, this demo shouldn't need to reset the theme.
+// Theme definition
 const defaultTheme = createTheme({
   palette: {
     primary: {
@@ -36,19 +43,19 @@ const defaultTheme = createTheme({
 });
 
 interface Guest {
-  firstName: string; // Must be a string, cannot be undefined
-  lastName: string; // Must be a string, cannot be undefined
-  foodRestrictions?: string; // Optional, can be undefined
-  attending: string; // Must be a string, cannot be undefined
+  firstName: string;
+  lastName: string;
+  foodRestrictions?: string;
+  attending: string;
 }
 
 interface FormData {
-  rsvpId: string; // Must be a string, cannot be undefined
-  lastName: string; // Must be a string, cannot be undefined
-  email: string; // Must be a string, cannot be undefined
-  phone: string; // Must be a string, cannot be undefined
-  comments?: string; // Optional, can be undefined
-  guests: Guest[]; // Must be an array of Guest objects
+  rsvpId: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  comments?: string;
+  guests: Guest[];
 }
 
 const schema = yup.object().shape({
@@ -76,11 +83,11 @@ export const RSVP: React.FC = () => {
     resolver: yupResolver(schema),
   });
 
-  const fetchRSVPData = async (rsvpId: string, lastName: string) => {
+  const fetchRSVPData = async (rsvpId: string) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?pin=${rsvpId}&lastName=${lastName}`);
+      const response = await fetch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?pin=${rsvpId}`);
       
       if (!response.ok) {
         throw new Error('Error fetching data. Please check your PIN and Last Name.');
@@ -141,142 +148,177 @@ export const RSVP: React.FC = () => {
 
   return (
     <div className="rsvpBack" style={{ padding: 30, height: "100%" }}>
-    <ThemeProvider theme={defaultTheme}>
-    <Container maxWidth="md">
-      <CssBaseline />
-      <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography component="h1" variant="h5">
-          RSVP Form
-        </Typography>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <Stack spacing={2} sx={{ width: '100%' }}>
-            <TextField
-              label="RSVP Pin"
-              {...register('rsvpId')}
-              error={!!errors.rsvpId}
-              helperText={errors.rsvpId?.message}
-            />
-            <TextField
-              label="Last Name"
-              {...register('lastName')}
-              error={!!errors.lastName}
-              helperText={errors.lastName?.message}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => fetchRSVPData(
-                (document.querySelector('input[name="rsvpId"]') as HTMLInputElement).value,
-                (document.querySelector('input[name="lastName"]') as HTMLInputElement).value
-              )}
-              disabled={loading}
-            >
-              {loading ? 'Loading...' : 'View Invite Now'}
-            </Button>
-            {error && <Typography color="error">{error}</Typography>}
-            {formData && (
-              <>
-                <Typography variant="h6">General Info</Typography>
+      <ThemeProvider theme={defaultTheme}>
+        <Container maxWidth="lg" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: 2, radius: "2px" }}>
+          <CssBaseline />
+          <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Typography id="reccs" component="h2" variant="h5"
+            sx={{
+
+              display: "flex",
+              justifyContent:"center",
+              alignItems:"center",
+            }}>
+               RSVP Form 
+            </Typography>
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+              <Stack spacing={2} sx={{ width: '100%' }}>
                 <TextField
                   label="RSVP Pin"
-                  value={formData.rsvpId}
-                  InputProps={{ readOnly: true }}
+                  {...register('rsvpId')}
+                  error={!!errors.rsvpId}
+                  helperText={errors.rsvpId?.message}
                 />
-                <TextField
-                  label="Email"
-                  {...register('email')}
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
-                />
-                <TextField
-                  label="Phone"
-                  {...register('phone')}
-                  error={!!errors.phone}
-                  helperText={errors.phone?.message}
-                />
-                <TextField
-                  label="Comments"
-                  {...register('comments')}
-                  error={!!errors.comments}
-                  helperText={errors.comments?.message}
-                  fullWidth
-                  multiline
-                  rows={2}
-                />
-                <Typography variant="h6">Guests List</Typography>
-                {formData.guests.map((guest : any, index : any) => (
-                  <Box key={index} sx={{ border: 1, borderColor: 'lightgray', p: 2, mb: 2 }}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={6}>
-                        <TextField
-                          label="First Name"
-                          value={guest.firstName}
-                          InputProps={{ readOnly: true }}
-                          fullWidth
-                        />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <TextField
-                          label="Last Name"
-                          value={guest.lastName}
-                          InputProps={{ readOnly: true }}
-                          fullWidth
-                        />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <FormControl fullWidth>
-                          <InputLabel>Attending?</InputLabel>
-                          <Select
-                            {...register(`guests.${index}.attending` as const)}
-                            defaultValue={guest.attending}
-                          >
-                            <MenuItem value="Yes">Yes</MenuItem>
-                            <MenuItem value="No">No</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      {guest.attending === 'Yes' && (
-                        <Grid item xs={6}>
-                          <FormControl fullWidth>
-                            <InputLabel>Food Restrictions</InputLabel>
-                            <Select
-                              {...register(`guests.${index}.foodRestrictions` as const)}
-                              defaultValue={guest.foodRestrictions}
-                            >
-                              <MenuItem value="None">None</MenuItem>
-                              <MenuItem value="Chicken">Chicken</MenuItem>
-                              <MenuItem value="Vegan">Vegan</MenuItem>
-                              <MenuItem value="Vegetarian">Vegetarian</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                      )}
-                    </Grid>
-                  </Box>
-                ))}
-                <Stack direction="row" spacing={2}>
+                {!formData && (
                   <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={handleClear}
-                  >
-                    Clear
-                  </Button>
-                  <Button
-                    type="submit"
                     variant="contained"
                     color="primary"
+                    onClick={() => fetchRSVPData(
+                      (document.querySelector('input[name="rsvpId"]') as HTMLInputElement).value
+                    )}
+                    disabled={loading}
                   >
-                    RSVP Now
+                    {loading ? 'Loading...' : 'View RSVP'}
                   </Button>
-                </Stack>
-              </>
-            )}
-          </Stack>
-        </form>
-      </Box>
-    </Container>
-    </ThemeProvider>
+                )}
+                {error && <Typography color="error">{error}</Typography>}
+                {formData && (
+                  <Grid container spacing={2}>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="h6">Contact Info</Typography>
+                        {/* Email and Phone on the same row with labels outside */}
+                        <Grid container spacing={2} alignItems="center" sx={{ marginBottom: 2}}>
+                          <Grid item xs={3}>
+                            <Typography variant="body1">Email:</Typography>
+                          </Grid>
+                          <Grid item xs={9}>
+                            <TextField
+                              {...register('email')}
+                              error={!!errors.email}
+                              helperText={errors.email?.message}
+                              variant="outlined"
+                              fullWidth
+                            />
+                          </Grid>
+                        </Grid>
+                        <Grid container spacing={2} alignItems="center" sx={{ marginBottom: 2 }}>
+                          <Grid item xs={3}>
+                            <Typography variant="body1">Phone:</Typography>
+                          </Grid>
+                          <Grid item xs={9}>
+                            <TextField
+                              {...register('phone')}
+                              error={!!errors.phone}
+                              helperText={errors.phone?.message}
+                              variant="outlined"
+                              fullWidth
+                            />
+                          </Grid>
+                        </Grid>
+                        {/* Comments field (multiline) with label outside */}
+                        <Grid container spacing={2} alignItems="center" sx={{ marginBottom: 2 }}>
+                          <Grid item xs={3}>
+                            <Typography variant="body1">Comments:</Typography>
+                          </Grid>
+                          <Grid item xs={9}>
+                            <TextField
+                              {...register('comments')}
+                              error={!!errors.comments}
+                              helperText={errors.comments?.message}
+                              multiline
+                              rows={2}
+                              variant="outlined"
+                              fullWidth
+                            />
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="h6">Guests List</Typography>
+                      <TableContainer component={Paper}>
+                        <Table>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell sx={{ fontWeight: 'bold' }}>First Name</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Last Name</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Attending</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Food Restrictions</TableCell>
+                          </TableRow>
+                        </TableHead>
+                          <TableBody>
+                            {formData.guests.map((guest: any, index: any) => (
+                              <TableRow key={index}>
+                                <TableCell>
+                                  <TextField
+                                    value={guest.firstName}
+                                    InputProps={{ readOnly: true }}
+                                    fullWidth
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    value={guest.lastName}
+                                    InputProps={{ readOnly: true }}
+                                    fullWidth
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <FormControl fullWidth>
+                                    <Select
+                                      {...register(`guests.${index}.attending` as const)}
+                                      defaultValue={guest.attending}
+                                    >
+                                      <MenuItem value="Yes">Yes</MenuItem>
+                                      <MenuItem value="No">No</MenuItem>
+                                    </Select>
+                                  </FormControl>
+                                </TableCell>
+                                <TableCell>
+                                  {guest.attending === 'Yes' ? (
+                                    <FormControl fullWidth>
+                                      <Select
+                                        {...register(`guests.${index}.foodRestrictions` as const)}
+                                        defaultValue={guest.foodRestrictions}
+                                      >
+                                        <MenuItem value="None">None</MenuItem>
+                                        <MenuItem value="Chicken">Chicken</MenuItem>
+                                        <MenuItem value="Vegan">Vegan</MenuItem>
+                                        <MenuItem value="Vegetarian">Vegetarian</MenuItem>
+                                      </Select>
+                                    </FormControl>
+                                  ) : (
+                                    <TextField
+                                      value="N/A"
+                                      InputProps={{ readOnly: true }}
+                                      fullWidth
+                                    />
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Grid>
+                    <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end', width: '100%', padding: 3 }}>
+                    <Button variant="outlined"color="secondary"onClick={handleClear}>
+                      Clear
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                    >
+                      RSVP Now
+                    </Button>
+                  </Stack>
+                  </Grid>
+                )}
+              </Stack>
+            </form>
+          </Box>
+        </Container>
+      </ThemeProvider>
     </div>
   );
 };
