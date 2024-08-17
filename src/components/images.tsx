@@ -24,49 +24,65 @@ const defaultTheme = createTheme({
 // Replace this with your actual API Gateway endpoint
 const API_GATEWAY_URL = "https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images";
 
+interface FormData {
+  file: File | null;
+  firstName: string;
+  lastName: string;
+  comment: string;
+}
+
 export const Images = () => {
-  const [file, setFile] = useState<File | null>(null);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [comment, setComment] = useState("");
+  const [formData, setFormData] = useState<FormData>({
+    file: null,
+    firstName: "",
+    lastName: "",
+    comment: "",
+  });
   const [galleryKey, setGalleryKey] = useState(0);
   const [open, setOpen] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
-      setFile(selectedFile);
+      setFormData({ ...formData, file: selectedFile });
     }
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = event.target;
+    setFormData({ ...formData, [id]: value });
   };
 
   const handleUpload = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!file) {
+    if (!formData.file) {
       alert("Please select an image.");
       return;
     }
     try {
       // Create form data to send in the POST request
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("firstName", firstName);
-      formData.append("lastName", lastName);
-      formData.append("comment", comment);
-      formData.append("dateUpload", new Date().toISOString());
+      const uploadData = new FormData();
+      uploadData.append("file", formData.file);
+      uploadData.append("firstName", formData.firstName);
+      uploadData.append("lastName", formData.lastName);
+      uploadData.append("comment", formData.comment);
+      uploadData.append("dateUpload", new Date().toISOString());
 
       // Send the POST request with the FormData
       const response = await fetch(API_GATEWAY_URL, {
         method: "POST",
-        body: formData,
+        body: uploadData,
         // No need to set Content-Type header manually, as FormData handles it
       });
 
       if (response.ok) {
         // Reset form
-        setFile(null);
-        setFirstName("");
-        setLastName("");
-        setComment("");
+        setFormData({
+          file: null,
+          firstName: "",
+          lastName: "",
+          comment: "",
+        });
         setOpen(true);
         setTimeout(() => {
           setOpen(false);
@@ -142,7 +158,7 @@ export const Images = () => {
                     verticalAlign: 'middle',
                   }}
                 />
-                {file ? file.name : 'Upload Image'}
+                {formData.file ? formData.file.name : 'Upload Image'}
               </span>
             </label>  
             <Grid container spacing={2}>
@@ -154,8 +170,8 @@ export const Images = () => {
                   fullWidth
                   id="firstName"
                   label="First Name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  value={formData.firstName}
+                  onChange={handleInputChange}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -166,21 +182,21 @@ export const Images = () => {
                   id="lastName"
                   label="Last Name"
                   size="small"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  value={formData.lastName}
+                  onChange={handleInputChange}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   margin="none"
                   fullWidth
-                  id="questionsComments"
+                  id="comment"
                   label="Leave a Note"
                   size="small"
                   multiline
                   rows={4}
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
+                  value={formData.comment}
+                  onChange={handleInputChange}
                 />
               </Grid>
             </Grid>
