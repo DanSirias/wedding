@@ -29,7 +29,7 @@ export const Images = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [comment, setComment] = useState("");
-  const [galleryKey, setGalleryKey] = useState(0); // Add galleryKey state
+  const [galleryKey, setGalleryKey] = useState(0);
   const [open, setOpen] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,9 +54,11 @@ export const Images = () => {
       formData.append("comment", comment);
       formData.append("dateUpload", new Date().toISOString());
 
+      // Send the POST request with the FormData
       const response = await fetch(API_GATEWAY_URL, {
         method: "POST",
         body: formData,
+        // No need to set Content-Type header manually, as FormData handles it
       });
 
       if (response.ok) {
