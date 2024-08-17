@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 export const Images = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -49,20 +50,17 @@ export const Images = () => {
         };
 
         try {
-          // Send the payload to your API Gateway
-          const response = await fetch('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', {
-            method: 'POST',
-            body: JSON.stringify(payload),
+          // Send the payload to your API Gateway using Axios
+          const response = await axios.post('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', payload, {
             headers: {
               'Content-Type': 'application/json'
-            },
+            }
           });
 
-          const data = await response.json();
-          setResponseMessage(`Success: ${data}`);
+          setResponseMessage(`Success: ${response.data}`);
         } catch (error) {
           console.error('Error uploading image:', error);
-          setResponseMessage(`Error: ${(error as Error).message}`);
+          setResponseMessage(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
       };
 
@@ -80,5 +78,3 @@ export const Images = () => {
     </div>
   );
 };
-
-
