@@ -109,11 +109,6 @@ export const RetrivedImages = () => {
                       height="240"
                       image={post.imageUrl}
                     />
-                    <CardContent>
-                      <Typography variant="body2" color="text.secondary">
-                        {post.comment ? post.comment : "No comments available"}
-                      </Typography>
-                    </CardContent>
                   </Card>
                 </Grid>
               ))}
@@ -121,7 +116,7 @@ export const RetrivedImages = () => {
           </Box>
           <Dialog open={open} onClose={handleClose} maxWidth="md">
             <DialogContent>
-              <img src={selectedImage} alt="Large Image" style={{ width: '100%', height: 'auto' }} />
+              <img src={selectedImage} alt="Large Image" style={{ width: 'auto', height: 'auto' }} />
             </DialogContent>
           </Dialog>
         </Container>

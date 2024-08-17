@@ -1,6 +1,6 @@
 /* FONTS */
 /* font-family: 'Dawning of a New Day', cursive; */
-@import url('https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&display=swap'); 
+@import url('https://fonts.googleapis.com/css2?family=La+Belle+Aurore&display=swap'); 
 
 /* Color Pallette 
 
@@ -301,7 +301,8 @@ Light 2 #F3EDE2
   #reccs {
     font-size: 50px;
     color:  #321115;
-    font-family: 'Dawning of a New Day', cursive;
+    font-family: "La Belle Aurore", cursive;
+    font-weight: 400;
   }   
   
   #reccsHome {
