@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Container, Grid, Typography, Box, Card, CardMedia, Dialog, DialogContent,
+  Container, Grid, Typography, Box, Card, CardMedia, Dialog, DialogContent, CardContent,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -19,12 +19,12 @@ export interface imagePost {
   imageFileName: string;
   firstName: string;
   lastName: string;
-  comment: string;
-  dateUploaded: string; // ISO 8601 string
+  comment: string | null;
+  dateUploaded: string;
 }
 
 export const RetrivedImages = () => {
-  const [postsList, setPostList] = useState<imagePost[] | null>(null);
+  const [postsList, setPostList] = useState<imagePost[]>([]);
   const [open, setOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
 
@@ -35,9 +35,17 @@ export const RetrivedImages = () => {
         throw new Error(`Error fetching data: ${response.statusText}`);
       }
       const data = await response.json();
-      setPostList(data as imagePost[]);
+
+      // Check if the response has an "images" property that is an array
+      if (data && Array.isArray(data.images)) {
+        setPostList(data.images as imagePost[]);
+      } else {
+        console.error("API did not return an array of images:", data);
+        setPostList([]); // Fallback to an empty array
+      }
     } catch (error) {
       console.error("Failed to fetch images:", error);
+      setPostList([]); // Fallback to an empty array in case of error
     }
   };
 
@@ -79,7 +87,7 @@ export const RetrivedImages = () => {
             marginTop: 2,
           }}>
             <Grid container justifyContent="center" rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: "auto" }}>
-              {postsList && postsList.map((post) => (
+              {postsList.length > 0 && postsList.map((post) => (
                 <Grid
                   className="fadein"
                   item
@@ -101,6 +109,11 @@ export const RetrivedImages = () => {
                       height="240"
                       image={post.imageUrl}
                     />
+                    <CardContent>
+                      <Typography variant="body2" color="text.secondary">
+                        {post.comment ? post.comment : "No comments available"}
+                      </Typography>
+                    </CardContent>
                   </Card>
                 </Grid>
               ))}
