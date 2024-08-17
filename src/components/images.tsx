@@ -48,15 +48,16 @@ export const Images = () => {
     try {
       // Create form data to send in the POST request
       const formData = new FormData();
-      formData.append("file", file);
-      formData.append("firstName", firstName);
-      formData.append("lastName", lastName);
-      formData.append("comment", comment);
-      formData.append("dateUpload", new Date().toISOString());
+      formData.append("file", file);  // Appends the image file
+      formData.append("firstName", firstName);  // Appends the first name
+      formData.append("lastName", lastName);  // Appends the last name
+      formData.append("comment", comment);  // Appends the comment
+      formData.append("dateUpload", new Date().toISOString());  // Appends the date and time
 
+      // Send the POST request
       const response = await fetch(API_GATEWAY_URL, {
         method: "POST",
-        body: formData,
+        body: formData,  // Pass the FormData directly
       });
 
       if (response.ok) {
@@ -74,10 +75,10 @@ export const Images = () => {
         alert("An error occurred while uploading the image.");
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error during upload:", error);
       alert("An error occurred while uploading the image.");
     }
-  };
+};
 
   const handleClose = () => {
     setOpen(false);
