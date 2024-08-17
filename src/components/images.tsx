@@ -21,7 +21,6 @@ const defaultTheme = createTheme({
   }, 
 });
 
-// Replace this with your actual API Gateway endpoint
 const API_GATEWAY_URL = "https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images";
 
 export const Images = () => {
@@ -45,40 +44,53 @@ export const Images = () => {
       alert("Please select an image.");
       return;
     }
+
     try {
-      // Create form data to send in the POST request
-      const formData = new FormData();
-      formData.append("file", file);  // Appends the image file
-      formData.append("firstName", firstName);  // Appends the first name
-      formData.append("lastName", lastName);  // Appends the last name
-      formData.append("comment", comment);  // Appends the comment
-      formData.append("dateUpload", new Date().toISOString());  // Appends the date and time
+      // Convert the image file to a Base64 string
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = async () => {
+        const base64File = reader.result?.toString().split(',')[1]; // Get Base64 string without data prefix
 
-      // Send the POST request
-      const response = await fetch(API_GATEWAY_URL, {
-        method: "POST",
-        body: formData,  // Pass the FormData directly
-      });
+        // Construct the JSON payload
+        const payload = {
+          fileName: file.name,
+          fileContent: base64File,
+          firstName,
+          lastName,
+          comment,
+          dateUpload: new Date().toISOString()
+        };
 
-      if (response.ok) {
-        // Reset form
-        setFile(null);
-        setFirstName("");
-        setLastName("");
-        setComment("");
-        setOpen(true);
-        setTimeout(() => {
-          setOpen(false);
-        }, 3000);
-        setGalleryKey((prevKey) => prevKey + 1);
-      } else {
-        alert("An error occurred while uploading the image.");
-      }
+        // Send the POST request
+        const response = await fetch(API_GATEWAY_URL, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload),  // Pass the JSON payload
+        });
+
+        if (response.ok) {
+          // Reset form
+          setFile(null);
+          setFirstName("");
+          setLastName("");
+          setComment("");
+          setOpen(true);
+          setTimeout(() => {
+            setOpen(false);
+          }, 3000);
+          setGalleryKey((prevKey) => prevKey + 1);
+        } else {
+          alert("An error occurred while uploading the image.");
+        }
+      };
     } catch (error) {
       console.error("Error during upload:", error);
       alert("An error occurred while uploading the image.");
     }
-};
+  };
 
   const handleClose = () => {
     setOpen(false);
