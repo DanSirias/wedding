@@ -1,0 +1,88 @@
+import json
+import boto3
+import logging
+import uuid
+from datetime import datetime
+import base64
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+# Initialize S3 client
+s3 = boto3.client('s3')
+
+# Specify the S3 bucket name directly
+s3_bucket = 'siriaswedding'  # Replace with your actual S3 bucket name
+
+def lambda_handler(event, context):
+    try:
+        # Parse the incoming request body as JSON
+        payload = json.loads(event['body'])
+
+        # Extract fields from the JSON payload
+        file_name = payload.get('fileName', str(uuid.uuid4()))
+        file_content_base64 = payload['fileContent']  # Base64-encoded image data
+        first_name = payload.get('firstName', '')
+        last_name = payload.get('lastName', '')
+        comment = payload.get('comment', '')
+        date_upload = payload.get('dateUpload', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
+        # Decode the base64 file content
+        file_content = base64.b64decode(file_content_base64)
+
+        # Construct the S3 key (file path)
+        s3_key = f"images/{file_name}"
+
+        # Upload the file to S3
+        s3.put_object(Bucket=s3_bucket, Key=s3_key, Body=file_content)
+
+        # Construct the S3 URL
+        s3_url = f"https://{s3_bucket}.s3.amazonaws.com/{s3_key}"
+
+        # Store metadata in DynamoDB
+        image_id = str(uuid.uuid4())
+        store_metadata_in_dynamodb(image_id, file_name, first_name, last_name, comment, date_upload, s3_url)
+
+        # Return success response
+        response = {
+            'success': True,
+            's3_url': s3_url
+        }
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'application/json',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+            },
+            'body': json.dumps(response)
+        }
+
+    except Exception as e:
+        logger.error(f"Error occurred: {str(e)}")
+        return {
+            'statusCode': 500,
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'application/json',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+            },
+            'body': json.dumps({'success': False, 'error': str(e)})
+        }
+
+def store_metadata_in_dynamodb(image_id, file_name, first_name, last_name, comment, date_uploaded, s3_url):
+    # Example DynamoDB metadata storage logic
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('images')  # Replace with your actual table name
+
+    table.put_item(
+        Item={
+            'imageId': image_id,
+            'imageFileName': file_name,
+            'firstName': first_name,
+            'lastName': last_name,
+            'comment': comment,
+            'dateUploaded': date_uploaded,
+            'imageUrl': s3_url  # Store the S3 URL in DynamoDB
+        }
+    )
