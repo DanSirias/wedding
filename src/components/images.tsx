@@ -1,217 +1,84 @@
 import React, { useState } from "react";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { Dialog, DialogTitle } from '@mui/material';
-import cam from '../images/camera.svg';
-import "../App.css";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { RetrivedImages } from './retreiveImages';
-
-const defaultTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#321115",
-      dark: "#847072"
-    }
-  }, 
-});
-
-const API_GATEWAY_URL = "https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images";
 
 export const Images = () => {
   const [file, setFile] = useState<File | null>(null);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [comment, setComment] = useState("");
-  const [galleryKey, setGalleryKey] = useState(0);
-  const [open, setOpen] = useState(false);
+  const [responseMessage, setResponseMessage] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
-      console.log("File selected:", selectedFile);
       setFile(selectedFile);
-    } else {
-      console.log("No file selected.");
     }
   };
 
-  const handleUpload = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleUpload = () => {
     if (!file) {
       alert("Please select an image.");
       return;
     }
 
-    try {
-      // Create form data to send in the POST request
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("firstName", firstName);
-      formData.append("lastName", lastName);
-      formData.append("comment", comment);
-      formData.append("dateUpload", new Date().toISOString());
+    const reader = new FileReader();
 
-      // Debug: Log the FormData keys and values
-      formData.forEach((value, key) => {
-        console.log(key + ': ' + value);
-      });
+    reader.onloadend = () => {
+      const img = new Image();
+      img.onload = async () => {
+        // Calculate new dimensions while maintaining aspect ratio
+        const aspectRatio = img.width / img.height;
+        const newHeight = 600;
+        const newWidth = newHeight * aspectRatio;
 
-      const response = await fetch(API_GATEWAY_URL, {
-        method: "POST",
-        body: formData,
-      });
+        // Create an off-screen canvas
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d')!;
+        canvas.width = newWidth;
+        canvas.height = newHeight;
 
-      if (response.ok) {
-        // Reset form
-        setFile(null);
-        setFirstName("");
-        setLastName("");
-        setComment("");
-        setOpen(true);
-        setTimeout(() => {
-          setOpen(false);
-        }, 3000);
-        setGalleryKey((prevKey) => prevKey + 1);
-      } else {
-        alert("An error occurred while uploading the image.");
-        console.log("Server response:", response);
-      }
-    } catch (error) {
-      console.error("Error during upload:", error);
-      alert("An error occurred while uploading the image.");
-    }
-  };
+        // Draw the image on the canvas with new dimensions
+        ctx.drawImage(img, 0, 0, newWidth, newHeight);
 
-  const handleClose = () => {
-    setOpen(false);
+        // Convert canvas to base64
+        const resizedBase64 = canvas.toDataURL('image/jpeg').split(',')[1];
+
+        // Prepare the JSON payload
+        const payload = {
+          fileName: file.name,
+          fileExtension: file.name.split('.').pop(),  // Get the file extension
+          fileData: resizedBase64,  // Send only the resized base64 string
+          userType: "YourUserType", // Replace with actual userType from your state or context
+          photoType: "profile", // Example: 'passport' or 'profile'
+        };
+
+        try {
+          // Send the payload to your API Gateway
+          const response = await fetch('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {
+              'Content-Type': 'application/json'
+            },
+          });
+
+          const data = await response.json();
+          setResponseMessage(`Success: ${data}`);
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          setResponseMessage(`Error: ${(error as Error).message}`);
+        }
+      };
+
+      img.src = reader.result as string;
+    };
+
+    reader.readAsDataURL(file);
   };
 
   return (
-    <div className="" style={{ padding: 30, height: "100%" }}>
-      <ThemeProvider theme={defaultTheme}>
-        <Container
-          sx={{
-            border: 1,
-            borderColor: "lightgray",
-            boxShadow: 4,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-          className="imageShare"
-          component="main"
-          maxWidth="sm"
-        >
-          <CssBaseline />
-
-          <Typography id="reccs" component="h2" variant="h5">
-            Making Memories Together
-          </Typography>
-          <Typography sx={{ mt: 1, fontSize: 15 }} className="rsvp">
-            Share your wedding pictures with us!
-          </Typography>
-
-          <Box component="form" onSubmit={handleUpload} noValidate sx={{ mt: 1, textAlign: 'center' }}>
-            <label htmlFor="upload-button">
-              <input
-                type="file"
-                accept="image/*"
-                id="upload-button"
-                style={{ display: 'none' }}
-                onChange={handleFileChange}
-              />
-              <span
-                className="upload-button"
-                style={{
-                  display: 'inline-block',
-                  cursor: 'pointer',
-                  padding: '25px',
-                  border: '1px dashed lightgray',
-                  borderRadius: '4px',
-                  textAlign: 'center',
-                  margin: 10,
-                }}
-              >
-                <img
-                  src={cam}
-                  alt="Upload"
-                  style={{
-                    width: '24px',
-                    height: '24px',
-                    marginRight: '8px',
-                    verticalAlign: 'middle',
-                  }}
-                />
-                {file ? file.name : 'Upload Image'}
-              </span>
-            </label>  
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  margin="none"
-                  size="small"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  margin="none"
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  size="small"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  margin="none"
-                  fullWidth
-                  id="questionsComments"
-                  label="Leave a Note"
-                  size="small"
-                  multiline
-                  rows={4}
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                />
-              </Grid>
-            </Grid>
-            <Typography sx={{ mt: 0, fontSize: 15, color: "grey", textAlign: 'left' }} className="rsvp">
-              *required
-            </Typography>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 0, mb: 2 }}
-              color="primary"
-            >
-              Upload Image
-            </Button>
-            <Dialog open={open} onClose={handleClose}>
-              <DialogTitle>Thank you</DialogTitle>
-            </Dialog>
-          </Box>
-        </Container>
-        <Container maxWidth="xl" style={{ height: "100%", width: "100%" }}>
-          <RetrivedImages key={galleryKey} />
-        </Container>
-      </ThemeProvider>
+    <div>
+      <input type="file" accept="image/*" onChange={handleFileChange} />
+      <button onClick={handleUpload}>Upload Image</button>
+      {responseMessage && <div>{responseMessage}</div>}
     </div>
   );
 };
+
+
