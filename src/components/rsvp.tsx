@@ -52,9 +52,9 @@ interface Guest {
 interface FormData {
   rsvpId: string;
   lastName: string;
-  email: string;
-  phone: string;
-  comments?: string;
+  email?: string | null;  // Can be a string, null, or undefined
+  phone?: string | null;  // Can be a string, null, or undefined
+  comments?: string | null;  // Can be a string, null, or undefined
   guests: Guest[];
 }
 
