@@ -5,6 +5,7 @@ import {Home} from './components/home';
 import {Events} from './components/events';
 import {Travel} from './components/travel';
 import {GiftRegistry} from './components/gift';
+import { Dashboard } from "./components/dashboard";
 import { Login } from "./components/login";
 import { RSVP } from './components/rsvp';
 import { Guests } from './components/guests';
@@ -50,6 +51,7 @@ const App: React.FC = () => {
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/gift" element={<GiftRegistry />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/images" element={<Images />} />
           </Routes>
         </div>
