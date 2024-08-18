@@ -96,16 +96,13 @@ export const Dashboard: React.FC = () => {
     try {
       // Convert newRSVP to match the expected API format
       const formattedRSVP = {
-        rsvpId: { S: newRSVP.rsvpId },
-        guests: {
-          L: newRSVP.guests.map(guest => ({
-            M: {
-              firstName: { S: guest.firstName },
-              lastName: { S: guest.lastName },
-            }
-          }))
-        },
+        rsvpId: newRSVP.rsvpId,
+        guests: newRSVP.guests.map(guest => ({
+          firstName: guest.firstName,
+          lastName: guest.lastName
+        })),
       };
+  
       console.log(formattedRSVP);
       await axios.post("https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp", formattedRSVP);
       handleCloseModal();
