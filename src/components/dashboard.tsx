@@ -108,6 +108,7 @@ export const Dashboard: React.FC = () => {
       };
 
       await axios.post("https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp", formattedRSVP);
+      console.log(formattedRSVP);
       handleCloseModal();
     } catch (error) {
       console.error("Error adding RSVP", error);
