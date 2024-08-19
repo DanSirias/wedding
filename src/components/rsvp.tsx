@@ -339,7 +339,7 @@ export const RSVP: React.FC = () => {
                     <Button
                       variant="contained"
                         color="primary"
-                        onClick={handleSubmit(onSubmit)} 
+                        onClick={handleSubmit} 
                         disabled={loading}
                       >
                         {loading ? 'Submitting...' : 'RSVP Now'}
