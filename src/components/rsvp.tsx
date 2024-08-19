@@ -134,7 +134,6 @@ export const RSVP: React.FC = () => {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     setLoading(true); // Start loading
     setError(null); // Reset any existing errors
-
     try {
       // Prepare the data for the PUT request
       const rsvpData = {
@@ -338,7 +337,7 @@ export const RSVP: React.FC = () => {
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleSubmit(onSubmit)}
+                        type="submit"
                         disabled={loading}
                       >
                         {loading ? 'Submitting...' : 'RSVP Now'}
