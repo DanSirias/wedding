@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import {
   Container,
   CssBaseline,
@@ -20,17 +23,15 @@ import {
   Paper,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import axios from 'axios';
-import { SelectChangeEvent } from '@mui/material';
 
 // Theme definition
 const defaultTheme = createTheme({
   palette: {
     primary: {
       main: "#321115",
-      dark: "#847072"
-    }
-  }, 
+      dark: "#847072",
+    },
+  },
   components: {
     MuiStack: {
       defaultProps: {
@@ -43,8 +44,8 @@ const defaultTheme = createTheme({
 interface Guest {
   firstName: string;
   lastName: string;
-  attending: string;
   foodRestrictions?: string;
+  attending: string;
 }
 
 interface FormData {
@@ -56,174 +57,196 @@ interface FormData {
   guests: Guest[];
 }
 
+// Validation schema
+const schema = yup.object().shape({
+  rsvpId: yup.string().required('RSVP Pin is required'),
+  lastName: yup.string().required('Last Name is required'),
+  email: yup.string().email('Invalid email format').required('Email is required'),
+  phone: yup.string().required('Phone number is required'),
+  comments: yup.string(),
+  guests: yup.array().of(
+    yup.object().shape({
+      firstName: yup.string().required('First Name is required'),
+      lastName: yup.string().required('Last Name is required'),
+      attending: yup.string().required('Attending status is required'),
+      foodRestrictions: yup.string().oneOf(['None', 'Chicken', 'Vegan', 'Vegetarian']),
+    })
+  ).required(),
+});
+
 export const RSVP: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
-    rsvpId: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    comments: '',
-    guests: [{ firstName: '', lastName: '', attending: 'Yes', foodRestrictions: 'None' }]
-  });
+  const [formData, setFormData] = useState<FormData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [fetchedData, setFetchedData] = useState<FormData | null>(null);
 
-  // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+  const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm<FormData>({
+    resolver: yupResolver(schema),
+  });
 
-  // Handle guest-specific input changes
-  const handleGuestChange = (
-    index: number,
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>
-  ) => {
-    const { name, value } = e.target;
-    const guests = [...formData.guests];
-    guests[index] = { ...guests[index], [name as string]: value };
-    setFormData(prevState => ({ ...prevState, guests }));
-  };
-  
-  // Add another guest to the form
-  const addAnotherGuest = () => {
-    setFormData(prevState => ({
-      ...prevState,
-      guests: [...prevState.guests, { firstName: '', lastName: '', attending: 'Yes', foodRestrictions: 'None' }]
-    }));
-  };
-
-  // Fetch RSVP data by RSVP ID
-  const fetchRSVPData = async () => {
+  const fetchRSVPData = async (rsvpId: string) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get<FormData>(
-        `https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?pin=${formData.rsvpId}`
-      );
+      const response = await fetch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?pin=${rsvpId}`);
+      
+      if (!response.ok) {
+        throw new Error('Error fetching data. Please check your PIN and Last Name.');
+      }
+  
+      const dynamoData = await response.json();
+  
+      const data = dynamoData[0];
+  
+      const parsedData: FormData = {
+        rsvpId: data.rsvpId.S,
+        lastName: data.lastName.S,
+        email: data.email.S,
+        phone: data.phone.S,
+        comments: data.comments?.S,
+        guests: data.guests.L.map((guest: any) => ({
+          firstName: guest.M.firstName.S,
+          lastName: guest.M.lastName.S,
+          foodRestrictions: guest.M.foodRestrictions.S,
+          attending: guest.M.attending.BOOL ? "Yes" : "No",
+        })),
+      };
+  
+      setFormData(parsedData);
 
-      const data = response.data;
-      setFetchedData(data);
-
-      // Set the form data with fetched values
-      setFormData({
-        rsvpId: data.rsvpId,
-        lastName: data.lastName,
-        email: data.email,
-        phone: data.phone,
-        comments: data.comments || '',
-        guests: data.guests.map((guest: any) => ({
-          firstName: guest.firstName,
-          lastName: guest.lastName,
-          attending: guest.attending ? 'Yes' : 'No',
-          foodRestrictions: guest.foodRestrictions || 'None'
-        }))
+      Object.keys(parsedData).forEach((key) => {
+        setValue(key as keyof FormData, (parsedData as any)[key]);
       });
     } catch (err) {
-      setError('Error fetching data. Please check your PIN and Last Name.');
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }
   };
 
-  // Submit the form data
-  const handleSubmit = async () => {
-    setLoading(true);
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    alert("Form submitted successfully!");
+
+    if (!formData) return;
+
+    setLoading(true); // Start loading
+    setError(null); // Reset any existing errors
     try {
-      // Format data to match the expected API structure
-      const formattedData = {
+      const rsvpData = {
         rsvpId: formData.rsvpId,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        comments: formData.comments || '',
-        guests: formData.guests.map(guest => ({
+        email: formData.email || null,
+        phone: formData.phone || null,
+        comments: formData.comments || null,
+        guests: formData.guests.map((guest) => ({
           firstName: guest.firstName,
           lastName: guest.lastName,
-          attending: guest.attending === 'Yes',
-          foodRestrictions: guest.foodRestrictions
-        }))
+          attending: guest.attending,
+          foodRestrictions: guest.foodRestrictions || 'None',
+        })),
       };
-
-      await axios.put('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp', formattedData);
-      alert('RSVP updated successfully');
+  
+      const response = await fetch('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(rsvpData),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update RSVP');
+      }
+  
+      const result = await response.json();
+      console.log('RSVP updated successfully', result);
     } catch (err) {
-      setError('Error submitting RSVP. Please try again.');
+      console.error('Error submitting RSVP', err);
+      setError('Error submitting RSVP. Please try again or contact us.');
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading
     }
+  };
+
+  const handleClear = () => {
+    reset();
+    setFormData(null);
   };
 
   return (
     <div className="rsvpBack" style={{ padding: 30, height: "100%" }}>
       <ThemeProvider theme={defaultTheme}>
-        <Container maxWidth="lg" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: 2, radius: "2px" }}>
+        <Container maxWidth="lg" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: 2 }}>
           <CssBaseline />
           <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Typography id="reccs" component="h2" variant="h5"
-            sx={{
-              display: "flex",
-              justifyContent:"center",
-              alignItems:"center",
-            }}>
-               RSVP Form 
+            <Typography id="reccs" component="h2" variant="h5" sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+              RSVP Form 
             </Typography>
 
-            {/* Form for Fetching Data */}
-            <Stack spacing={2} sx={{ width: '100%' }}>
-              <TextField
-                label="RSVP Pin"
-                name="rsvpId"
-                value={formData.rsvpId}
-                onChange={handleInputChange}
-              />
-              <Button
+            {/* Form 1: Fetch RSVP Data */}
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const rsvpId = (document.querySelector('input[name="rsvpId"]') as HTMLInputElement).value;
+              fetchRSVPData(rsvpId);
+            }} noValidate>
+              <Stack spacing={2} sx={{ width: '100%', marginBottom: 4, }}>
+                <TextField
+                  label="RSVP Pin"
+                  {...register('rsvpId')}
+                  error={!!errors.rsvpId}
+                  helperText={errors.rsvpId?.message}
+                  fullWidth
+                />
+                <Button
                   variant="contained"
                   color="primary"
-                  onClick={fetchRSVPData}
+                  type="submit"
                   disabled={loading}
                 >
                   {loading ? 'Loading...' : 'View RSVP'}
-              </Button>
-              {error && <Typography color="error">{error}</Typography>}
-            </Stack>
+                </Button>
+                {error && <Typography color="error">{error}</Typography>}
+              </Stack>
+            </form>
 
-            {/* Form for Submitting Updated Data */}
-            {fetchedData && (
-              <Stack spacing={2} sx={{ width: '100%', marginTop: 4 }}>
+            {/* Form 2: Submit Updated RSVP Data */}
+            {formData && formData.email && formData.phone && (
+            <form onSubmit={handleFormSubmit} noValidate>
+              <Stack spacing={2} sx={{ width: '100%' }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} md={6}>
-                    <Typography variant="h6">Contact Info</Typography>
+                    <Typography variant="h6" sx={{ marginBottom: 2 }}>Contact Info</Typography>
                     <TextField
                       label="Email"
-                      name="email"
+                      {...register('email')}
                       value={formData.email}
-                      onChange={handleInputChange}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      variant="outlined"
                       fullWidth
+                      sx={{ marginBottom: 2 }}
                     />
                     <TextField
                       label="Phone"
-                      name="phone"
+                      {...register('phone')}
                       value={formData.phone}
-                      onChange={handleInputChange}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      variant="outlined"
                       fullWidth
+                      sx={{ marginBottom: 2 }}
                     />
                     <TextField
                       label="Comments"
-                      name="comments"
+                      {...register('comments')}
                       value={formData.comments}
-                      onChange={handleInputChange}
-                      fullWidth
+                      onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
                       multiline
                       rows={2}
+                      variant="outlined"
+                      fullWidth
+                      sx={{ marginBottom: 2 }}
                     />
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <Typography variant="h6">Guests List</Typography>
+                    <Typography variant="h6" sx={{ marginBottom: 2 }}>Guests List</Typography>
                     <TableContainer component={Paper}>
                       <Table>
                         <TableHead>
@@ -239,26 +262,28 @@ export const RSVP: React.FC = () => {
                             <TableRow key={index}>
                               <TableCell>
                                 <TextField
-                                  name="firstName"
                                   value={guest.firstName}
-                                  onChange={(e) => handleGuestChange(index, e)}
+                                  InputProps={{ readOnly: true }}
                                   fullWidth
                                 />
                               </TableCell>
                               <TableCell>
                                 <TextField
-                                  name="lastName"
                                   value={guest.lastName}
-                                  onChange={(e) => handleGuestChange(index, e)}
+                                  InputProps={{ readOnly: true }}
                                   fullWidth
                                 />
                               </TableCell>
                               <TableCell>
                                 <FormControl fullWidth>
                                   <Select
-                                    name="attending"
+                                    {...register(`guests.${index}.attending` as const)}
                                     value={guest.attending}
-                                    onChange={(e) => handleGuestChange(index, e)}
+                                    onChange={(e) => {
+                                      const guests = [...formData.guests];
+                                      guests[index].attending = e.target.value as string;
+                                      setFormData({ ...formData, guests });
+                                    }}
                                   >
                                     <MenuItem value="Yes">Yes</MenuItem>
                                     <MenuItem value="No">No</MenuItem>
@@ -266,36 +291,54 @@ export const RSVP: React.FC = () => {
                                 </FormControl>
                               </TableCell>
                               <TableCell>
-                                <FormControl fullWidth>
-                                  <Select
-                                    name="foodRestrictions"
-                                    value={guest.foodRestrictions}
-                                    onChange={(e) => handleGuestChange(index, e)}
-                                  >
-                                    <MenuItem value="None">None</MenuItem>
-                                    <MenuItem value="Chicken">Chicken</MenuItem>
-                                    <MenuItem value="Vegan">Vegan</MenuItem>
-                                    <MenuItem value="Vegetarian">Vegetarian</MenuItem>
-                                  </Select>
-                                </FormControl>
+                                {guest.attending === 'Yes' ? (
+                                  <FormControl fullWidth>
+                                    <Select
+                                      {...register(`guests.${index}.foodRestrictions` as const)}
+                                      value={guest.foodRestrictions || 'None'}
+                                      onChange={(e) => {
+                                        const guests = [...formData.guests];
+                                        guests[index].foodRestrictions = e.target.value as string;
+                                        setFormData({ ...formData, guests });
+                                      }}
+                                    >
+                                      <MenuItem value="None">None</MenuItem>
+                                      <MenuItem value="Chicken">Chicken</MenuItem>
+                                      <MenuItem value="Vegan">Vegan</MenuItem>
+                                      <MenuItem value="Vegetarian">Vegetarian</MenuItem>
+                                    </Select>
+                                  </FormControl>
+                                ) : (
+                                  <TextField
+                                    value="N/A"
+                                    InputProps={{ readOnly: true }}
+                                    fullWidth
+                                  />
+                                )}
                               </TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
                       </Table>
                     </TableContainer>
-                    <Button onClick={addAnotherGuest} sx={{ marginTop: 2 }}>Add Another Guest</Button>
                   </Grid>
                 </Grid>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSubmit}
-                  disabled={loading}
-                >
-                  {loading ? 'Submitting...' : 'RSVP Now'}
-                </Button>
+
+                <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end', width: '100%', padding: 3 }}>
+                  <Button variant="outlined" color="secondary" onClick={handleClear}>
+                    Clear
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    disabled={loading}
+                  >
+                    {loading ? 'Submitting...' : 'RSVP Now'}
+                  </Button>
+                </Stack>
               </Stack>
+            </form>
             )}
           </Box>
         </Container>
