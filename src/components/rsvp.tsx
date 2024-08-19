@@ -134,12 +134,44 @@ export const RSVP: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      // Handle form submission logic here
-      console.log('Form Submitted', data);
+      // Prepare the data for the PUT request
+      const rsvpData = {
+        rsvpId: data.rsvpId,
+        email: data.email || null,       // Send null if the field is empty
+        phone: data.phone || null,       // Send null if the field is empty
+        comments: data.comments || null, // Send null if the field is empty
+        guests: data.guests.map((guest) => ({
+          firstName: guest.firstName,
+          lastName: guest.lastName,
+          attending: guest.attending,
+          foodRestrictions: guest.foodRestrictions || 'None', // Default to 'None' if empty
+        })),
+      };
+  
+      // Make the PUT request to update the RSVP
+    const response = await fetch('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(rsvpData),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update RSVP');
+      }
+  
+      const result = await response.json();
+      console.log('RSVP updated successfully', result);
+      
+      // Optionally, handle success (e.g., show a success message or redirect)
+  
     } catch (err) {
+      console.error('Error submitting RSVP', err);
       setError('Error submitting RSVP. Please try again or contact us.');
     }
   };
+  
 
   const handleClear = () => {
     reset();
@@ -305,12 +337,13 @@ export const RSVP: React.FC = () => {
                       Clear
                     </Button>
                     <Button
-                      type="submit"
                       variant="contained"
-                      color="primary"
-                    >
-                      RSVP Now
-                    </Button>
+                        color="primary"
+                        onClick={handleSubmit(onSubmit)} 
+                        disabled={loading}
+                      >
+                        {loading ? 'Submitting...' : 'RSVP Now'}
+                      </Button>
                   </Stack>
                   </Grid>
                 )}
