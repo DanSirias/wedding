@@ -12,7 +12,6 @@ import {
   Stack,
   Grid,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
   Table,
@@ -75,7 +74,7 @@ const schema = yup.object().shape({
 });
 
 export const RSVP: React.FC = () => {
-  const [formData, setFormData] = useState<FormData | any>(null);
+  const [formData, setFormData] = useState<FormData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -133,6 +132,9 @@ export const RSVP: React.FC = () => {
   };
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+    setLoading(true); // Start loading
+    setError(null); // Reset any existing errors
+
     try {
       // Prepare the data for the PUT request
       const rsvpData = {
@@ -149,7 +151,7 @@ export const RSVP: React.FC = () => {
       };
   
       // Make the PUT request to update the RSVP
-    const response = await fetch('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp', {
+      const response = await fetch('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -163,15 +165,14 @@ export const RSVP: React.FC = () => {
   
       const result = await response.json();
       console.log('RSVP updated successfully', result);
-      
       // Optionally, handle success (e.g., show a success message or redirect)
-  
     } catch (err) {
       console.error('Error submitting RSVP', err);
       setError('Error submitting RSVP. Please try again or contact us.');
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
-  
 
   const handleClear = () => {
     reset();
@@ -216,67 +217,65 @@ export const RSVP: React.FC = () => {
                 {error && <Typography color="error">{error}</Typography>}
                 {formData && (
                   <Grid container spacing={2}>
-                      <Grid item xs={12} md={6}>
-                        <Typography variant="h6">Contact Info</Typography>
-                        {/* Email and Phone on the same row with labels outside */}
-                        <Grid container spacing={2} alignItems="center" sx={{ marginBottom: 2}}>
-                          <Grid item xs={3}>
-                            <Typography variant="body1">Email:</Typography>
-                          </Grid>
-                          <Grid item xs={9}>
-                            <TextField
-                              {...register('email')}
-                              error={!!errors.email}
-                              helperText={errors.email?.message}
-                              variant="outlined"
-                              fullWidth
-                            />
-                          </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="h6">Contact Info</Typography>
+                      <Grid container spacing={2} alignItems="center" sx={{ marginBottom: 2}}>
+                        <Grid item xs={3}>
+                          <Typography variant="body1">Email:</Typography>
                         </Grid>
-                        <Grid container spacing={2} alignItems="center" sx={{ marginBottom: 2 }}>
-                          <Grid item xs={3}>
-                            <Typography variant="body1">Phone:</Typography>
-                          </Grid>
-                          <Grid item xs={9}>
-                            <TextField
-                              {...register('phone')}
-                              error={!!errors.phone}
-                              helperText={errors.phone?.message}
-                              variant="outlined"
-                              fullWidth
-                            />
-                          </Grid>
-                        </Grid>
-                        {/* Comments field (multiline) with label outside */}
-                        <Grid container spacing={2} alignItems="center" sx={{ marginBottom: 2 }}>
-                          <Grid item xs={3}>
-                            <Typography variant="body1">Comments:</Typography>
-                          </Grid>
-                          <Grid item xs={9}>
-                            <TextField
-                              {...register('comments')}
-                              error={!!errors.comments}
-                              helperText={errors.comments?.message}
-                              multiline
-                              rows={2}
-                              variant="outlined"
-                              fullWidth
-                            />
-                          </Grid>
+                        <Grid item xs={9}>
+                          <TextField
+                            {...register('email')}
+                            error={!!errors.email}
+                            helperText={errors.email?.message}
+                            variant="outlined"
+                            fullWidth
+                          />
                         </Grid>
                       </Grid>
+                      <Grid container spacing={2} alignItems="center" sx={{ marginBottom: 2 }}>
+                        <Grid item xs={3}>
+                          <Typography variant="body1">Phone:</Typography>
+                        </Grid>
+                        <Grid item xs={9}>
+                          <TextField
+                            {...register('phone')}
+                            error={!!errors.phone}
+                            helperText={errors.phone?.message}
+                            variant="outlined"
+                            fullWidth
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={2} alignItems="center" sx={{ marginBottom: 2 }}>
+                        <Grid item xs={3}>
+                          <Typography variant="body1">Comments:</Typography>
+                        </Grid>
+                        <Grid item xs={9}>
+                          <TextField
+                            {...register('comments')}
+                            error={!!errors.comments}
+                            helperText={errors.comments?.message}
+                            multiline
+                            rows={2}
+                            variant="outlined"
+                            fullWidth
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
                     <Grid item xs={12} md={6}>
                       <Typography variant="h6">Guests List</Typography>
                       <TableContainer component={Paper}>
                         <Table>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell sx={{ fontWeight: 'bold' }}>First Name</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Last Name</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Attending</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Food Restrictions</TableCell>
-                          </TableRow>
-                        </TableHead>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell sx={{ fontWeight: 'bold' }}>First Name</TableCell>
+                              <TableCell sx={{ fontWeight: 'bold' }}>Last Name</TableCell>
+                              <TableCell sx={{ fontWeight: 'bold' }}>Attending</TableCell>
+                              <TableCell sx={{ fontWeight: 'bold' }}>Food Restrictions</TableCell>
+                            </TableRow>
+                          </TableHead>
                           <TableBody>
                             {formData.guests.map((guest: any, index: any) => (
                               <TableRow key={index}>
@@ -333,18 +332,18 @@ export const RSVP: React.FC = () => {
                       </TableContainer>
                     </Grid>
                     <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end', width: '100%', padding: 3 }}>
-                    <Button variant="outlined"color="secondary"onClick={handleClear}>
-                      Clear
-                    </Button>
-                    <Button
-                      variant="contained"
+                      <Button variant="outlined" color="secondary" onClick={handleClear}>
+                        Clear
+                      </Button>
+                      <Button
+                        variant="contained"
                         color="primary"
-                        onClick={handleSubmit} 
+                        onClick={handleSubmit(onSubmit)}
                         disabled={loading}
                       >
                         {loading ? 'Submitting...' : 'RSVP Now'}
                       </Button>
-                  </Stack>
+                    </Stack>
                   </Grid>
                 )}
               </Stack>
