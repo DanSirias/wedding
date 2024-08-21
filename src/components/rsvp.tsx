@@ -94,20 +94,20 @@ export const RSVP: React.FC = () => {
       }
   
       const dynamoData = await response.json();
-  
+      console.log(dynamoData);
       const data = dynamoData[0];
   
       const parsedData: FormData = {
-        rsvpId: data.rsvpId.S,
-        lastName: data.lastName.S,
-        email: data.email.S,
-        phone: data.phone.S,
-        comments: data.comments?.S,
-        guests: data.guests.L.map((guest: any) => ({
-          firstName: guest.M.firstName.S,
-          lastName: guest.M.lastName.S,
-          foodRestrictions: guest.M.foodRestrictions.S,
-          attending: guest.M.attending.BOOL ? "Yes" : "No",
+        rsvpId: data.rsvpId,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        comments: data.comments,
+        guests: data.guests.map((guest: any) => ({
+          firstName: guest.firstName,
+          lastName: guest.lastName,
+          foodRestrictions: guest.foodRestrictions,
+          attending: guest.attending.BOOL ? "Yes" : "No",
         })),
       };
   
