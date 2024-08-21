@@ -123,7 +123,7 @@ export const RSVP: React.FC = () => {
     }
   };
 
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     alert("Form submitted successfully!");
 
@@ -131,41 +131,43 @@ export const RSVP: React.FC = () => {
 
     setLoading(true); // Start loading
     setError(null); // Reset any existing errors
+
     try {
-      const rsvpData = {
-        rsvpId: formData.rsvpId,
-        email: formData.email || null,
-        phone: formData.phone || null,
-        comments: formData.comments || null,
-        guests: formData.guests.map((guest) => ({
-          firstName: guest.firstName,
-          lastName: guest.lastName,
-          attending: guest.attending,
-          foodRestrictions: guest.foodRestrictions || 'None',
-        })),
-      };
-  
-      const response = await fetch('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(rsvpData),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to update RSVP');
-      }
-  
-      const result = await response.json();
-      console.log('RSVP updated successfully', result);
+        const rsvpData = {
+            rsvpId: formData.rsvpId,
+            email: formData.email || null,
+            phone: formData.phone || null,
+            comments: formData.comments || null,
+            guests: formData.guests.map((guest) => ({
+                firstName: guest.firstName,
+                lastName: guest.lastName,
+                attending: guest.attending === "Yes" ? true : false,  // Convert "Yes" to true and "No" to false
+                foodRestrictions: guest.foodRestrictions || 'None',
+            })),
+        };
+
+        const response = await fetch('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(rsvpData),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update RSVP');
+        }
+
+        const result = await response.json();
+        console.log('RSVP updated successfully', result);
     } catch (err) {
-      console.error('Error submitting RSVP', err);
-      setError('Error submitting RSVP. Please try again or contact us.');
+        console.error('Error submitting RSVP', err);
+        setError('Error submitting RSVP. Please try again or contact us.');
     } finally {
-      setLoading(false); // Stop loading
+        setLoading(false); // Stop loading
     }
-  };
+};
+
 
   const handleClear = () => {
     reset();
