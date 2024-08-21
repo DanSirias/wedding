@@ -102,12 +102,12 @@ export const RSVP: React.FC = () => {
         lastName: data.lastName,
         email: data.email,
         phone: data.phone,
-        comments: data.comments,
+        comments: data.comments || "", 
         guests: data.guests.map((guest: any) => ({
           firstName: guest.firstName,
           lastName: guest.lastName,
           foodRestrictions: guest.foodRestrictions,
-          attending: guest.attending.BOOL ? "Yes" : "No",
+          attending: guest.attending ? "Yes" : "No",  // Adjusted logic
         })),
       };
   
