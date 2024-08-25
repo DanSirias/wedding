@@ -14,6 +14,7 @@ import { Schedule } from "./components/schedule";
 import { Images } from './components/images';
 import { CssBaseline } from '@mui/material';
 import Navbar from './components/navbar';
+
 //import Container from "@mui/material/Container";
 
 
@@ -36,6 +37,10 @@ const styles = {
 
 
 const App: React.FC = () => {
+  const handleSignIn = () => {
+    console.log("User signed in");
+    // Perform any additional actions after sign-in
+  };
   return (
       <Router>
         <div className="" style={{ height: "100vh" }}>
@@ -50,7 +55,7 @@ const App: React.FC = () => {
             <Route path="/travel" element={<Travel />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/gift" element={<GiftRegistry />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login onSignIn={handleSignIn} />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/images" element={<Images />} />
           </Routes>
