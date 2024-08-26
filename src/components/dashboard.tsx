@@ -18,21 +18,21 @@ const defaultTheme = createTheme({
 });
 
 interface Guest {
-  lastName: { S: string };
-  firstName: { S: string };
-  attending: { BOOL: boolean };
-  foodRestrictions?: { S: string };
+  lastName: string;
+  firstName: string;
+  attending: boolean;
+  foodRestrictions?: string;
 }
 
 interface RSVP {
-  rsvpId: { S: string };
-  lastName: { S: string };
-  comments?: { S: string };
-  created: { S: string };
-  email: { S: string };
-  guests: { L: Array<{ M: Guest }> };
-  phone: { S: string };
-  updated: { S: string };
+  rsvpId: string;
+  lastName: string;
+  comments?: string;
+  created: string;
+  email: string;
+  guests: Array<Guest>;
+  phone: string;
+  updated: string;
 }
 
 export const Dashboard: React.FC = () => {
@@ -41,7 +41,7 @@ export const Dashboard: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [newRSVP, setNewRSVP] = useState({
     rsvpId: '',
-    guests: [{ firstName: '', lastName: '' }]
+    guests: [{ firstName: '', lastName: '', attending: false, foodRestrictions: '' }]
   });
 
   useEffect(() => {
@@ -88,23 +88,15 @@ export const Dashboard: React.FC = () => {
   const addAnotherGuest = () => {
     setNewRSVP(prevState => ({
       ...prevState,
-      guests: [...prevState.guests, { firstName: '', lastName: '' }],
+      guests: [...prevState.guests, { firstName: '', lastName: '', attending: false, foodRestrictions: '' }],
     }));
   };
 
   const handleSubmit = async () => {
     try {
-      // Convert newRSVP to match the expected API format
-      const formattedRSVP = {
-        rsvpId: newRSVP.rsvpId,
-        guests: newRSVP.guests.map(guest => ({
-          firstName: guest.firstName,
-          lastName: guest.lastName
-        })),
-      };
-  
-      console.log(formattedRSVP);
-      await axios.post("https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp", formattedRSVP);
+      // Submit the new RSVP to the API
+      console.log(newRSVP);
+      await axios.post("https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp", newRSVP);
       handleCloseModal();
     } catch (error) {
       console.error("Error adding RSVP", error);
@@ -183,25 +175,25 @@ export const Dashboard: React.FC = () => {
                 </TableHead>
                 <TableBody>
                   {rsvpData.map((rsvp) => (
-                    <React.Fragment key={rsvp.rsvpId.S}>
+                    <React.Fragment key={rsvp.rsvpId}>
                       <TableRow>
                         <TableCell>
                           <IconButton
                             size="small"
-                            onClick={() => toggleRow(rsvp.rsvpId.S)}
+                            onClick={() => toggleRow(rsvp.rsvpId)}
                           >
-                            {openRow[rsvp.rsvpId.S] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                            {openRow[rsvp.rsvpId] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                           </IconButton>
                         </TableCell>
-                        <TableCell>{rsvp.rsvpId.S}</TableCell>
-                        <TableCell>{rsvp.lastName.S}</TableCell>
-                        <TableCell>{rsvp.email.S}</TableCell>
-                        <TableCell>{rsvp.phone.S}</TableCell>
-                        <TableCell>{rsvp.comments?.S || ''}</TableCell>
+                        <TableCell>{rsvp.rsvpId}</TableCell>
+                        <TableCell>{rsvp.lastName}</TableCell>
+                        <TableCell>{rsvp.email}</TableCell>
+                        <TableCell>{rsvp.phone}</TableCell>
+                        <TableCell>{rsvp.comments || ''}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                          <Collapse in={openRow[rsvp.rsvpId.S]} timeout="auto" unmountOnExit>
+                          <Collapse in={openRow[rsvp.rsvpId]} timeout="auto" unmountOnExit>
                             <Box margin={2}>
                               <Typography variant="h6" gutterBottom component="div">
                                 Guests
@@ -216,12 +208,12 @@ export const Dashboard: React.FC = () => {
                                   </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                  {rsvp.guests.L.map((guest, index) => (
+                                  {rsvp.guests.map((guest, index) => (
                                     <TableRow key={index}>
-                                      <TableCell>{guest.M.firstName.S}</TableCell>
-                                      <TableCell>{guest.M.lastName.S}</TableCell>
-                                      <TableCell>{guest.M.attending.BOOL ? "Yes" : "No"}</TableCell>
-                                      <TableCell>{guest.M.foodRestrictions?.S || 'None'}</TableCell>
+                                      <TableCell>{guest.firstName}</TableCell>
+                                      <TableCell>{guest.lastName}</TableCell>
+                                      <TableCell>{guest.attending ? "Yes" : "No"}</TableCell>
+                                      <TableCell>{guest.foodRestrictions || 'None'}</TableCell>
                                     </TableRow>
                                   ))}
                                 </TableBody>
