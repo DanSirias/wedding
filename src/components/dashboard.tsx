@@ -147,7 +147,7 @@ export const Dashboard: React.FC = () => {
         <Grid container spacing={4}>
           <Grid item xs={12} sm={6} md={3}>
             <Card>
-              <CardContent>
+              <CardContent sx={{ textAlign: 'center' }}>
                 <Typography variant="h5">Add RSVP</Typography>
                 <Button variant="contained" color="primary" onClick={handleOpenModal}>
                   Add New RSVP
@@ -157,7 +157,7 @@ export const Dashboard: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Card>
-              <CardContent>
+              <CardContent sx={{ textAlign: 'center' }}>
                 <Typography variant="h5">Total Reservations</Typography>
                 <Typography variant="body2">{totalRSVPs}</Typography>
               </CardContent>
@@ -165,7 +165,7 @@ export const Dashboard: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Card>
-              <CardContent>
+              <CardContent sx={{ textAlign: 'center' }}>
                 <Typography variant="h5">Total Attending</Typography>
                 <Typography variant="body2">{totalAttendingGuests}</Typography>
               </CardContent>
@@ -173,7 +173,7 @@ export const Dashboard: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Card>
-              <CardContent>
+              <CardContent sx={{ textAlign: 'center' }}>
                 <Typography variant="h5">Total Declines</Typography>
                 <Typography variant="body2">{totalDeclinedGuests}</Typography>
               </CardContent>
@@ -188,8 +188,9 @@ export const Dashboard: React.FC = () => {
               <Typography variant="h6">Navigation</Typography>
               <Box mt={2}>
                 <Typography><a href="#" onClick={handleOpenModal}>Add RSVP</a></Typography>
-                <Typography>Link 2</Typography>
-                <Typography>Link 3</Typography>
+                <Typography><a href="#">Venue Portal</a></Typography>
+                <Typography><a href="https://booking.weddings-unlimited.com/manage?id=5028&surname=Sirias">Video/DJ Portal</a></Typography>
+                <Typography><a href="https://tuxedo.josbank.com/wedding-tracker?utm_source=JAB&utm_medium=Ecomm&utm_campaign=TopNav&utm_terms=WedGroupManager&_gl=1*bm7jp3*_ga*MTA0MTQ3MTQ2MC4xNzI0Nzk5MTI1*_ga_T6SWH68K36*MTcyNDc5OTIzNC4xLjEuMTcyNDc5OTI0Ni4wLjAuMA..">Grooms Portal</a></Typography>
               </Box>
             </Paper>
           </Grid>
