@@ -45,10 +45,35 @@ export const Dashboard: React.FC = () => {
   });
 
   useEffect(() => {
+    // Function to extract the ID token from the URL
+    const getIdTokenFromUrl = () => {
+      const hash = window.location.hash.substring(1); // Remove the leading '#'
+      const params = new URLSearchParams(hash);
+      return params.get('id_token');
+    };
+
+    // Store the ID token in session storage
+    const storeIdTokenInSession = () => {
+      const idToken = getIdTokenFromUrl();
+      if (idToken) {
+        sessionStorage.setItem('id_token', idToken);
+        console.log('ID token stored in session storage');
+      } else {
+        console.log('No ID token found in URL');
+      }
+    };
+
+    storeIdTokenInSession(); // Store the token when the component mounts
+
     const fetchData = async () => {
       try {
         const response = await axios.get<RSVP[]>(
-          "https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?lastName=sirias"
+          "https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?lastName=sirias",
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
+            },
+          }
         );
         console.log(response.data); 
         setRsvpData(response.data);
@@ -96,7 +121,11 @@ export const Dashboard: React.FC = () => {
     try {
       // Submit the new RSVP to the API
       console.log(newRSVP);
-      await axios.post("https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp", newRSVP);
+      await axios.post("https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp", newRSVP, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
+        },
+      });
       handleCloseModal();
     } catch (error) {
       console.error("Error adding RSVP", error);
