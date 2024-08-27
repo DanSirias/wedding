@@ -44,6 +44,14 @@ export const Dashboard: React.FC = () => {
     guests: [{ firstName: '', lastName: '', attending: false, foodRestrictions: '' }]
   });
 
+  const totalRSVPs = rsvpData.length;
+  const totalAttendingGuests = rsvpData.reduce((total, rsvp) => 
+    total + rsvp.guests.filter(guest => guest.attending).length, 0
+  );
+  const totalDeclinedGuests = rsvpData.reduce((total, rsvp) => 
+    total + rsvp.guests.filter(guest => !guest.attending).length, 0
+  );
+
   useEffect(() => {
     // Function to extract the ID token from the URL
     const getIdTokenFromUrl = () => {
@@ -150,24 +158,24 @@ export const Dashboard: React.FC = () => {
           <Grid item xs={12} sm={6} md={3}>
             <Card>
               <CardContent>
-                <Typography variant="h5">Card 2</Typography>
-                <Typography variant="body2">Description for Card 2</Typography>
+                <Typography variant="h5">Total Reservations</Typography>
+                <Typography variant="body2">{totalRSVPs}</Typography>
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Card>
               <CardContent>
-                <Typography variant="h5">Card 3</Typography>
-                <Typography variant="body2">Description for Card 3</Typography>
+                <Typography variant="h5">Total Attending</Typography>
+                <Typography variant="body2">{totalAttendingGuests}</Typography>
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Card>
               <CardContent>
-                <Typography variant="h5">Card 4</Typography>
-                <Typography variant="body2">Description for Card 4</Typography>
+                <Typography variant="h5">Total Declines</Typography>
+                <Typography variant="body2">{totalDeclinedGuests}</Typography>
               </CardContent>
             </Card>
           </Grid>
