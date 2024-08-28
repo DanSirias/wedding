@@ -7,6 +7,7 @@ import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import * as XLSX from 'xlsx';  // Import xlsx library
 
 const defaultTheme = createTheme({
   palette: {
@@ -177,6 +178,25 @@ export const Dashboard: React.FC = () => {
     }
   };
 
+  const handleDownloadExcel = () => {
+    const formattedData = rsvpData.map((rsvp) => ({
+      rsvpId: rsvp.rsvpId,
+      lastName: rsvp.lastName,
+      email: rsvp.email,
+      phone: rsvp.phone,
+      comments: rsvp.comments || '',
+      guests: rsvp.guests.map(guest => `${guest.firstName} ${guest.lastName} (Attending: ${guest.attending ? "Yes" : "No"})`).join(', '),
+      created: rsvp.created,
+      updated: rsvp.updated
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "RSVP Data");
+
+    XLSX.writeFile(workbook, "RSVP_Data.xlsx");
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container maxWidth="lg" sx={{ marginTop: 4 }}>
@@ -215,6 +235,11 @@ export const Dashboard: React.FC = () => {
                 <Typography variant="body2">{totalDeclinedGuests}</Typography>
               </CardContent>
             </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Button variant="contained" color="secondary" onClick={handleDownloadExcel}>
+              Download Excel
+            </Button>
           </Grid>
         </Grid>
 
