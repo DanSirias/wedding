@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
   Container, Grid, Card, CardContent, Typography, Box, Paper,
-  Table, TableBody, TableCell, TableHead, TableRow, IconButton, Collapse, Button, Modal, TextField
+  Table, TableBody, TableCell, TableHead, TableRow, IconButton, Collapse, Button, Modal, TextField, Select, MenuItem
 } from "@mui/material";
 import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import * as XLSX from 'xlsx';  // Import xlsx library
+import { SelectChangeEvent } from "@mui/material";  // Import SelectChangeEvent
 
 const defaultTheme = createTheme({
   palette: {
@@ -116,7 +118,7 @@ export const Dashboard: React.FC = () => {
     }));
   };
 
-  const handleGuestChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: string) => {
+  const handleGuestChange = (index: number, event: SelectChangeEvent<string>, field: string) => {
     if (editedRSVP) {
       const updatedGuests = [...editedRSVP.guests];
       updatedGuests[index] = { ...updatedGuests[index], [field]: event.target.value };
@@ -177,6 +179,35 @@ export const Dashboard: React.FC = () => {
     }
   };
 
+  const handleDownloadExcel = () => {
+    const formattedData = rsvpData.map((rsvp) => {
+      const row: any = {
+        rsvpId: rsvp.rsvpId,
+        lastName: rsvp.lastName,
+        email: rsvp.email,
+        phone: rsvp.phone,
+        comments: rsvp.comments || '',
+        created: rsvp.created,
+        updated: rsvp.updated
+      };
+      
+      rsvp.guests.forEach((guest, index) => {
+        row[`Guest ${index + 1} First Name`] = guest.firstName;
+        row[`Guest ${index + 1} Last Name`] = guest.lastName;
+        row[`Guest ${index + 1} Attending`] = guest.attending ? "Yes" : "No";
+        row[`Guest ${index + 1} Food Restrictions`] = guest.foodRestrictions || 'None';
+      });
+
+      return row;
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "RSVP Data");
+
+    XLSX.writeFile(workbook, "RSVP_Data.xlsx");
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container maxWidth="lg" sx={{ marginTop: 4 }}>
@@ -218,25 +249,28 @@ export const Dashboard: React.FC = () => {
           </Grid>
         </Grid>
 
-        {/* Layout Section */}
-        <Grid container spacing={4} sx={{ marginTop: 4 }}>
-          <Grid item xs={12} md={3}>
-            <Paper elevation={3} sx={{ padding: 2 }}>
-              <Typography variant="h6">Navigation</Typography>
-              <Box mt={2}>
-                <Typography><a href="#" onClick={handleOpenModal}>Add RSVP</a></Typography>
-                <Typography><a href="#">Venue Portal</a></Typography>
-                <Typography><a href="https://booking.weddings-unlimited.com/manage?id=5028&surname=Sirias">Video/DJ Portal</a></Typography>
-                <Typography><a href="https://tuxedo.josbank.com/wedding-tracker?utm_source=JAB&utm_medium=Ecomm&utm_campaign=TopNav&utm_terms=WedGroupManager&_gl=1*bm7jp3*_ga*MTA0MTQ3MTQ2MC4xNzI0Nzk5MTI1*_ga_T6SWH68K36*MTcyNDc5OTIzNC4xLjEuMTcyNDc5OTI0Ni4wLjAuMA..">Grooms Portal</a></Typography>
-              </Box>
-            </Paper>
+        {/* Button and Title Section */}
+        <Grid container spacing={2} sx={{ marginTop: 4 }} justifyContent="space-between" alignItems="center">
+          <Grid item>
+            <Typography variant="h6" gutterBottom>
+              RSVP Data
+            </Typography>
           </Grid>
+          <Grid item>
+            <Button
+              variant="contained"
+              style={{ backgroundColor: '#5d7a66', color: 'white' }}
+              onClick={handleDownloadExcel}
+            >
+              Download Excel
+            </Button>
+          </Grid>
+        </Grid>
 
-          <Grid item xs={12} md={9}>
+        {/* Table Section */}
+        <Grid container spacing={4} sx={{ marginTop: 2 }}>
+          <Grid item xs={12} md={12}>
             <Paper elevation={3} sx={{ padding: 2 }}>
-              <Typography variant="h6" gutterBottom>
-                RSVP Data
-              </Typography>
               <Table>
                 <TableHead sx={{ backgroundColor: 'lightgray' }}>
                   <TableRow>
@@ -309,6 +343,22 @@ export const Dashboard: React.FC = () => {
                                       </TableCell>
                                       <TableCell>
                                         {editingRow === rsvp.rsvpId ? (
+                                          <Select
+                                            fullWidth
+                                            value={editedRSVP?.guests[index]?.foodRestrictions || 'None'}
+                                            onChange={(e) => handleGuestChange(index, e, 'foodRestrictions')}
+                                          >
+                                            <MenuItem value="None">None</MenuItem>
+                                            <MenuItem value="Chicken">Chicken</MenuItem>
+                                            <MenuItem value="Vegan">Vegan</MenuItem>
+                                            <MenuItem value="Vegetarian">Vegetarian</MenuItem>
+                                          </Select>
+                                        ) : (
+                                          guest.foodRestrictions || 'None'
+                                        )}
+                                      </TableCell>
+                                      <TableCell>
+                                        {editingRow === rsvp.rsvpId ? (
                                           <TextField
                                             fullWidth
                                             value={editedRSVP?.guests[index]?.attending ? "Yes" : "No"}
@@ -316,17 +366,6 @@ export const Dashboard: React.FC = () => {
                                           />
                                         ) : (
                                           guest.attending ? "Yes" : "No"
-                                        )}
-                                      </TableCell>
-                                      <TableCell>
-                                        {editingRow === rsvp.rsvpId ? (
-                                          <TextField
-                                            fullWidth
-                                            value={editedRSVP?.guests[index]?.foodRestrictions || ''}
-                                            onChange={(e) => handleGuestChange(index, e, 'foodRestrictions')}
-                                          />
-                                        ) : (
-                                          guest.foodRestrictions || 'None'
                                         )}
                                       </TableCell>
                                     </TableRow>
