@@ -30,7 +30,7 @@ interface RSVP {
   comments?: string;
   created: string;
   email: string;
-  guests: Array<Guest>;
+  guests: Guest[];
   phone: string;
   updated: string;
 }
@@ -55,14 +55,12 @@ export const Dashboard: React.FC = () => {
   );
 
   useEffect(() => {
-    // Function to extract the ID token from the URL
-    const getIdTokenFromUrl = () => {
+    const getIdTokenFromUrl = (): string | null => {
       const hash = window.location.hash.substring(1); // Remove the leading '#'
       const params = new URLSearchParams(hash);
       return params.get('id_token');
     };
 
-    // Store the ID token in session storage
     const storeIdTokenInSession = () => {
       const idToken = getIdTokenFromUrl();
       if (idToken) {
@@ -73,7 +71,7 @@ export const Dashboard: React.FC = () => {
       }
     };
 
-    storeIdTokenInSession(); // Store the token when the component mounts
+    storeIdTokenInSession(); 
 
     const fetchData = async () => {
       try {
@@ -96,20 +94,18 @@ export const Dashboard: React.FC = () => {
   }, []);
 
   const toggleRow = (rsvpId: string) => {
-    if (editingRow === rsvpId) {
-      setEditingRow(null);
-      setEditedRSVP(null);
-    } else {
-      setEditingRow(rsvpId);
-      const rsvp = rsvpData.find(r => r.rsvpId === rsvpId);
-      if (rsvp) {
-        setEditedRSVP(rsvp);
-      }
-    }
     setOpenRow(prevOpenRow => ({
       ...prevOpenRow,
       [rsvpId]: !prevOpenRow[rsvpId]
     }));
+  };
+
+  const handleEdit = (rsvpId: string) => {
+    setEditingRow(rsvpId);
+    const rsvp = rsvpData.find(r => r.rsvpId === rsvpId);
+    if (rsvp) {
+      setEditedRSVP(rsvp);
+    }
   };
 
   const handleRSVPChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -144,7 +140,6 @@ export const Dashboard: React.FC = () => {
       });
       setEditingRow(null);
       setEditedRSVP(null);
-      // Optionally, refetch the data to get the latest state
       const response = await axios.get<RSVP[]>(
         "https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?lastName=sirias",
         {
@@ -171,8 +166,6 @@ export const Dashboard: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      // Submit the new RSVP to the API
-      console.log(newRSVP);
       await axios.post("https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp", newRSVP, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
@@ -347,7 +340,7 @@ export const Dashboard: React.FC = () => {
                                 </Box>
                               ) : (
                                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                                  <Button variant="contained" color="primary" onClick={() => toggleRow(rsvp.rsvpId)}>Edit</Button>
+                                  <Button variant="contained" color="primary" onClick={() => handleEdit(rsvp.rsvpId)}>Edit</Button>
                                 </Box>
                               )}
                             </Box>
