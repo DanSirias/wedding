@@ -11,6 +11,7 @@ import { RSVP } from './components/rsvp';
 import { Guests } from './components/guests';
 import { WeddingParty } from './components/weddingparty';
 import { Schedule } from "./components/schedule";
+import { SignOut } from "./components/signout";
 import { Images } from './components/images';
 import { CssBaseline } from '@mui/material';
 import Navbar from './components/navbar';
@@ -56,6 +57,7 @@ const App: React.FC = () => {
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/gift" element={<GiftRegistry />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/signout" element={<SignOut />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/images" element={<Images />} />
           </Routes>

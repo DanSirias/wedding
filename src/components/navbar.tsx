@@ -1,83 +1,33 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Link } from '@mui/material';
-import "../App.css"; 
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import {
+  AppBar, Toolbar, Typography, Link, Box, IconButton, Menu, Container, Avatar, Button,
+  Tooltip, MenuItem
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import AdbIcon from '@mui/icons-material/Adb';
-import Logo from '../images/RDlogo_light.svg'
-import { useNavigate } from "react-router-dom";
-import { auth } from '../backend/firebase-config'; 
-import { useAuthState } from "react-firebase-hooks/auth";
-import { signOut } from "firebase/auth";
 import LoginIcon from '@mui/icons-material/Login';
-import Daniel from '../images/daniel.jpg'; 
-import Rebecca from '../images/rebecca.jpg'; 
+import Daniel from '../images/daniel.jpg';
+import Rebecca from '../images/rebecca.jpg';
 import { Home, ConfirmationNumber, People, Flight, PhotoLibrary, CardGiftcard } from '@mui/icons-material';
-
 
 const pages = [
   { text: 'Home', href: '/', icon: Home },
   { text: 'RSVP', href: '/rsvp', icon: ConfirmationNumber },
   { text: 'Wedding Party', href: '/weddingparty', icon: People },
   { text: 'Travel', href: '/travel', icon: Flight },
-  { text: 'Schedule', href: '/schedule', icon: CalendarTodayIcon},
+  { text: 'Schedule', href: '/schedule', icon: CalendarTodayIcon },
   { text: 'Memories', href: '/images', icon: PhotoLibrary },
   { text: 'Gift Registry', href: '/gift', icon: CardGiftcard },
 ];
-    
-const iconMapping = {
-  home: Home,
-  rsvp: ConfirmationNumber,
-  wedding_party: People,
-  travel: Flight,
-  schedule: CalendarTodayIcon, 
-  memories: PhotoLibrary,
-  gift: CardGiftcard,
-};
-  const settings = ['Profile', 'Account', 'Dashboard', 'Log Out'];
-    
-    
+
+const settings = ['Profile', 'Account', 'Dashboard', 'Log Out'];
+
 function Navbar() {
-
-  const navigate = useNavigate(); 
-  const [user] = useAuthState(auth);
-
-  const signUserOut = async () => {
-    await signOut(auth); 
-    navigate('/login'); 
-  };
-
-  const onClickFunctions = [
-    () => {
-      // onClick function for 'Profile'
-      console.log('Clicked Profile');
-    },
-    () => {
-      // onClick function for 'Account'
-      console.log('Clicked Account');
-    },
-    () => {
-      // onClick function for 'Dashboard'
-      console.log('Clicked Dashboard');
-    },
-    () => {
-      // onClick function for 'LogOut'
-      logout (); 
-      console.log('Clicked LogOut');
-    }
-  ];
+  const navigate = useNavigate();
+  const idToken = sessionStorage.getItem('id_token');
 
   const [anchorElNav, setAnchorElNav] = React.useState<HTMLElement | null>(null);
-
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -97,14 +47,10 @@ function Navbar() {
   };
 
   const logout = async () => {
-    try {
-      await signOut(auth);
-
-    } catch (err) {
-      console.error(err);
-    }
+    // Clear the session storage and redirect to the sign-out URL
+    sessionStorage.removeItem('id_token');
+    navigate('/signout');
   };
-
 
   return (
     <AppBar position="sticky" className="navbar">
@@ -162,13 +108,13 @@ function Navbar() {
                   <Typography textAlign="center">
                     <Link
                       component={RouterLink}
-                      to={`${page.href}`}
-                      style={{ textDecoration: "None", color: "#321115", fontSize: 20 }}
+                      to={page.href}
+                      style={{ textDecoration: "none", color: "#321115", fontSize: 20 }}
                       color="inherit"
                       underline="none"
                       sx={{ mx: 2 }}
                     >
-                      <page.icon sx={{ marginRight: 1, fontSize: 16 }} /> {/* Render the icon */}
+                      <page.icon sx={{ marginRight: 1, fontSize: 16 }} />
                       {page.text}
                     </Link>
                   </Typography>
@@ -176,18 +122,13 @@ function Navbar() {
               ))}
             </Menu>
           </Box>
-          {/* LOGO */}
-          {/*           <Avatar    sx={{
-                display: { xs: 'block', md: 'none' },
-                ml: 0,
-          }} alt="Default Avatar" src={Logo} /> */}
+
           <Typography
             variant="h5"
             noWrap
             component="a"
             href=""
             sx={{
-              //mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
               fontFamily: "monospace",
@@ -198,35 +139,42 @@ function Navbar() {
               marginLeft: 0,
             }}
           ></Typography>
+
           <Box
             sx={{
               flexGrow: 1,
               display: { xs: "none", md: "flex" },
-              alignItems: "center", // Align items vertically centered
+              alignItems: "center",
             }}
           >
             {pages.map((page) => (
               <Button
                 key={page.text}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 1, color: "#321115", display: "block", textAlign: "left" }} // Align text to the left
+                sx={{ my: 1, color: "#321115", display: "block", textAlign: "left" }}
               >
                 <Link
                   component={RouterLink}
                   to={page.href}
-                  style={{ textDecoration: "none", color: "#321115", display: "flex", alignItems: "center", fontSize:14 }} // Align items horizontally centered
+                  style={{ textDecoration: "none", color: "#321115", display: "flex", alignItems: "center", fontSize: 14 }}
                   color="inherit"
                   underline="none"
                   sx={{ mx: 2 }}
                 >
-                  <page.icon sx={{ marginRight: 1, fontSize:18 }} /> {/* Render the icon */}
+                  <page.icon sx={{ marginRight: 1, fontSize: 18 }} />
                   {page.text}
-                </Link>{" "}
+                </Link>
               </Button>
             ))}
           </Box>
 
-          {!user ? (
+          {idToken ? (
+            <Box sx={{ flexGrow: 0 }}>
+              <Button onClick={logout} sx={{ color: "#321115" }}>
+                Sign Out
+              </Button>
+            </Box>
+          ) : (
             <Box sx={{ flexGrow: 0, display: { xs: "block", md: "flex" } }}>
               <Typography display="flex" alignItems="center" textAlign="center">
                 <LoginIcon sx={{ marginRight: "0px" }} />
@@ -242,70 +190,11 @@ function Navbar() {
                 </Link>
               </Typography>
             </Box>
-          ) : (
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                {user.email === "danielsirias.88@gmail.com" ? (
-                  <Typography display="flex" alignItems="center">
-                    <span style={{ paddingRight: "8px" }}>Howdy, Daniel</span>
-                    <Avatar
-                      alt="Daniel Sirias"
-                      src={Daniel}
-                      onClick={handleOpenUserMenu}
-                      sx={{ p: 0 }}
-                    />
-                  </Typography>
-                ) : user.email === "rbenne88@gmail.com" ? (
-                  <Typography display="flex" alignItems="center">
-                    <span style={{ paddingRight: "8px" }}>Howdy, Rebecca</span>
-                    <Avatar
-                      alt="Rebecca Sirias"
-                      src={Rebecca}
-                      onClick={handleOpenUserMenu}
-                      sx={{ p: 0 }}
-                    />
-                  </Typography>
-                ) : (
-                  <Avatar
-                    alt="Default Avatar"
-                    src="/static/images/avatar/default.jpg"
-                  />
-                )}
-              </Tooltip>
-
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting, index) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography
-                      textAlign="center"
-                      onClick={onClickFunctions[index]}
-                    >
-                      {setting}
-                    </Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
           )}
         </Toolbar>
       </Container>
     </AppBar>
   );
 }
-export default Navbar;
 
+export default Navbar;
