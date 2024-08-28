@@ -18,7 +18,7 @@ const pages = [
   { text: 'Travel', href: '/travel', icon: Flight },
   { text: 'Schedule', href: '/schedule', icon: CalendarTodayIcon },
   { text: 'Memories', href: '/images', icon: PhotoLibrary },
-  { text: 'Gift Registry', href: '/gift', icon: CardGiftcard },
+  { text: 'Registry', href: '/gift', icon: CardGiftcard },
 ];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Log Out'];

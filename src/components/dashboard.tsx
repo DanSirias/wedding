@@ -43,6 +43,8 @@ export const Dashboard: React.FC = () => {
     rsvpId: '',
     guests: [{ firstName: '', lastName: '', attending: false, foodRestrictions: '' }]
   });
+  const [editingRow, setEditingRow] = useState<string | null>(null);
+  const [editedRSVP, setEditedRSVP] = useState<RSVP | null>(null);
 
   const totalRSVPs = rsvpData.length;
   const totalAttendingGuests = rsvpData.reduce((total, rsvp) => 
@@ -94,14 +96,21 @@ export const Dashboard: React.FC = () => {
   }, []);
 
   const toggleRow = (rsvpId: string) => {
+    if (editingRow === rsvpId) {
+      setEditingRow(null);
+      setEditedRSVP(null);
+    } else {
+      setEditingRow(rsvpId);
+      const rsvp = rsvpData.find(r => r.rsvpId === rsvpId);
+      if (rsvp) {
+        setEditedRSVP(rsvp);
+      }
+    }
     setOpenRow(prevOpenRow => ({
       ...prevOpenRow,
       [rsvpId]: !prevOpenRow[rsvpId]
     }));
   };
-
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
 
   const handleRSVPChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -111,12 +120,47 @@ export const Dashboard: React.FC = () => {
     }));
   };
 
-  const handleGuestChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = event.target;
-    const guests = [...newRSVP.guests];
-    guests[index] = { ...guests[index], [name]: value };
-    setNewRSVP(prevState => ({ ...prevState, guests }));
+  const handleGuestChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: string) => {
+    if (editedRSVP) {
+      const updatedGuests = [...editedRSVP.guests];
+      updatedGuests[index] = { ...updatedGuests[index], [field]: event.target.value };
+      setEditedRSVP({ ...editedRSVP, guests: updatedGuests });
+    }
   };
+
+  const handleCancelEdit = () => {
+    setEditingRow(null);
+    setEditedRSVP(null);
+  };
+
+  const handleUpdate = async () => {
+    if (!editedRSVP) return;
+    
+    try {
+      await axios.put(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp`, editedRSVP, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
+        },
+      });
+      setEditingRow(null);
+      setEditedRSVP(null);
+      // Optionally, refetch the data to get the latest state
+      const response = await axios.get<RSVP[]>(
+        "https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?lastName=sirias",
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
+          },
+        }
+      );
+      setRsvpData(response.data);
+    } catch (error) {
+      console.error("Error updating RSVP", error);
+    }
+  };
+
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
 
   const addAnotherGuest = () => {
     setNewRSVP(prevState => ({
@@ -248,14 +292,64 @@ export const Dashboard: React.FC = () => {
                                 <TableBody>
                                   {rsvp.guests.map((guest, index) => (
                                     <TableRow key={index}>
-                                      <TableCell>{guest.firstName}</TableCell>
-                                      <TableCell>{guest.lastName}</TableCell>
-                                      <TableCell>{guest.attending ? "Yes" : "No"}</TableCell>
-                                      <TableCell>{guest.foodRestrictions || 'None'}</TableCell>
+                                      <TableCell>
+                                        {editingRow === rsvp.rsvpId ? (
+                                          <TextField
+                                            fullWidth
+                                            value={editedRSVP?.guests[index]?.firstName || ''}
+                                            onChange={(e) => handleGuestChange(index, e, 'firstName')}
+                                          />
+                                        ) : (
+                                          guest.firstName
+                                        )}
+                                      </TableCell>
+                                      <TableCell>
+                                        {editingRow === rsvp.rsvpId ? (
+                                          <TextField
+                                            fullWidth
+                                            value={editedRSVP?.guests[index]?.lastName || ''}
+                                            onChange={(e) => handleGuestChange(index, e, 'lastName')}
+                                          />
+                                        ) : (
+                                          guest.lastName
+                                        )}
+                                      </TableCell>
+                                      <TableCell>
+                                        {editingRow === rsvp.rsvpId ? (
+                                          <TextField
+                                            fullWidth
+                                            value={editedRSVP?.guests[index]?.attending ? "Yes" : "No"}
+                                            onChange={(e) => handleGuestChange(index, e, 'attending')}
+                                          />
+                                        ) : (
+                                          guest.attending ? "Yes" : "No"
+                                        )}
+                                      </TableCell>
+                                      <TableCell>
+                                        {editingRow === rsvp.rsvpId ? (
+                                          <TextField
+                                            fullWidth
+                                            value={editedRSVP?.guests[index]?.foodRestrictions || ''}
+                                            onChange={(e) => handleGuestChange(index, e, 'foodRestrictions')}
+                                          />
+                                        ) : (
+                                          guest.foodRestrictions || 'None'
+                                        )}
+                                      </TableCell>
                                     </TableRow>
                                   ))}
                                 </TableBody>
                               </Table>
+                              {editingRow === rsvp.rsvpId ? (
+                                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                                  <Button variant="contained" color="primary" onClick={handleUpdate}>Update</Button>
+                                  <Button variant="contained" color="secondary" onClick={handleCancelEdit} sx={{ ml: 2 }}>Cancel</Button>
+                                </Box>
+                              ) : (
+                                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                                  <Button variant="contained" color="primary" onClick={() => toggleRow(rsvp.rsvpId)}>Edit</Button>
+                                </Box>
+                              )}
                             </Box>
                           </Collapse>
                         </TableCell>
@@ -295,7 +389,7 @@ export const Dashboard: React.FC = () => {
                   label="First Name"
                   name="firstName"
                   value={guest.firstName}
-                  onChange={(e) => handleGuestChange(index, e)}
+                  onChange={(e) => handleGuestChange(index, e, 'firstName')}
                 />
                 <TextField
                   fullWidth
@@ -303,7 +397,7 @@ export const Dashboard: React.FC = () => {
                   label="Last Name"
                   name="lastName"
                   value={guest.lastName}
-                  onChange={(e) => handleGuestChange(index, e)}
+                  onChange={(e) => handleGuestChange(index, e, 'lastName')}
                 />
               </Box>
             ))}
