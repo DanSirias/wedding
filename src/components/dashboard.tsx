@@ -118,13 +118,13 @@ export const Dashboard: React.FC = () => {
     }));
   };
 
-  const handleGuestChange = (index: number, event: SelectChangeEvent<string>, field: string) => {
-    if (editedRSVP) {
-      const updatedGuests = [...editedRSVP.guests];
-      updatedGuests[index] = { ...updatedGuests[index], [field]: event.target.value };
-      setEditedRSVP({ ...editedRSVP, guests: updatedGuests });
-    }
-  };
+const handleGuestChange = (index: number, event: SelectChangeEvent<string>, field: string) => {
+  if (editedRSVP) {
+    const updatedGuests = [...editedRSVP.guests];
+    updatedGuests[index] = { ...updatedGuests[index], [field]: event.target.value };
+    setEditedRSVP({ ...editedRSVP, guests: updatedGuests });
+  }
+};
 
   const handleCancelEdit = () => {
     setEditingRow(null);
