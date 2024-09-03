@@ -71,7 +71,7 @@ const events = [
     image: Waterfall,
   },
   {
-    title: "Reception",
+    title: "Wedding Reception",
     date: "November 10, 2024",
     time: "7:00PM-11:00PM",
     description: "We warmly invite you to a formal reception at the distinguished Carillon Ballroom. The Carillon Ballroom offers an atmosphere of timeless elegance. The classic design, featuring intricate details and rich textures, creates the perfect setting for an evening of celebration and joy.",    
