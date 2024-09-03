@@ -290,11 +290,15 @@ export const Dashboard: React.FC = () => {
               <Typography variant="h6" gutterBottom>
                 RSVP Data
               </Typography>
-              <Grid item xs={12} sm={6} md={3}>
-                <Button variant="contained" color="secondary" onClick={handleDownloadExcel}>
-                  Download Excel
-                </Button>
-              </Grid>
+              <Grid container justifyContent="flex-end" sx={{ marginBottom: 2 }}>
+              <Button
+                variant="contained"
+                sx={{ backgroundColor: '#5d7a66', color: '#fff' }} // Custom green color
+                onClick={handleDownloadExcel}
+              >
+                Download Excel
+              </Button>
+            </Grid>
               <Table>
                 <TableHead sx={{ backgroundColor: 'lightgray' }}>
                   <TableRow>
