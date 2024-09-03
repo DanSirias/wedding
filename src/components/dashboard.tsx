@@ -7,8 +7,8 @@ import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import * as XLSX from 'xlsx';  // Import xlsx library
-import { useForm, SubmitHandler } from "react-hook-form";
+import * as XLSX from 'xlsx';
+import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
@@ -27,7 +27,7 @@ interface Guest {
   lastName: string;
   firstName: string;
   attending: boolean;
-  foodRestrictions: FoodRestrictions; // No longer optional
+  foodRestrictions: FoodRestrictions;
 }
 
 interface RSVP {
@@ -65,12 +65,17 @@ export const Dashboard: React.FC = () => {
   const [editingRow, setEditingRow] = useState<string | null>(null);
   const [editedRSVP, setEditedRSVP] = useState<RSVP | null>(null);
 
-  const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors }, control, setValue, reset } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
       rsvpId: '',
       guests: [{ firstName: '', lastName: '', attending: false, foodRestrictions: 'None' }],
     },
+  });
+
+  const { fields, append } = useFieldArray({
+    control,
+    name: "guests"
   });
 
   const totalRSVPs = rsvpData?.length || 0;
@@ -106,7 +111,7 @@ export const Dashboard: React.FC = () => {
           "https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?lastName=sirias",
           {
             headers: {
-              Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
+              Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
             },
           }
         );
@@ -154,7 +159,7 @@ export const Dashboard: React.FC = () => {
     try {
       await axios.put(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp`, editedRSVP, {
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
+          Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
         },
       });
       setEditingRow(null);
@@ -163,7 +168,7 @@ export const Dashboard: React.FC = () => {
         "https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?lastName=sirias",
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
+            Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
           },
         }
       );
@@ -183,14 +188,14 @@ export const Dashboard: React.FC = () => {
   };
 
   const addAnotherGuest = () => {
-    setValue('guests', [...(rsvpData?.[0]?.guests || []), { firstName: '', lastName: '', attending: false, foodRestrictions: 'None' }]);
+    append({ firstName: '', lastName: '', attending: false, foodRestrictions: 'None' });
   };
 
   const handleSubmitRSVP: SubmitHandler<FormData> = async (data) => {
     try {
       await axios.post("https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp", data, {
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
+          Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
         },
       });
       handleCloseModal();
@@ -291,14 +296,14 @@ export const Dashboard: React.FC = () => {
                 RSVP Data
               </Typography>
               <Grid container justifyContent="flex-end" sx={{ marginBottom: 2 }}>
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: '#5d7a66', color: '#fff' }} // Custom green color
-                onClick={handleDownloadExcel}
-              >
-                Download Excel
-              </Button>
-            </Grid>
+                <Button
+                  variant="contained"
+                  sx={{ backgroundColor: '#5d7a66', color: '#fff' }} // Custom green color
+                  onClick={handleDownloadExcel}
+                >
+                  Download Excel
+                </Button>
+              </Grid>
               <Table>
                 <TableHead sx={{ backgroundColor: 'lightgray' }}>
                   <TableRow>
@@ -379,12 +384,12 @@ export const Dashboard: React.FC = () => {
                                                   const updatedGuests = [...editedRSVP.guests];
                                                   updatedGuests[index] = {
                                                     ...updatedGuests[index],
-                                                    attending: e.target.value === "Yes", // Convert string to boolean
+                                                    attending: e.target.value === "Yes",
                                                   };
                                                   setEditedRSVP({
                                                     ...editedRSVP,
                                                     guests: updatedGuests,
-                                                    rsvpId: editedRSVP.rsvpId, // Ensure rsvpId is provided
+                                                    rsvpId: editedRSVP.rsvpId,
                                                   });
                                                 }
                                               }}
@@ -408,12 +413,12 @@ export const Dashboard: React.FC = () => {
                                                   const updatedGuests = [...editedRSVP.guests];
                                                   updatedGuests[index] = {
                                                     ...updatedGuests[index],
-                                                    foodRestrictions: e.target.value as FoodRestrictions, // Type safety
+                                                    foodRestrictions: e.target.value as FoodRestrictions,
                                                   };
                                                   setEditedRSVP({
                                                     ...editedRSVP,
                                                     guests: updatedGuests,
-                                                    rsvpId: editedRSVP.rsvpId, // Ensure rsvpId is provided
+                                                    rsvpId: editedRSVP.rsvpId,
                                                   });
                                                 }
                                               }}
@@ -475,8 +480,8 @@ export const Dashboard: React.FC = () => {
                 error={!!errors.rsvpId}
                 helperText={errors.rsvpId?.message}
               />
-              {rsvpData?.[0]?.guests.map((guest, index) => (
-                <Box key={index}>
+              {fields.map((field, index) => (
+                <Box key={field.id}>
                   <TextField
                     fullWidth
                     margin="normal"
