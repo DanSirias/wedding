@@ -406,21 +406,3 @@ Light 2 #F3EDE2
   }
 }
 
-.reveal {
-  position: relative;
-  opacity: 0;
-  animation: fadeSlideIn 1s ease forwards; /* Apply animation */
-}
-
-.reveal.active {
-  opacity: 1;
-  animation: fadeSlideIn 1s ease forwards; /* Apply animation */
-}
-
-.reveal.active {
-  opacity: 1;
-  transform: translateY(0);
-  animation: fadeSlideIn 2s ease; /* Apply animation */
-  animation-duration: 3s; 
-  animation-delay: 1s;
-}

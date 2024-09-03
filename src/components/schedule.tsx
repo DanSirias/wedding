@@ -1,24 +1,21 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 
 import "../App.css";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import marriott from '../images/marriott.jpg'
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from '@mui/material/Grid';
 import { styled, Theme } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Golf  from "../images/topgolf.jpg";
-import Rehersal  from "../images/postino.jpg";
+import Rehersal from "../images/postino.jpg";
 import Bell from "../images/thebell.jpg";
+import Bell2 from "../images/thebell2.jpg";
 import Waterfall from "../images/cocktail.jpg";
-import ScrollAnimation from 'react-animate-on-scroll'; 
-import 'animate.css';
+import Rustic from "../images/rustic.jpg";
 
 const Item = styled(Paper)<{ theme: Theme }>((props: any) => ({
   backgroundColor: props.theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -26,7 +23,6 @@ const Item = styled(Paper)<{ theme: Theme }>((props: any) => ({
   padding: props.theme.spacing(1),
   color: props.theme.palette.text.secondary,
 }));
-
 
 const defaultTheme = createTheme({
   palette: {
@@ -37,82 +33,62 @@ const defaultTheme = createTheme({
   }, 
 });
 
-
 const events = [
   {
     title: "Welcome Gathering",
-    date: "April 10, 2024",
+    date: "November 8, 2024",
     time: "6:30PM-8:30PM",
     description: "We invite those of you who will be in Houston on Friday evening to gather with us! Come join for some food and drinks as we welcome you to the Texas.",
-    address: "123 Event Street, City, Country",
-    image: Golf,
+    address: "1836 Polk St, Houston, TX 77003",
+    addressUrl: "https://maps.app.goo.gl/chbkBVnG32a9u9UK8",
+    image: Rustic,
   },
   {
-    title: "Rehersal Cocktail Hour",
-    date: "April 15, 2024",
-    time: "6:30PM-8:30PM",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    address: "456 Event Avenue, City, Country",
+    title: "Rehearsal Cocktail Social",
+    date: "November 9, 2024",
+    time: "6:00PM-8:00PM",
+    description: "The rehearsal cocktail social will be an intimate gathering exclusively for the wedding party and the immediate families of the bride and groom.",
+    address: "1151 Uptown Park Blvd Ste. 12, Houston, TX 77056",
+    addressUrl: "https://maps.app.goo.gl/Y3FBR8HpJQPHauDm6",
     image: Rehersal,
   },
   {
     title: "Wedding Ceremony",
-    date: "April 20, 2024",
-    time: "6:30PM-8:30PM",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    date: "November 10, 2024",
+    time: "6:00PM-11:00PM",
+    description: "We are delighted to invite you to join us for a day of celebration and love as we exchange our vows at the stunning Bell Tower on 34th. Surrounded by the timeless elegance of this iconic venue, we will begin our new journey together amidst the grandeur of its beautiful gardens and classic architecture.",
     address: "901 W. 34th Houston, TX 77018",
+    addressUrl: "https://maps.app.goo.gl/126eeE7g5ysRqM8MA",
     image: Bell,
   },
   {
     title: "Cocktail Hour",
-    date: "April 20, 2024",
-    time: "6:30PM-8:30PM",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    date: "November 10, 2024",
+    time: "6:30PM-7:00PM",
+    description: "Please join us for a cocktail hour by The Waterwall, designed to evoke a sense of tranquility and elegance. As water gracefully flows down the large stone structure, the mesmerizing effect and soothing sound create a serene ambiance, enhancing the experience of this special evening.",
     address: "Main Water Wall Courtyard and Garden",
+    addressUrl: "https://maps.app.goo.gl/126eeE7g5ysRqM8MA",
     image: Waterfall,
   },
   {
     title: "Reception",
-    date: "April 20, 2024",
+    date: "November 10, 2024",
     time: "7:00PM-11:00PM",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    description: "We warmly invite you to a formal reception at the distinguished Carillon Ballroom. The Carillon Ballroom offers an atmosphere of timeless elegance. The classic design, featuring intricate details and rich textures, creates the perfect setting for an evening of celebration and joy.",    
     address: "Carillon Ballroom",
-    image: Bell,
+    addressUrl: "https://maps.app.goo.gl/126eeE7g5ysRqM8MA",
+    image: Bell2,
   },
 ];
 
-
 export const Schedule: React.FC = () => {
-  useEffect(() => {
-    const reveal = () => {
-      const reveals = document.querySelectorAll(".reveal");
-
-      reveals.forEach(element => {
-        const windowHeight = window.innerHeight;
-        const elementTop = element.getBoundingClientRect().top;
-        const elementVisible = 150;
-
-        if (elementTop < windowHeight - elementVisible) {
-          element.classList.add("active");
-        } else {
-          element.classList.remove("active");
-        }
-      });
-    };
-    reveal(); // Call reveal function once when component mounts
-    window.addEventListener("scroll", reveal);
-    return () => {
-      window.removeEventListener("scroll", reveal); // Clean up event listener on unmount
-    };
-  }, []);
-
   return (
     <>
       <ThemeProvider theme={defaultTheme}>
         <div className="header-htx"></div>
-        <div style={{ marginTop: 0}}>
-        <Container maxWidth={false} style={{ height: "100%"}} 
-          sx={{
+        <div style={{ marginTop: 0 }}>
+          <Container maxWidth={false} style={{ height: "100%"}} 
+            sx={{
               pt: { xs: 4, sm: 6, md:2 },
               pb: { xs: 8, sm:8,  md:2 },
               position: 'relative',
@@ -120,143 +96,107 @@ export const Schedule: React.FC = () => {
               flexDirection: 'column',
               alignItems: 'center',
               gap: { xs: 2, sm: 1 },
-              border: 0, borderColor: "lightgray", boxShadow: 4,
-              /* backgroundImage: `url(${hou})`, */
+              border: 0, 
+              borderColor: "lightgray", 
+              boxShadow: 4,
               backgroundColor: "#f2f2f2", 
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}>
             <Typography id="reccs" component="h2" variant="h5"
-            sx={{
-              fontSize: 20,
-              display: "flex",
-              justifyContent:"center",
-              alignItems:"center",
-            }}>
-               Schedule of Events
-            </Typography>
-            <Box
-            sx={{
-              width: { sm: '100%', md: '60%' },
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              marginTop: 0,
-              marginLeft: 0, 
-              marginRight: 0 
-            }}
-            >
-            <Typography id="" component="h2" variant="h5"
               sx={{
+                fontSize: 20,
                 display: "flex",
                 justifyContent:"center",
                 alignItems:"center",
               }}>
-              <p style={{ fontSize: 20, marginTop: 0}}>
-                Houston, the Space City, has set the stage for our special day,
-                and we couldn't be more excited to have you here. Together, let's
-                immerse ourselves in the city's Southern charm, vibrant energy,
-                and heartfelt moments as we celebrate love, friendship, and the
-                beginning of our forever.         
-              </p>
-
-            </Typography>                    
+              Schedule of Events
+            </Typography>
+            <Box
+              sx={{
+                width: { sm: '100%', md: '60%' },
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                marginTop: 0,
+                marginLeft: 0, 
+                marginRight: 0 
+              }}
+            >
+              <Typography id="" component="h2" variant="h5"
+                sx={{
+                  display: "flex",
+                  justifyContent:"center",
+                  alignItems:"center",
+                }}>
+                <p style={{ fontSize: 20, marginTop: 0 }}>
+                  Houston, the Space City, has set the stage for our special day,
+                  and we couldn't be more excited to have you here. Together, let's
+                  immerse ourselves in the city's Southern charm, vibrant energy,
+                  and heartfelt moments as we celebrate love, friendship, and the
+                  beginning of our forever.         
+                </p>
+              </Typography>                    
             </Box>
           </Container>
         </div>
 
         <Container id="cardHolder" maxWidth={false}       
-              sx={{
-                  pt: { xs: 4, sm: 12 },
-                  pb: { xs: 8, sm: 16 },
-                  position: 'relative',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center', // Center children horizontally
-              }}
-          >
-
-
-        <Grid container spacing={3}>
-
-                {events.map((event, index) => (
-                  <Grid item xs={12} md={12} lg={12} key={index} sx={{
-                    width: { sm: '100%', md: '60%' },
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginLeft: 0,
-                    marginRight: 0,
-                    marginTop: 0,
-                    justifyContent: "center",
-                    alignItems: "center", // Center children horizontally
-                  }}>
-                    <Card className="reveal" sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
-                      <Card sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
-                        <CardMedia
-                          component="img"
-                          sx={{
-                            width: { xs: 350, sm: 450 }, // Set width to 'auto' for mobile and 250 for other screen sizes
-                            height: 'auto',
-                            display: 'block', // Always show image
-                            marginBottom: { xs: 2, sm: 0 }, // Add margin bottom in mobile view
-                          }}
-                          image={event.image}
-                          alt={event.title}
-                        />
-                        <CardContent sx={{ flex: 1 }}>
-                          <Typography component="h2" variant="h5">
-                            {event.title}
-                          </Typography>
-                          <Typography variant="subtitle1" color="text.secondary" paragraph>
-                            {event.date} | {event.time}
-                          </Typography>
-                          <Typography variant="body2" gutterBottom >
-                            {event.description}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            Address: {event.address}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </Card>
-                  </Grid>
-                ))}
-
+          sx={{
+            pt: { xs: 4, sm: 12 },
+            pb: { xs: 8, sm: 16 },
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center', // Center children horizontally
+          }}
+        >
+          <Grid container spacing={3}>
+            {events.map((event, index) => (
+              <Grid item xs={12} md={12} lg={8} key={index} sx={{
+                width: '60%', // Set width to 60% of the page
+                display: 'flex',
+                flexDirection: 'column',
+                marginLeft: 'auto', // Center horizontally
+                marginRight: 'auto', // Center horizontally
+                marginTop: 0,
+                justifyContent: "center",
+                alignItems: "center", // Center children horizontally
+              }}>
+                <Card className="reveal" sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
+                  <Card sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
+                    <CardMedia
+                      component="img"
+                      sx={{
+                        width: { xs: 350, sm: 450 },
+                        height: 'auto',
+                        display: 'block',
+                        marginBottom: { xs: 2, sm: 0 },
+                      }}
+                      image={event.image}
+                      alt={event.title}
+                    />
+                    <CardContent sx={{ flex: 1 }}>
+                      <Typography component="h2" variant="h5">
+                        {event.title}
+                      </Typography>
+                      <Typography variant="subtitle1" color="text.secondary" paragraph>
+                        {event.date} | {event.time}
+                      </Typography>
+                      <Typography variant="body2" gutterBottom>
+                        {event.description}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        Address: <a href={event.addressUrl} target="_blank" rel="noopener noreferrer">{event.address}</a>
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Card>
               </Grid>
-          </Container>
-
-
+            ))}
+          </Grid>
+        </Container>
       </ThemeProvider>
     </>
   );
 };
-
-
-
-/* 
-
-            <Grid item xs={12} md={6} lg={8}>
-            <Card sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
-              <Card sx={{ display: 'flex' }}>
-                <CardContent sx={{ flex: 1 }}>
-                  <Typography component="h2" variant="h5">
-                  Getting To and Around Houston
-                  </Typography>
-                  <Typography variant="subtitle1" color="text.secondary" paragraph>
-                  We have two primary airports in the city: George Bush Intercontinental (IAH) and William P. Hobby (HOU). 
-                  Our wedding venue and chosen hotel are conveniently located just a 10-minute drive away from IAH. However, the choice of airport and airline is entirely up to you and your preferences.
-                  </Typography>
-                  <Typography variant="subtitle1" color="primary">
-                    <Button href="https://fly2houston.com/iah/airlines" size="small">View IAH...</Button>
-                  </Typography>
-                </CardContent>
-                <CardMedia
-                  component="img"
-                  sx={{ width: 250, display: { xs: 'none', sm: 'block' } }}
-                  image={iah}
-                  alt="TEST"
-                />
-              </Card>
-            </Card>
-            </Grid>
-*/
