@@ -175,7 +175,7 @@ export const Schedule: React.FC = () => {
                       alt={event.title}
                     />
                     <CardContent sx={{ flex: 1 }}>
-                      <Typography component="h2" variant="h5">
+                      <Typography id="reccs" component="h2" variant="h5">
                         {event.title}
                       </Typography>
                       <Typography variant="subtitle1" color="text.secondary" paragraph>
