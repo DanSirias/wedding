@@ -130,11 +130,9 @@ export const Schedule: React.FC = () => {
                   alignItems:"center",
                 }}>
                 <p style={{ fontSize: 20, marginTop: 0 }}>
-                  Houston, the Space City, has set the stage for our special day,
-                  and we couldn't be more excited to have you here. Together, let's
-                  immerse ourselves in the city's Southern charm, vibrant energy,
-                  and heartfelt moments as we celebrate love, friendship, and the
-                  beginning of our forever.         
+                Join us for a weekend of celebration that blends Texas charm, Italian warmth, and timeless elegance. We’ll kick off with a Texan country-style welcome party under the open sky, 
+                followed by an Italian-inspired rehearsal dinner where family and friends gather to toast to love and the journey ahead. Finally, we’ll celebrate in the classic beauty of 
+                The Bell Tower on 34th, where heartfelt moments will set the stage for the beginning of our forever. We can’t wait to share these unforgettable experiences with you.       
                 </p>
               </Typography>                    
             </Box>
