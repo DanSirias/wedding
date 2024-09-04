@@ -21,7 +21,6 @@ const defaultTheme = createTheme({
   },
 });
 
-const apiUrl = process.env.REACT_APP_API_RSVP;
 
 type FoodRestrictions = 'None' | 'Chicken' | 'Vegan' | 'Vegetarian';
 
@@ -66,6 +65,8 @@ export const Dashboard: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [editingRow, setEditingRow] = useState<string | null>(null);
   const [editedRSVP, setEditedRSVP] = useState<RSVP | null>(null);
+
+  const apiUrl = process.env.REACT_APP_API_RSVP;
 
   const { register, handleSubmit, formState: { errors }, control, setValue, reset } = useForm<FormData>({
     resolver: yupResolver(schema),
