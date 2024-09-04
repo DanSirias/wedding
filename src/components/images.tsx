@@ -21,6 +21,8 @@ const defaultTheme = createTheme({
   }, 
 });
 
+const apiUrl = process.env.REACT_APP_API_IMAGES;
+const API_GATEWAY_URL = apiUrl;
 
 export const Images = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -30,8 +32,7 @@ export const Images = () => {
   const [galleryKey, setGalleryKey] = useState(0); // Add galleryKey state
   const [open, setOpen] = useState(false);
 
-  const apiUrl = process.env.REACT_APP_API_IMAGES;
-  const API_GATEWAY_URL = apiUrl;
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -65,7 +66,7 @@ export const Images = () => {
         };
 
         // Send the POST request
-        const response = await fetch(`${API_GATEWAY_URL}`, {
+        const response = await fetch(`${apiUrl}`, {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
