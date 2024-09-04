@@ -21,7 +21,8 @@ const defaultTheme = createTheme({
   }, 
 });
 
-const API_GATEWAY_URL = "https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images";
+const apiUrl = process.env.REACT_APP_API_IMAGES;
+const API_GATEWAY_URL = apiUrl;
 
 export const Images = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -63,7 +64,7 @@ export const Images = () => {
         };
 
         // Send the POST request
-        const response = await fetch(API_GATEWAY_URL, {
+        const response = await fetch(`${API_GATEWAY_URL}`, {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'

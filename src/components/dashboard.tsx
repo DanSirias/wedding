@@ -21,6 +21,8 @@ const defaultTheme = createTheme({
   },
 });
 
+const apiUrl = process.env.REACT_APP_API_RSVP;
+
 type FoodRestrictions = 'None' | 'Chicken' | 'Vegan' | 'Vegetarian';
 
 interface Guest {
@@ -108,7 +110,7 @@ export const Dashboard: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get<RSVP[]>(
-          "https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?lastName=sirias",
+          `${apiUrl}?lastName=sirias`,
           {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
@@ -157,7 +159,7 @@ export const Dashboard: React.FC = () => {
     if (!editedRSVP) return;
     
     try {
-      await axios.put(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp`, editedRSVP, {
+      await axios.put(`${apiUrl}`, editedRSVP, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
         },
@@ -165,7 +167,7 @@ export const Dashboard: React.FC = () => {
       setEditingRow(null);
       setEditedRSVP(null);
       const response = await axios.get<RSVP[]>(
-        "https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp?lastName=sirias",
+        `${apiUrl}?lastName=sirias`,
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
@@ -193,7 +195,7 @@ export const Dashboard: React.FC = () => {
 
   const handleSubmitRSVP: SubmitHandler<FormData> = async (data) => {
     try {
-      await axios.post("https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp", data, {
+      await axios.post(`${apiUrl}`, data, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
         },
