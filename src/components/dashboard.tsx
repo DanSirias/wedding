@@ -117,6 +117,7 @@ export const Dashboard: React.FC = () => {
             },
           }
         );
+        console.log(apiUrl); 
         console.log(response.data); 
         setRsvpData(response.data);
       } catch (error) {
