@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {
@@ -14,16 +14,17 @@ import {
   FormControl,
   Select,
   MenuItem,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
-  useMediaQuery,
+  Divider,  // Import Divider
+  useMediaQuery
 } from '@mui/material';
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Theme definition
 const defaultTheme = createTheme({
@@ -31,13 +32,6 @@ const defaultTheme = createTheme({
     primary: {
       main: "#321115",
       dark: "#847072",
-    },
-  },
-  components: {
-    MuiStack: {
-      defaultProps: {
-        useFlexGap: true,
-      },
     },
   },
 });
@@ -98,7 +92,6 @@ export const RSVP: React.FC = () => {
       }
   
       const dynamoData = await response.json();
-      console.log(dynamoData);
       const data = dynamoData[0];
   
       const parsedData: FormData = {
@@ -111,7 +104,7 @@ export const RSVP: React.FC = () => {
           firstName: guest.firstName,
           lastName: guest.lastName,
           foodRestrictions: guest.foodRestrictions,
-          attending: guest.attending ? "Yes" : "No",  // Adjusted logic
+          attending: guest.attending ? "Yes" : "No",
         })),
       };
   
@@ -145,7 +138,7 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             guests: formData.guests.map((guest) => ({
                 firstName: guest.firstName,
                 lastName: guest.lastName,
-                attending: guest.attending === "Yes" ? true : false,  // Convert "Yes" to true and "No" to false
+                attending: guest.attending === "Yes" ? true : false,
                 foodRestrictions: guest.foodRestrictions || 'None',
             })),
         };
@@ -252,80 +245,139 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <Typography variant="h6" sx={{ marginBottom: 2 }}>Guests List</Typography>
-                      <TableContainer component={Paper}>
-                        <Table size={isSmallScreen ? 'small' : 'medium'}>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell sx={{ fontWeight: 'bold' }}>First Name</TableCell>
-                              <TableCell sx={{ fontWeight: 'bold' }}>Last Name</TableCell>
-                              <TableCell sx={{ fontWeight: 'bold' }}>Attending</TableCell>
-                              <TableCell sx={{ fontWeight: 'bold' }}>Food Restrictions</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {formData.guests.map((guest, index) => (
-                              <TableRow key={index}>
-                                <TableCell>
-                                  <TextField
-                                    value={guest.firstName}
-                                    InputProps={{ readOnly: true }}
-                                    fullWidth
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  <TextField
-                                    value={guest.lastName}
-                                    InputProps={{ readOnly: true }}
-                                    fullWidth
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  <FormControl fullWidth>
-                                    <Select
-                                      {...register(`guests.${index}.attending` as const)}
-                                      value={guest.attending}
-                                      onChange={(e) => {
-                                        const guests = [...formData.guests];
-                                        guests[index].attending = e.target.value as string;
-                                        setFormData({ ...formData, guests });
-                                      }}
-                                    >
-                                      <MenuItem value="Yes">Yes</MenuItem>
-                                      <MenuItem value="No">No</MenuItem>
-                                    </Select>
-                                  </FormControl>
-                                </TableCell>
-                                <TableCell>
-                                  {guest.attending === 'Yes' ? (
-                                    <FormControl fullWidth>
-                                      <Select
-                                        {...register(`guests.${index}.foodRestrictions` as const)}
-                                        value={guest.foodRestrictions || 'None'}
-                                        onChange={(e) => {
-                                          const guests = [...formData.guests];
-                                          guests[index].foodRestrictions = e.target.value as string;
-                                          setFormData({ ...formData, guests });
-                                        }}
-                                      >
-                                        <MenuItem value="None">None</MenuItem>
-                                        <MenuItem value="Chicken">Chicken</MenuItem>
-                                        <MenuItem value="Vegan">Vegan</MenuItem>
-                                        <MenuItem value="Vegetarian">Vegetarian</MenuItem>
-                                      </Select>
-                                    </FormControl>
-                                  ) : (
+
+                      {/* Render Form-Style Layout for Small Screens */}
+                      {isSmallScreen ? (
+                        formData.guests.map((guest, index) => (
+                          <Box key={index} component={Paper} sx={{ padding: 2, marginBottom: 2 }}>
+                            <TextField
+                              label="First Name"
+                              value={guest.firstName}
+                              InputProps={{ readOnly: true }}
+                              fullWidth
+                              sx={{ marginBottom: 2 }}
+                            />
+                            <TextField
+                              label="Last Name"
+                              value={guest.lastName}
+                              InputProps={{ readOnly: true }}
+                              fullWidth
+                              sx={{ marginBottom: 2 }}
+                            />
+                            <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                              <Select
+                                {...register(`guests.${index}.attending` as const)}
+                                value={guest.attending}
+                                onChange={(e) => {
+                                  const guests = [...formData.guests];
+                                  guests[index].attending = e.target.value as string;
+                                  setFormData({ ...formData, guests });
+                                }}
+                              >
+                                <MenuItem value="Yes">Yes</MenuItem>
+                                <MenuItem value="No">No</MenuItem>
+                              </Select>
+                            </FormControl>
+                            {guest.attending === 'Yes' && (
+                              <FormControl fullWidth>
+                                <Select
+                                  {...register(`guests.${index}.foodRestrictions` as const)}
+                                  value={guest.foodRestrictions || 'None'}
+                                  onChange={(e) => {
+                                    const guests = [...formData.guests];
+                                    guests[index].foodRestrictions = e.target.value as string;
+                                    setFormData({ ...formData, guests });
+                                  }}
+                                >
+                                  <MenuItem value="None">None</MenuItem>
+                                  <MenuItem value="Chicken">Chicken</MenuItem>
+                                  <MenuItem value="Vegan">Vegan</MenuItem>
+                                  <MenuItem value="Vegetarian">Vegetarian</MenuItem>
+                                </Select>
+                              </FormControl>
+                            )}
+                            {/* Add Divider between guest sections */}
+                            {index < formData.guests.length - 1 && (
+                              <Divider sx={{ marginY: 2 }} />
+                            )}
+                          </Box>
+                        ))
+                      ) : (
+                        <TableContainer component={Paper}>
+                          <Table>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell sx={{ fontWeight: 'bold' }}>First Name</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold' }}>Last Name</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold' }}>Attending</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold' }}>Food Restrictions</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {formData.guests.map((guest, index) => (
+                                <TableRow key={index}>
+                                  <TableCell>
                                     <TextField
-                                      value="N/A"
+                                      value={guest.firstName}
                                       InputProps={{ readOnly: true }}
                                       fullWidth
                                     />
-                                  )}
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
+                                  </TableCell>
+                                  <TableCell>
+                                    <TextField
+                                      value={guest.lastName}
+                                      InputProps={{ readOnly: true }}
+                                      fullWidth
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <FormControl fullWidth>
+                                      <Select
+                                        {...register(`guests.${index}.attending` as const)}
+                                        value={guest.attending}
+                                        onChange={(e) => {
+                                          const guests = [...formData.guests];
+                                          guests[index].attending = e.target.value as string;
+                                          setFormData({ ...formData, guests });
+                                        }}
+                                      >
+                                        <MenuItem value="Yes">Yes</MenuItem>
+                                        <MenuItem value="No">No</MenuItem>
+                                      </Select>
+                                    </FormControl>
+                                  </TableCell>
+                                  <TableCell>
+                                    {guest.attending === 'Yes' ? (
+                                      <FormControl fullWidth>
+                                        <Select
+                                          {...register(`guests.${index}.foodRestrictions` as const)}
+                                          value={guest.foodRestrictions || 'None'}
+                                          onChange={(e) => {
+                                            const guests = [...formData.guests];
+                                            guests[index].foodRestrictions = e.target.value as string;
+                                            setFormData({ ...formData, guests });
+                                          }}
+                                        >
+                                          <MenuItem value="None">None</MenuItem>
+                                          <MenuItem value="Chicken">Chicken</MenuItem>
+                                          <MenuItem value="Vegan">Vegan</MenuItem>
+                                          <MenuItem value="Vegetarian">Vegetarian</MenuItem>
+                                        </Select>
+                                      </FormControl>
+                                    ) : (
+                                      <TextField
+                                        value="N/A"
+                                        InputProps={{ readOnly: true }}
+                                        fullWidth
+                                      />
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      )}
                     </Grid>
                   </Grid>
 
