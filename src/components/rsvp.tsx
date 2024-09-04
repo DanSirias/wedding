@@ -21,6 +21,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  useMediaQuery,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -78,6 +79,9 @@ export const RSVP: React.FC = () => {
   const [formData, setFormData] = useState<FormData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Responsive breakpoint check
+  const isSmallScreen = useMediaQuery('(max-width: 600px)');
 
   const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm<FormData>({
     resolver: yupResolver(schema),
@@ -168,7 +172,6 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     }
 };
 
-
   const handleClear = () => {
     reset();
     setFormData(null);
@@ -190,7 +193,7 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               const rsvpId = (document.querySelector('input[name="rsvpId"]') as HTMLInputElement).value;
               fetchRSVPData(rsvpId);
             }} noValidate>
-              <Stack spacing={2} sx={{ width: '100%', marginBottom: 4, }}>
+              <Stack spacing={2} sx={{ width: '100%', marginBottom: 4 }}>
                 <TextField
                   label="RSVP Pin"
                   {...register('rsvpId')}
@@ -212,135 +215,135 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
             {/* Form 2: Submit Updated RSVP Data */}
             {formData && formData.email && formData.phone && (
-            <form onSubmit={handleFormSubmit} noValidate>
-              <Stack spacing={2} sx={{ width: '100%' }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
-                    <Typography variant="h6" sx={{ marginBottom: 2 }}>Contact Info</Typography>
-                    <TextField
-                      label="Email"
-                      {...register('email')}
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      variant="outlined"
-                      fullWidth
-                      sx={{ marginBottom: 2 }}
-                    />
-                    <TextField
-                      label="Phone"
-                      {...register('phone')}
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      variant="outlined"
-                      fullWidth
-                      sx={{ marginBottom: 2 }}
-                    />
-                    <TextField
-                      label="Comments"
-                      {...register('comments')}
-                      value={formData.comments}
-                      onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
-                      multiline
-                      rows={2}
-                      variant="outlined"
-                      fullWidth
-                      sx={{ marginBottom: 2 }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Typography variant="h6" sx={{ marginBottom: 2 }}>Guests List</Typography>
-                    <TableContainer component={Paper}>
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell sx={{ fontWeight: 'bold' }}>First Name</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Last Name</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Attending</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Food Restrictions</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {formData.guests.map((guest, index) => (
-                            <TableRow key={index}>
-                              <TableCell>
-                                <TextField
-                                  value={guest.firstName}
-                                  InputProps={{ readOnly: true }}
-                                  fullWidth
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  value={guest.lastName}
-                                  InputProps={{ readOnly: true }}
-                                  fullWidth
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <FormControl fullWidth>
-                                  <Select
-                                    {...register(`guests.${index}.attending` as const)}
-                                    value={guest.attending}
-                                    onChange={(e) => {
-                                      const guests = [...formData.guests];
-                                      guests[index].attending = e.target.value as string;
-                                      setFormData({ ...formData, guests });
-                                    }}
-                                  >
-                                    <MenuItem value="Yes">Yes</MenuItem>
-                                    <MenuItem value="No">No</MenuItem>
-                                  </Select>
-                                </FormControl>
-                              </TableCell>
-                              <TableCell>
-                                {guest.attending === 'Yes' ? (
-                                  <FormControl fullWidth>
-                                    <Select
-                                      {...register(`guests.${index}.foodRestrictions` as const)}
-                                      value={guest.foodRestrictions || 'None'}
-                                      onChange={(e) => {
-                                        const guests = [...formData.guests];
-                                        guests[index].foodRestrictions = e.target.value as string;
-                                        setFormData({ ...formData, guests });
-                                      }}
-                                    >
-                                      <MenuItem value="None">None</MenuItem>
-                                      <MenuItem value="Chicken">Chicken</MenuItem>
-                                      <MenuItem value="Vegan">Vegan</MenuItem>
-                                      <MenuItem value="Vegetarian">Vegetarian</MenuItem>
-                                    </Select>
-                                  </FormControl>
-                                ) : (
+              <form onSubmit={handleFormSubmit} noValidate>
+                <Stack spacing={2} sx={{ width: '100%' }}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="h6" sx={{ marginBottom: 2 }}>Contact Info</Typography>
+                      <TextField
+                        label="Email"
+                        {...register('email')}
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        variant="outlined"
+                        fullWidth
+                        sx={{ marginBottom: 2 }}
+                      />
+                      <TextField
+                        label="Phone"
+                        {...register('phone')}
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        variant="outlined"
+                        fullWidth
+                        sx={{ marginBottom: 2 }}
+                      />
+                      <TextField
+                        label="Comments"
+                        {...register('comments')}
+                        value={formData.comments}
+                        onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
+                        multiline
+                        rows={2}
+                        variant="outlined"
+                        fullWidth
+                        sx={{ marginBottom: 2 }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="h6" sx={{ marginBottom: 2 }}>Guests List</Typography>
+                      <TableContainer component={Paper}>
+                        <Table size={isSmallScreen ? 'small' : 'medium'}>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell sx={{ fontWeight: 'bold' }}>First Name</TableCell>
+                              <TableCell sx={{ fontWeight: 'bold' }}>Last Name</TableCell>
+                              <TableCell sx={{ fontWeight: 'bold' }}>Attending</TableCell>
+                              <TableCell sx={{ fontWeight: 'bold' }}>Food Restrictions</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {formData.guests.map((guest, index) => (
+                              <TableRow key={index}>
+                                <TableCell>
                                   <TextField
-                                    value="N/A"
+                                    value={guest.firstName}
                                     InputProps={{ readOnly: true }}
                                     fullWidth
                                   />
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    value={guest.lastName}
+                                    InputProps={{ readOnly: true }}
+                                    fullWidth
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <FormControl fullWidth>
+                                    <Select
+                                      {...register(`guests.${index}.attending` as const)}
+                                      value={guest.attending}
+                                      onChange={(e) => {
+                                        const guests = [...formData.guests];
+                                        guests[index].attending = e.target.value as string;
+                                        setFormData({ ...formData, guests });
+                                      }}
+                                    >
+                                      <MenuItem value="Yes">Yes</MenuItem>
+                                      <MenuItem value="No">No</MenuItem>
+                                    </Select>
+                                  </FormControl>
+                                </TableCell>
+                                <TableCell>
+                                  {guest.attending === 'Yes' ? (
+                                    <FormControl fullWidth>
+                                      <Select
+                                        {...register(`guests.${index}.foodRestrictions` as const)}
+                                        value={guest.foodRestrictions || 'None'}
+                                        onChange={(e) => {
+                                          const guests = [...formData.guests];
+                                          guests[index].foodRestrictions = e.target.value as string;
+                                          setFormData({ ...formData, guests });
+                                        }}
+                                      >
+                                        <MenuItem value="None">None</MenuItem>
+                                        <MenuItem value="Chicken">Chicken</MenuItem>
+                                        <MenuItem value="Vegan">Vegan</MenuItem>
+                                        <MenuItem value="Vegetarian">Vegetarian</MenuItem>
+                                      </Select>
+                                    </FormControl>
+                                  ) : (
+                                    <TextField
+                                      value="N/A"
+                                      InputProps={{ readOnly: true }}
+                                      fullWidth
+                                    />
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Grid>
                   </Grid>
-                </Grid>
 
-                <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end', width: '100%', padding: 3 }}>
-                  <Button variant="outlined" color="secondary" onClick={handleClear}>
-                    Clear
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    disabled={loading}
-                  >
-                    {loading ? 'Submitting...' : 'RSVP Now'}
-                  </Button>
+                  <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end', width: '100%', padding: 3 }}>
+                    <Button variant="outlined" color="secondary" onClick={handleClear}>
+                      Clear
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      type="submit"
+                      disabled={loading}
+                    >
+                      {loading ? 'Submitting...' : 'RSVP Now'}
+                    </Button>
+                  </Stack>
                 </Stack>
-              </Stack>
-            </form>
+              </form>
             )}
           </Box>
         </Container>
