@@ -243,7 +243,7 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                         sx={{ marginBottom: 2 }}
                       />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6}  sx={{ backgroundColor: 'white', padding: 2, borderRadius: 1 }}>
                       <Typography variant="h6" sx={{ marginBottom: 2 }}>Guests List</Typography>
 
                       {/* Render Form-Style Layout for Small Screens */}
