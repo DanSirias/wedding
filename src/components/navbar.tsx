@@ -156,10 +156,10 @@ function Navbar() {
                 <Link
                   component={RouterLink}
                   to={page.href}
-                  style={{ textDecoration: "none", color: "#321115", display: "flex", alignItems: "center", fontSize: 14 }}
+                  style={{ textDecoration: "none", color: "#321115", display: "flex", alignItems: "center", fontSize: 14}}
                   color="inherit"
                   underline="none"
-                  sx={{ mx: 2 }}
+                  sx={{ mx: 0 }}
                 >
                   <page.icon sx={{ marginRight: 1, fontSize: 18 }} />
                   {page.text}
