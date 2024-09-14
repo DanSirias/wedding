@@ -211,7 +211,7 @@ const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               <form onSubmit={handleFormSubmit} noValidate>
                 <Stack spacing={2} sx={{ width: '100%' }}>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6} sx={{ backgroundColor: 'white', padding: 2, borderRadius: 1 }}>
                       <Typography variant="h6" sx={{ marginBottom: 2 }}>Contact Info</Typography>
                       <TextField
                         label="Email"
