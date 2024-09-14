@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container, CssBaseline, Box, Typography, TextField, Button, Stack, Grid, FormControl, Select, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Divider
+  Container, CssBaseline, Box, Typography, TextField, Button, Stack, Grid, FormControl, Select, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Divider, Dialog, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useForm, SubmitHandler, useFieldArray } from 'react-hook-form';
@@ -55,6 +55,7 @@ export const RSVP: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formVisible, setFormVisible] = useState(false); // State to control form visibility
+  const [openModal, setOpenModal] = useState(false); // State for modal visibility
 
   const { register, handleSubmit, control, formState: { errors }, reset } = useForm<FormData>({
     resolver: yupResolver(schema),
@@ -120,7 +121,15 @@ export const RSVP: React.FC = () => {
           'Content-Type': 'application/json',
         },
       });
-      alert("RSVP updated successfully");
+
+      // Show modal pop-up
+      setOpenModal(true);
+
+      // Redirect to another URL after 3 seconds
+      setTimeout(() => {
+        window.location.href = 'https://example.com/thank-you'; // Change to your desired URL
+      }, 3000);
+
     } catch (err) {
       setError("Error submitting RSVP. Please try again or contact us.");
     } finally {
@@ -288,6 +297,16 @@ export const RSVP: React.FC = () => {
             </form>
           )}
         </Box>
+          {/* Modal for Success Message */}
+          <Dialog open={openModal} onClose={() => setOpenModal(false)}>
+          <DialogTitle>Success</DialogTitle>
+          <DialogContent>
+          <Typography>Thank you, we look forward to seeing you!</Typography>
+          </DialogContent>
+          <DialogActions>
+          <Button onClick={() => setOpenModal(false)}>Close</Button>
+          </DialogActions>
+          </Dialog>
       </Container>
     </ThemeProvider>
     </div>
