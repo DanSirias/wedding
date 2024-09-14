@@ -471,8 +471,9 @@ export const Dashboard: React.FC = () => {
           <Box sx={{
             position: 'absolute', top: '50%', left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 600, bgcolor: 'background.paper', borderRadius: 2,
-            boxShadow: 24, p: 4
+            width: 600, maxHeight: '80vh', // Set a max height for the modal
+            bgcolor: 'background.paper', borderRadius: 2,
+            boxShadow: 24, p: 4, overflowY: 'auto' // Enable vertical scrolling
           }}>
             <Typography variant="h6" component="h2">
               Add New RSVP
@@ -487,24 +488,28 @@ export const Dashboard: React.FC = () => {
                 helperText={errors.rsvpId?.message}
               />
               {fields.map((field, index) => (
-                <Box key={field.id}>
-                  <TextField
-                    fullWidth
-                    margin="normal"
-                    label="First Name"
-                    {...register(`guests.${index}.firstName`)}
-                    error={!!errors.guests?.[index]?.firstName}
-                    helperText={errors.guests?.[index]?.firstName?.message}
-                  />
-                  <TextField
-                    fullWidth
-                    margin="normal"
-                    label="Last Name"
-                    {...register(`guests.${index}.lastName`)}
-                    error={!!errors.guests?.[index]?.lastName}
-                    helperText={errors.guests?.[index]?.lastName?.message}
-                  />
-                </Box>
+                <Grid container spacing={2} key={field.id}>
+                  <Grid item xs={6}>
+                    <TextField
+                      fullWidth
+                      margin="normal"
+                      label="First Name"
+                      {...register(`guests.${index}.firstName`)}
+                      error={!!errors.guests?.[index]?.firstName}
+                      helperText={errors.guests?.[index]?.firstName?.message}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      fullWidth
+                      margin="normal"
+                      label="Last Name"
+                      {...register(`guests.${index}.lastName`)}
+                      error={!!errors.guests?.[index]?.lastName}
+                      helperText={errors.guests?.[index]?.lastName?.message}
+                    />
+                  </Grid>
+                </Grid>
               ))}
               <Button onClick={addAnotherGuest} sx={{ marginTop: 2 }}>Add Another Guest</Button>
               <Button
