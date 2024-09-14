@@ -18,10 +18,11 @@ const defaultTheme = createTheme({
   },
 });
 
+// Update attending type to strictly "Yes" | "No"
 interface Guest {
   firstName: string;
   lastName: string;
-  attending: boolean;
+  attending: "Yes" | "No";  // Strict type
   foodRestrictions: 'None' | 'Chicken' | 'Vegan' | 'Vegetarian';
 }
 
@@ -44,7 +45,7 @@ const schema = yup.object().shape({
     yup.object().shape({
       firstName: yup.string().required('First Name is required'),
       lastName: yup.string().required('Last Name is required'),
-      attending: yup.boolean().required('Attending status is required'),
+      attending: yup.string().oneOf(['Yes', 'No']).required('Attending status is required'), // Literal string union
       foodRestrictions: yup.string().oneOf(['None', 'Chicken', 'Vegan', 'Vegetarian']).required('Food Restriction is required'),
     })
   ).required(),
@@ -63,7 +64,7 @@ export const RSVP: React.FC = () => {
       email: '',
       phone: '',
       comments: '',
-      guests: [{ firstName: '', lastName: '', attending: false, foodRestrictions: 'None' }],
+      guests: [{ firstName: '', lastName: '', attending: "Yes", foodRestrictions: 'None' }],
     },
   });
 
@@ -91,7 +92,7 @@ export const RSVP: React.FC = () => {
         guests: data.guests.map((guest: any) => ({
           firstName: guest.firstName,
           lastName: guest.lastName,
-          attending: guest.attending === "Yes" ? true : false,
+          attending: guest.attending === true ? "Yes" : "No", // Convert boolean to "Yes"/"No"
           foodRestrictions: guest.foodRestrictions || 'None',
         })),
       });
@@ -111,7 +112,7 @@ export const RSVP: React.FC = () => {
         ...data,
         guests: data.guests.map(guest => ({
           ...guest,
-          attending: guest.attending === true ? "Yes" : "No", // Converting boolean back to "Yes"/"No"
+          attending: guest.attending === "Yes" ? true : false, // Convert "Yes"/"No" back to boolean
         })),
       };
       await axios.put('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/rsvp', formattedData, {
@@ -132,6 +133,7 @@ export const RSVP: React.FC = () => {
   };
 
   return (
+    <div className="rsvpBack" style={{ padding: 30, height: "100%" }}>
     <ThemeProvider theme={defaultTheme}>
       <Container maxWidth="lg" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: 2 }}>
         <CssBaseline />
@@ -170,7 +172,7 @@ export const RSVP: React.FC = () => {
           {formVisible && (
             <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
               <Stack spacing={2} sx={{ width: '100%' }}>
-                <Grid container spacing={2}>
+                <Grid container spacing={2} sx={{ backgroundColor: 'white', padding: 2, borderRadius: 1 }}>
                   <Grid item xs={12} md={6}>
                     <Typography variant="h6">Contact Info</Typography>
                     <TextField
@@ -220,6 +222,9 @@ export const RSVP: React.FC = () => {
                                   error={!!errors.guests?.[index]?.firstName}
                                   helperText={errors.guests?.[index]?.firstName?.message}
                                   fullWidth
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}  // Make firstName read-only
                                 />
                               </TableCell>
                               <TableCell>
@@ -228,6 +233,9 @@ export const RSVP: React.FC = () => {
                                   error={!!errors.guests?.[index]?.lastName}
                                   helperText={errors.guests?.[index]?.lastName?.message}
                                   fullWidth
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}  // Make lastName read-only
                                 />
                               </TableCell>
                               <TableCell>
@@ -235,7 +243,7 @@ export const RSVP: React.FC = () => {
                                   <Select
                                     {...register(`guests.${index}.attending` as const)}
                                     error={!!errors.guests?.[index]?.attending}
-                                    defaultValue={fields[index].attending ? "Yes" : "No"}
+                                    defaultValue={fields[index].attending} // Correctly set default value
                                   >
                                     <MenuItem value="Yes">Yes</MenuItem>
                                     <MenuItem value="No">No</MenuItem>
@@ -263,7 +271,6 @@ export const RSVP: React.FC = () => {
                     </TableContainer>
                   </Grid>
                 </Grid>
-
                 <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end' }}>
                   <Button variant="outlined" color="secondary" onClick={handleClear}>
                     Clear
@@ -283,6 +290,7 @@ export const RSVP: React.FC = () => {
         </Box>
       </Container>
     </ThemeProvider>
+    </div>
   );
 };
 
