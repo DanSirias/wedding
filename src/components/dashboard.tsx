@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+\import React, { useEffect, useState } from "react";
 import {
   Container, Grid, Card, CardContent, Typography, Box, Paper,
   Table, TableBody, TableCell, TableHead, TableRow, IconButton, Collapse, Button, Modal, TextField, FormControl, Select, MenuItem
@@ -70,7 +70,6 @@ export const Dashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState(""); // State to hold the search query
   const [filteredData, setFilteredData] = useState<RSVP[]>([]); // State to hold the filtered data
 
-
   const { register, handleSubmit, formState: { errors }, control, setValue, reset } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -84,6 +83,14 @@ export const Dashboard: React.FC = () => {
     name: "guests"
   });
 
+  const totalRSVPs = rsvpData?.length || 0;
+  const totalAttendingGuests = rsvpData?.reduce((total, rsvp) =>
+    total + rsvp.guests.filter(guest => guest.attending).length, 0
+  ) || 0;
+  const totalDeclinedGuests = rsvpData?.reduce((total, rsvp) =>
+    total + rsvp.guests.filter(guest => !guest.attending).length, 0
+  ) || 0;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -93,6 +100,7 @@ export const Dashboard: React.FC = () => {
           },
         });
         setRsvpData(response.data);
+        setFilteredData(response.data); // Set both rsvpData and filteredData initially
       } catch (error) {
         console.error("Error fetching data", error);
       }
@@ -106,6 +114,23 @@ export const Dashboard: React.FC = () => {
       ...prevOpenRow,
       [rsvpId]: !prevOpenRow[rsvpId]
     }));
+  };
+
+  // Handle search input change and filter data
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    if (rsvpData) {
+      const filtered = rsvpData.filter(rsvp =>
+        rsvp.rsvpId.toLowerCase().includes(query) ||  // Filter by RSVP ID
+        rsvp.guests.some(guest =>
+          guest.firstName.toLowerCase().includes(query) ||  // Filter by Guest First Name
+          guest.lastName.toLowerCase().includes(query)      // Filter by Guest Last Name
+        )
+      );
+      setFilteredData(filtered);
+    }
   };
 
   const handleGuestChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { value: unknown }>, field: string) => {
@@ -138,49 +163,12 @@ export const Dashboard: React.FC = () => {
         },
       });
       setRsvpData(response.data);
+      setFilteredData(response.data); // Update the filtered data after saving
     } catch (error) {
       console.error("Error updating RSVP", error);
     }
   };
 
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => {
-    reset({
-      rsvpId: '',
-      guests: [{ firstName: '', lastName: '', attending: false, foodRestrictions: 'None' }],
-    });
-    setOpenModal(false);
-  };
-
-  const handleSubmitRSVP: SubmitHandler<FormData> = async (data) => {
-    try {
-      await axios.post(`${apiUrl}`, data, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
-        },
-      });
-      handleCloseModal();
-    } catch (error) {
-      console.error("Error adding RSVP", error);
-    }
-  };
-
-    // Handle search input change and filter data
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const query = event.target.value.toLowerCase();
-      setSearchQuery(query);
-  
-      if (rsvpData) {
-        const filtered = rsvpData.filter(rsvp =>
-          rsvp.rsvpId.toLowerCase().includes(query) ||  // Filter by RSVP ID
-          rsvp.guests.some(guest =>
-            guest.firstName.toLowerCase().includes(query) ||  // Filter by Guest First Name
-            guest.lastName.toLowerCase().includes(query)      // Filter by Guest Last Name
-          )
-        );
-        setFilteredData(filtered);
-      }
-    };
   const handleDownloadExcel = () => {
     if (!rsvpData) return;
 
@@ -194,7 +182,7 @@ export const Dashboard: React.FC = () => {
         created: rsvp.created,
         updated: rsvp.updated
       };
-      
+
       rsvp.guests.forEach((guest, index) => {
         row[`Guest ${index + 1} First Name`] = guest.firstName;
         row[`Guest ${index + 1} Last Name`] = guest.lastName;
@@ -212,10 +200,58 @@ export const Dashboard: React.FC = () => {
     XLSX.writeFile(workbook, "RSVP_Data.xlsx");
   };
 
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => {
+    reset({
+      rsvpId: '',
+      guests: [{ firstName: '', lastName: '', attending: false, foodRestrictions: 'None' }],
+    });
+    setOpenModal(false);
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container maxWidth="lg" sx={{ marginTop: 4 }}>
+        {/* Cards Section */}
         <Grid container spacing={4}>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card>
+              <CardContent sx={{ textAlign: 'center' }}>
+                <Typography variant="h5">Add RSVP</Typography>
+                <Button variant="contained" color="primary" onClick={handleOpenModal}>
+                  Add New RSVP
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card>
+              <CardContent sx={{ textAlign: 'center' }}>
+                <Typography variant="h5">Total Reservations</Typography>
+                <Typography variant="body2">{totalRSVPs}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card>
+              <CardContent sx={{ textAlign: 'center' }}>
+                <Typography variant="h5">Total Attending</Typography>
+                <Typography variant="body2">{totalAttendingGuests}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card>
+              <CardContent sx={{ textAlign: 'center' }}>
+                <Typography variant="h5">Total Declines</Typography>
+                <Typography variant="body2">{totalDeclinedGuests}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+
+        {/* Table and Data Section */}
+        <Grid container spacing={4} sx={{ marginTop: 4 }}>
           {/* Navigation Section */}
           <Grid item xs={12} md={3}>
             <Paper elevation={3} sx={{ padding: 2 }}>
@@ -230,12 +266,13 @@ export const Dashboard: React.FC = () => {
             </Paper>
           </Grid>
 
-          {/* Table and Data Section */}
+          {/* Table Section */}
           <Grid item xs={12} md={9}>
-            <Paper elevation={3} sx={{ padding: 2 }}>QAA
+            <Paper elevation={3} sx={{ padding: 2 }}>
               <Typography variant="h6" gutterBottom>
                 RSVP Data
               </Typography>
+
               {/* Search Bar and Download Button */}
               <Grid container justifyContent="space-between" sx={{ marginBottom: 2 }}>
                 <Button
@@ -253,6 +290,7 @@ export const Dashboard: React.FC = () => {
                   sx={{ width: 300 }}
                 />
               </Grid>
+
               <Table>
                 <TableHead sx={{ backgroundColor: 'lightgray' }}>
                   <TableRow>
@@ -265,7 +303,7 @@ export const Dashboard: React.FC = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rsvpData?.map((rsvp) => {
+                  {filteredData.map((rsvp) => {
                     const hasDeclinedGuest = rsvp.guests.some(guest => !guest.attending);
                     const hasFoodRestrictions = rsvp.guests.some(guest => guest.foodRestrictions !== 'None');
 
@@ -314,14 +352,101 @@ export const Dashboard: React.FC = () => {
                                   <TableBody>
                                     {rsvp.guests.map((guest, index) => (
                                       <TableRow key={index}>
-                                        <TableCell>{guest.firstName}</TableCell>
-                                        <TableCell>{guest.lastName}</TableCell>
-                                        <TableCell>{guest.attending ? "Yes" : "No"}</TableCell>
-                                        <TableCell>{guest.foodRestrictions || 'None'}</TableCell>
+                                        <TableCell>
+                                          {editingRow === rsvp.rsvpId ? (
+                                            <TextField
+                                              fullWidth
+                                              value={editedRSVP?.guests[index]?.firstName || ''}
+                                              onChange={(e) => handleGuestChange(index, e, 'firstName')}
+                                            />
+                                          ) : (
+                                            guest.firstName
+                                          )}
+                                        </TableCell>
+                                        <TableCell>
+                                          {editingRow === rsvp.rsvpId ? (
+                                            <TextField
+                                              fullWidth
+                                              value={editedRSVP?.guests[index]?.lastName || ''}
+                                              onChange={(e) => handleGuestChange(index, e, 'lastName')}
+                                            />
+                                          ) : (
+                                            guest.lastName
+                                          )}
+                                        </TableCell>
+                                        <TableCell>
+                                          {editingRow === rsvp.rsvpId ? (
+                                            <FormControl fullWidth>
+                                              <Select
+                                                value={editedRSVP?.guests?.[index]?.attending ? "Yes" : "No"}
+                                                onChange={(e) => {
+                                                  if (editedRSVP && editedRSVP.guests) {
+                                                    const updatedGuests = [...editedRSVP.guests];
+                                                    updatedGuests[index] = {
+                                                      ...updatedGuests[index],
+                                                      attending: e.target.value === "Yes",
+                                                    };
+                                                    setEditedRSVP({
+                                                      ...editedRSVP,
+                                                      guests: updatedGuests,
+                                                      rsvpId: editedRSVP.rsvpId,
+                                                    });
+                                                  }
+                                                }}
+                                              >
+                                                <MenuItem value="Yes">Yes</MenuItem>
+                                                <MenuItem value="No">No</MenuItem>
+                                              </Select>
+                                            </FormControl>
+                                          ) : (
+                                            guest.attending ? "Yes" : "No"
+                                          )}
+                                        </TableCell>
+
+                                        <TableCell>
+                                          {editingRow === rsvp.rsvpId ? (
+                                            <FormControl fullWidth>
+                                              <Select
+                                                value={editedRSVP?.guests?.[index]?.foodRestrictions || 'None'}
+                                                onChange={(e) => {
+                                                  if (editedRSVP && editedRSVP.guests) {
+                                                    const updatedGuests = [...editedRSVP.guests];
+                                                    updatedGuests[index] = {
+                                                      ...updatedGuests[index],
+                                                      foodRestrictions: e.target.value as FoodRestrictions,
+                                                    };
+                                                    setEditedRSVP({
+                                                      ...editedRSVP,
+                                                      guests: updatedGuests,
+                                                      rsvpId: editedRSVP.rsvpId,
+                                                    });
+                                                  }
+                                                }}
+                                              >
+                                                <MenuItem value="None">None</MenuItem>
+                                                <MenuItem value="Chicken">Chicken</MenuItem>
+                                                <MenuItem value="Vegan">Vegan</MenuItem>
+                                                <MenuItem value="Vegetarian">Vegetarian</MenuItem>
+                                              </Select>
+                                            </FormControl>
+                                          ) : (
+                                            guest.foodRestrictions || 'None'
+                                          )}
+                                        </TableCell>
                                       </TableRow>
                                     ))}
                                   </TableBody>
                                 </Table>
+                                {editingRow === rsvp.rsvpId ? (
+                                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                                    <Button variant="contained" color="primary" onClick={handleUpdate}>Update</Button>
+                                    <Button variant="contained" color="secondary" onClick={handleCancelEdit} sx={{ ml: 2 }}>Cancel</Button>
+                                  </Box>
+                                ) : (
+                                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                                    <Button variant="contained" color="primary" onClick={() => setEditingRow(rsvp.rsvpId)}>Edit</Button>
+                                  </Box>
+                                )}
                               </Box>
                             </Collapse>
                           </TableCell>
@@ -347,7 +472,7 @@ export const Dashboard: React.FC = () => {
             <Typography variant="h6" component="h2">
               Add New RSVP
             </Typography>
-            <form onSubmit={handleSubmit(handleSubmitRSVP)}>
+            <form onSubmit={handleSubmit(handleUpdate)}>
               <TextField
                 fullWidth
                 margin="normal"
