@@ -133,6 +133,14 @@ export const Dashboard: React.FC = () => {
     }
   };
 
+  const handleEdit = (rsvpId: string) => {
+    setEditingRow(rsvpId);
+    const rsvp = rsvpData?.find(r => r.rsvpId === rsvpId);
+    if (rsvp) {
+      setEditedRSVP(rsvp);
+    }
+  };
+
   const handleGuestChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { value: unknown }>, field: string) => {
     if (editedRSVP) {
       const updatedGuests = [...editedRSVP.guests];
@@ -166,6 +174,20 @@ export const Dashboard: React.FC = () => {
       setFilteredData(response.data); // Update the filtered data after saving
     } catch (error) {
       console.error("Error updating RSVP", error);
+    }
+  };
+
+  // ADD NEW FUNCTION TO HANDLE FORM SUBMISSION
+  const handleSubmitRSVP: SubmitHandler<FormData> = async (data) => {
+    try {
+      await axios.post(`${apiUrl}`, data, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+        },
+      });
+      handleCloseModal();
+    } catch (error) {
+      console.error("Error adding RSVP", error);
     }
   };
 
@@ -444,7 +466,7 @@ export const Dashboard: React.FC = () => {
                                   </Box>
                                 ) : (
                                   <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                                    <Button variant="contained" color="primary" onClick={() => setEditingRow(rsvp.rsvpId)}>Edit</Button>
+                                    <Button variant="contained" color="primary" onClick={() => handleEdit(rsvp.rsvpId)}>Edit</Button>
                                   </Box>
                                 )}
                               </Box>
@@ -472,7 +494,7 @@ export const Dashboard: React.FC = () => {
             <Typography variant="h6" component="h2">
               Add New RSVP
             </Typography>
-            <form onSubmit={handleSubmit(handleUpdate)}>
+            <form onSubmit={handleSubmit(handleSubmitRSVP)}>
               <TextField
                 fullWidth
                 margin="normal"
