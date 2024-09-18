@@ -189,10 +189,37 @@ export const Travel: React.FC = () => {
                   />
                   <CardContent sx={{ flex: 1 }}>
                     <Typography component="h2" variant="h5">
-                      Where to Stay
+                      Primary Hotel
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary" paragraph>
                       We have room blocks for our guests at the Houston Marriott West Loop by The Galleria. Feel free to reserve one of the blocked rooms under the wedding name in your invitation or find accommodations nearby.
+                    </Typography>
+                    <Typography variant="subtitle1" color="primary">
+                      <Button href="https://www.marriott.com/events/start.mi?id=1717168646997&key=GRP" size="small">View Hotel...</Button>
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Card>
+              <Card sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
+                <Card sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
+                  <CardMedia
+                    component="img"
+                    sx={{
+                      width: { xs: 350, sm: 450 }, // Set width to 'auto' for mobile and 250 for other screen sizes
+                      height: 'auto',
+                      display: 'block', // Always show image
+                      marginBottom: { xs: 2, sm: 0 }, // Add margin bottom in mobile view
+                    }}
+                    image={marriott}
+                    alt="TEST"
+                  />
+                  <CardContent sx={{ flex: 1 }}>
+                    <Typography component="h2" variant="h5">
+                      Family Accommodations
+                    </Typography>
+                    <Typography variant="subtitle1" color="text.secondary" paragraph>
+                      In addition to, a few studio style rooms are blocked for our guests who prefer a larger suite for families at the 
+                      Residence Inn Houston by The Galleria
                     </Typography>
                     <Typography variant="subtitle1" color="primary">
                       <Button href="https://www.marriott.com/en-us/hotels/houwl-houston-marriott-west-loop-by-the-galleria/overview/" size="small">View Hotel...</Button>

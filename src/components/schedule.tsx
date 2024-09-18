@@ -42,6 +42,7 @@ const events = [
     address: "1836 Polk St, Houston, TX 77003",
     addressUrl: "https://maps.app.goo.gl/chbkBVnG32a9u9UK8",
     image: Rustic,
+    attire: "Western/Happy Hour"
   },
   {
     title: "Rehearsal Cocktail Social",
@@ -51,6 +52,7 @@ const events = [
     address: "1151 Uptown Park Blvd Ste. 12, Houston, TX 77056",
     addressUrl: "https://maps.app.goo.gl/Y3FBR8HpJQPHauDm6",
     image: Rehersal,
+    attire: "Dressy Casual/Cocktail"
   },
   {
     title: "Wedding Ceremony",
@@ -60,6 +62,7 @@ const events = [
     address: "901 W. 34th Houston, TX 77018",
     addressUrl: "https://maps.app.goo.gl/126eeE7g5ysRqM8MA",
     image: Bell,
+    attire: "Black Tie-Optional"
   },
   {
     title: "Cocktail Hour",
@@ -69,6 +72,7 @@ const events = [
     address: "Main Water Wall Courtyard and Garden",
     addressUrl: "https://maps.app.goo.gl/126eeE7g5ysRqM8MA",
     image: Waterfall,
+    attire: "Black Tie-Optional"
   },
   {
     title: "Wedding Reception",
@@ -78,6 +82,7 @@ const events = [
     address: "Carillon Ballroom",
     addressUrl: "https://maps.app.goo.gl/126eeE7g5ysRqM8MA",
     image: Bell2,
+    attire: "Black Tie-Optional"
   },
 ];
 
@@ -161,7 +166,7 @@ export const Schedule: React.FC = () => {
                 justifyContent: "center",
                 alignItems: "center", // Center children horizontally
               }}>
-                <Card className="reveal" sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
+                <Card className="card1" sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
                   <Card sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
                     <CardMedia
                       component="img"
@@ -184,11 +189,19 @@ export const Schedule: React.FC = () => {
                       <Typography variant="body2" gutterBottom>
                         {event.description}
                       </Typography>
+                      <Typography variant="body2" gutterBottom color="textSecondary">
+                        Attire: {event.attire}
+                      </Typography>
                       <Typography variant="body2" color="textSecondary">
                         Address: <a href={event.addressUrl} target="_blank" rel="noopener noreferrer">{event.address}</a>
                       </Typography>
                     </CardContent>
                   </Card>
+                  <div className="go-corner">
+                      <div className="go-arrow">
+                        →
+                      </div>
+                  </div>
                 </Card>
               </Grid>
             ))}
