@@ -15,6 +15,7 @@ import waterfall from '../images/waterfall.jpg'
 import rooftop from '../images/zon23.jpg'
 import nasa from '../images/nasa.jpg'
 import marriott from '../images/marriott.jpg'
+import marriott2 from '../images/marriott2.jpg'
 import post from '../images/post.jpg'
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -163,6 +164,25 @@ export const Travel: React.FC = () => {
               </Card>
             </Card>
           </Grid>
+          
+          <Divider
+              sx={{
+                margin: "20px 0",
+                backgroundImage: "linear-gradient(to right, transparent, red, transparent)",
+                backgroundSize: "100% 2px",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
+
+          <Typography id="reccs" component="h2" variant="h5"
+            sx={{
+
+              display: "flex",
+              justifyContent:"center",
+              alignItems:"center",
+            }}>
+               Hotel Information:
+            </Typography>
 
             <Grid item xs={12} md={4} lg={8} sx={{
               width: { sm: '100%', md: '60%' },
@@ -189,7 +209,7 @@ export const Travel: React.FC = () => {
                   />
                   <CardContent sx={{ flex: 1 }}>
                     <Typography component="h2" variant="h5">
-                      Primary Hotel
+                      Our Primary Hotel
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary" paragraph>
                       We have room blocks for our guests at the Houston Marriott West Loop by The Galleria. Feel free to reserve one of the blocked rooms under the wedding name in your invitation or find accommodations nearby.
@@ -200,6 +220,18 @@ export const Travel: React.FC = () => {
                   </CardContent>
                 </Card>
               </Card>
+            </Grid>
+
+            <Grid item xs={12} md={4} lg={8} sx={{
+              width: { sm: '100%', md: '60%' },
+              display: 'flex',
+              flexDirection: 'column',
+              marginLeft: 0,
+              marginRight: 0,
+              marginTop: 5,
+              justifyContent: "center",
+              alignItems: "center", // Center children horizontally
+            }}>
               <Card sx={{ maxWidth: "100%", border: 1, borderColor: "lightgray", boxShadow: 4 }}>
                 <Card sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
                   <CardMedia
@@ -210,7 +242,7 @@ export const Travel: React.FC = () => {
                       display: 'block', // Always show image
                       marginBottom: { xs: 2, sm: 0 }, // Add margin bottom in mobile view
                     }}
-                    image={marriott}
+                    image={marriott2}
                     alt="TEST"
                   />
                   <CardContent sx={{ flex: 1 }}>
@@ -222,13 +254,12 @@ export const Travel: React.FC = () => {
                       Residence Inn Houston by The Galleria
                     </Typography>
                     <Typography variant="subtitle1" color="primary">
-                      <Button href="https://www.marriott.com/en-us/hotels/houwl-houston-marriott-west-loop-by-the-galleria/overview/" size="small">View Hotel...</Button>
+                      <Button href="https://www.marriott.com/en-us/hotels/hougl-residence-inn-houston-by-the-galleria/overview/" size="small">View Hotel...</Button>
                     </Typography>
                   </CardContent>
                 </Card>
               </Card>
             </Grid>
-
 
             <Divider
               sx={{
