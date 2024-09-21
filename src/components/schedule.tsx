@@ -42,7 +42,9 @@ const events = [
     address: "1836 Polk St, Houston, TX 77003",
     addressUrl: "https://maps.app.goo.gl/chbkBVnG32a9u9UK8",
     image: Rustic,
-    attire: "Western/Happy Hour"
+    attire: "Western/Happy Hour",
+    transport: "Self/Rideshare"
+
   },
   {
     title: "Rehearsal Cocktail Social",
@@ -52,7 +54,8 @@ const events = [
     address: "1151 Uptown Park Blvd Ste. 12, Houston, TX 77056",
     addressUrl: "https://maps.app.goo.gl/Y3FBR8HpJQPHauDm6",
     image: Rehersal,
-    attire: "Dressy Casual/Cocktail"
+    attire: "Dressy Casual/Cocktail",
+    transport: "Self/Rideshare"
   },
   {
     title: "Wedding Ceremony",
@@ -62,7 +65,8 @@ const events = [
     address: "901 W. 34th Houston, TX 77018",
     addressUrl: "https://maps.app.goo.gl/126eeE7g5ysRqM8MA",
     image: Bell,
-    attire: "Black Tie-Optional"
+    attire: "Black Tie-Optional",
+    transport: "The charter bus will depart from the Marriott lobby starting at 4:50PM and 5:20PM"
   },
   {
     title: "Cocktail Hour",
@@ -72,7 +76,8 @@ const events = [
     address: "Main Water Wall Courtyard and Garden",
     addressUrl: "https://maps.app.goo.gl/126eeE7g5ysRqM8MA",
     image: Waterfall,
-    attire: "Black Tie-Optional"
+    attire: "Black Tie-Optional",
+    transport: "Self/Rideshare"
   },
   {
     title: "Wedding Reception",
@@ -82,7 +87,8 @@ const events = [
     address: "Carillon Ballroom",
     addressUrl: "https://maps.app.goo.gl/126eeE7g5ysRqM8MA",
     image: Bell2,
-    attire: "Black Tie-Optional"
+    attire: "Black Tie-Optional",
+    transport: "Self/Rideshare"
   },
 ];
 
@@ -194,6 +200,9 @@ export const Schedule: React.FC = () => {
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
                       <strong>Address:</strong> <a href={event.addressUrl} target="_blank" rel="noopener noreferrer">{event.address}</a>
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                      <strong>Transport:</strong> {event.transport}
                       </Typography>
                     </CardContent>
                   </Card>

@@ -69,14 +69,23 @@ export const Travel: React.FC = () => {
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}>
+            <Typography id="reccs" component="h2" variant="h5"
+            sx={{
+
+              display: "flex",
+              justifyContent:"center",
+              alignItems:"center",
+            }}>
+              Welcome to Houston, Texas
+            </Typography>
+
             <Typography
               gutterBottom
               id="htx-title"
               component="div"
               align="center"
             >
-              Welcome to Houston, Texas
-              <p style={{ fontSize: 15, marginTop: 0}}><em>"The Fourth Largest City in the USA"</em></p>
+              <p style={{ fontSize: 15, marginTop: 0}}><em>"The Largest City in Texas"</em></p>
             </Typography>
             <Box
             sx={{
