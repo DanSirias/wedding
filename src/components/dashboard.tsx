@@ -96,13 +96,13 @@ export const Dashboard: React.FC = () => {
     const getIdTokenFromUrl = (): string | null => {
       const hash = window.location.hash.substring(1); // Remove the leading '#'
       const params = new URLSearchParams(hash);
-      return params.get('access_token');
+      return params.get('id_token');
     };
 
     const storeIdTokenInSession = () => {
       const idToken = getIdTokenFromUrl();
       if (idToken) {
-        sessionStorage.setItem('access_token', idToken);
+        sessionStorage.setItem('id_token', idToken);
         console.log('ID token stored in session storage');
       } else {
         console.log('No ID token found in URL');
@@ -115,7 +115,7 @@ export const Dashboard: React.FC = () => {
       try {
         const response = await axios.get<RSVP[]>(`${apiUrl}?lastName=sirias`, {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+            Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
           },
         });
         setRsvpData(response.data);
