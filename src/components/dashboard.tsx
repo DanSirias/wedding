@@ -212,32 +212,24 @@ export const Dashboard: React.FC = () => {
 
   const handleDownloadExcel = () => {
     if (!rsvpData) return;
-
-    const formattedData = rsvpData.map((rsvp) => {
-      const row: any = {
+  
+    const formattedData = rsvpData.flatMap((rsvp) => {
+      return rsvp.guests.map((guest) => ({
         rsvpId: rsvp.rsvpId,
-        lastName: rsvp.lastName,
-        email: rsvp.email,
-        phone: rsvp.phone,
-        comments: rsvp.comments || '',
-        created: rsvp.created,
-        updated: rsvp.updated
-      };
-
-      rsvp.guests.forEach((guest, index) => {
-        row[`Guest ${index + 1} First Name`] = guest.firstName;
-        row[`Guest ${index + 1} Last Name`] = guest.lastName;
-        row[`Guest ${index + 1} Attending`] = guest.attending ? "Yes" : "No";
-        row[`Guest ${index + 1} Food Restrictions`] = guest.foodRestrictions || 'None';
-      });
-
-      return row;
+        firstName: guest.firstName,
+        lastName: guest.lastName,
+        email: rsvp.email,          // Shared RSVP info
+        phone: rsvp.phone,          // Shared RSVP info
+        comments: rsvp.comments || '',  // Shared RSVP info
+        attending: guest.attending ? "Yes" : "No",
+        foodRestrictions: guest.foodRestrictions || 'None',
+      }));
     });
-
+  
     const worksheet = XLSX.utils.json_to_sheet(formattedData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "RSVP Data");
-
+  
     XLSX.writeFile(workbook, "RSVP_Data.xlsx");
   };
 
