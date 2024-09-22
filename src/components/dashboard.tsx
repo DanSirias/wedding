@@ -91,7 +91,26 @@ export const Dashboard: React.FC = () => {
     total + rsvp.guests.filter(guest => !guest.attending).length, 0
   ) || 0;
 
+  // UseEffect to handle token extraction and data fetching
   useEffect(() => {
+    const getIdTokenFromUrl = (): string | null => {
+      const hash = window.location.hash.substring(1); // Remove the leading '#'
+      const params = new URLSearchParams(hash);
+      return params.get('access_token');
+    };
+
+    const storeIdTokenInSession = () => {
+      const idToken = getIdTokenFromUrl();
+      if (idToken) {
+        sessionStorage.setItem('access_token', idToken);
+        console.log('ID token stored in session storage');
+      } else {
+        console.log('No ID token found in URL');
+      }
+    };
+
+    storeIdTokenInSession();
+
     const fetchData = async () => {
       try {
         const response = await axios.get<RSVP[]>(`${apiUrl}?lastName=sirias`, {
