@@ -293,6 +293,7 @@ export const Dashboard: React.FC = () => {
                 <Typography><a href="#" onClick={handleOpenModal}>Add RSVP</a></Typography>
                 <Typography><a href="https://clientportal.totalpartyplanner.com/?id=IOvVDYamb4wF4DV1me+UyuT7r7GyZ16Cy8HAOO+9k3RmpYX0KlzApsvqR9NDMEQh9Su1a5iWBEJugDVSCILdPYhAjbgnSmVFjuhTFBubmJ53CBTRZjFmlzaImSFVzloAD+mLyUycXzEHScnzFcpQ2/+5O/wszg2rsJjnZqznFvjtsApvI8Ce3r5ICQy0ydcrhsIz3lH8L4sXjfl8QR+4UPNrqMVvt0h5bAi/Nyg1q34EJ5ARW22UC4Y0kykBUBwK">Venue Portal</a></Typography>
                 <Typography><a href="https://booking.weddings-unlimited.com/manage?id=5028&surname=Sirias">Video/DJ Portal</a></Typography>
+                <Typography><a href="https://vibodj.app.link/OzzBZq4eqLb">DJ Portal</a></Typography>
                 <Typography><a href="https://studioclient.com/invoice/7eba7edfd3a77ba04bee8d1e63afbd1d">Photography Portal</a></Typography>
                 <Typography><a href="https://tuxedo.josbank.com/wedding-tracker?utm_source=JAB&utm_medium=Ecomm&utm_campaign=TopNav&utm_terms=WedGroupManager&_gl=1*bm7jp3*_ga*MTA0MTQ3MTQ2MC4xNzI0Nzk5MTI1*_ga_T6SWH68K36*MTcyNDc5OTIzNC4xLjEuMTcyNDc5OTI0Ni4wLjAuMA..">Grooms Portal</a></Typography>
               </Box>
