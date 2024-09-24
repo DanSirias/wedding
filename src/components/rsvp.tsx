@@ -309,7 +309,7 @@ export const RSVP: React.FC = () => {
                       Served with Sautéed Mixed Vegetables finished with Olive Oil and Garlic
                       and Three Cheese Scalloped Potatoes with Parmesan, Mozzarella, and Cheddar.<br /><br /> 
 
-                      If you have any dietary needs, we kindly ask that you inform us, and we will work to accommodate them.
+                      If you have any dietary restrictions, we kindly ask that you inform us above, and we will work to accommodate them.
                       </Typography>
                     </Grid>
                   </Grid>
