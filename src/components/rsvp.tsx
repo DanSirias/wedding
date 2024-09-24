@@ -252,7 +252,7 @@ export const RSVP: React.FC = () => {
                                 <TableCell>First Name</TableCell>
                                 <TableCell>Last Name</TableCell>
                                 <TableCell>Attending</TableCell>
-                                <TableCell>Food Restrictions</TableCell>
+                                <TableCell>Dietary Restrictions</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -302,9 +302,17 @@ export const RSVP: React.FC = () => {
                           </Table>
                         </TableContainer>
                       )}
+                      <Typography variant="body2" color="textSecondary">
+                      <strong>Our curated menu for the night consists of:</strong><br />
+
+                      ENTRÉE: Filet Mignon à la Porcini Cognac
+                      Served with Sautéed Mixed Vegetables finished with Olive Oil and Garlic
+                      and Three Cheese Scalloped Potatoes with Parmesan, Mozzarella, and Cheddar.<br /><br /> 
+
+                      If you have any dietary needs, we kindly ask that you inform us, and we will work to accommodate them.
+                      </Typography>
                     </Grid>
                   </Grid>
-
                   <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end' }}>
                     <Button variant="outlined" color="secondary" onClick={handleClear}>
                       Clear
