@@ -7,6 +7,7 @@ import { useForm, SubmitHandler, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import axios from 'axios';
+import InputLabel from '@mui/material/InputLabel';
 
 // Theme definition
 const defaultTheme = createTheme({
@@ -223,8 +224,12 @@ export const RSVP: React.FC = () => {
                               sx={{ marginTop: 1 }}
                             />
                             <FormControl fullWidth sx={{ marginTop: 1 }}>
+                            <InputLabel id={`attending-label-${index}`}>
+                              Attending
+                            </InputLabel>
                               <Select
-                                label="Attending"
+                                labelId={`attending-label-${index}`} // This connects the label with the Select component
+                                label="Attending"  // Label is passed here to display the label on the dropdown
                                 {...register(`guests.${index}.attending` as const)}
                                 defaultValue={fields[index].attending}
                               >
@@ -233,16 +238,20 @@ export const RSVP: React.FC = () => {
                               </Select>
                             </FormControl>
                             <FormControl fullWidth sx={{ marginTop: 1 }}>
-                              <Select
-                                label="Dietary Restrictions"
-                                {...register(`guests.${index}.foodRestrictions` as const)}
-                                defaultValue={fields[index].foodRestrictions}
-                              >
-                                <MenuItem value="None">None</MenuItem>
-                                <MenuItem value="Vegan">Vegan</MenuItem>
-                                <MenuItem value="Vegetarian">Vegetarian</MenuItem>
-                              </Select>
-                            </FormControl>
+                            <InputLabel id={`dietary-restrictions-label-${index}`}>
+                              Dietary Restrictions
+                            </InputLabel>
+                            <Select
+                              labelId={`dietary-restrictions-label-${index}`} // This connects the label with the Select component
+                              label="Dietary Restrictions"  // Label is passed here to display the label on the dropdown
+                              {...register(`guests.${index}.foodRestrictions` as const)}
+                              defaultValue={fields[index].foodRestrictions}
+                            >
+                              <MenuItem value="None">None</MenuItem>
+                              <MenuItem value="Vegan">Vegan</MenuItem>
+                              <MenuItem value="Vegetarian">Vegetarian</MenuItem>
+                            </Select>
+                          </FormControl>
                           </Box>
                         ))
                       ) : (
