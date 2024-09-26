@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
-  Container, Grid, Card, CardContent, Typography, Box, Paper,
-  Table, TableBody, TableCell, TableHead, TableRow, IconButton, Collapse, Button, Modal, TextField, FormControl, Select, MenuItem
+  Container, Grid, Card, CardContent, Typography, Box, Paper, Table, TableBody, TableCell,
+  TableHead, TableRow, IconButton, Collapse, Button, Modal, TextField, FormControl, Select, MenuItem
 } from "@mui/material";
 import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -67,8 +67,9 @@ export const Dashboard: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [editingRow, setEditingRow] = useState<string | null>(null);
   const [editedRSVP, setEditedRSVP] = useState<RSVP | null>(null);
-  const [searchQuery, setSearchQuery] = useState(""); // State to hold the search query
-  const [filteredData, setFilteredData] = useState<RSVP[]>([]); // State to hold the filtered data
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredData, setFilteredData] = useState<RSVP[]>([]);
+  const [loading, setLoading] = useState(true);  // Loading state to handle API requests
 
   const { register, handleSubmit, formState: { errors }, control, setValue, reset } = useForm<FormData>({
     resolver: yupResolver(schema),
@@ -91,10 +92,10 @@ export const Dashboard: React.FC = () => {
     total + rsvp.guests.filter(guest => !guest.attending).length, 0
   ) || 0;
 
-  // UseEffect to handle token extraction and data fetching
+  // Extract token from URL and fetch data
   useEffect(() => {
     const getIdTokenFromUrl = (): string | null => {
-      const hash = window.location.hash.substring(1); // Remove the leading '#'
+      const hash = window.location.hash.substring(1);  // Remove the leading '#'
       const params = new URLSearchParams(hash);
       return params.get('id_token');
     };
@@ -109,24 +110,32 @@ export const Dashboard: React.FC = () => {
       }
     };
 
-    storeIdTokenInSession();
-
     const fetchData = async () => {
       try {
-        const response = await axios.get<RSVP[]>(`${apiUrl}?lastName=sirias`, {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
-          },
-        });
-        setRsvpData(response.data);
-        setFilteredData(response.data); // Set both rsvpData and filteredData initially
+        const idToken = sessionStorage.getItem('id_token');
+        if (idToken) {
+          const response = await axios.get<RSVP[]>(`${apiUrl}?lastName=sirias`, {
+            headers: {
+              Authorization: `Bearer ${idToken}`,
+            },
+          });
+          setRsvpData(response.data);
+          setFilteredData(response.data);  // Set both rsvpData and filteredData initially
+        }
       } catch (error) {
         console.error("Error fetching data", error);
+      } finally {
+        setLoading(false);  // Stop loading state after data fetching is done
       }
     };
 
+    storeIdTokenInSession();
     fetchData();
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;  // Simple loading indicator
+  }
 
   const toggleRow = (rsvpId: string) => {
     setOpenRow(prevOpenRow => ({
@@ -179,29 +188,28 @@ export const Dashboard: React.FC = () => {
     try {
       await axios.put(`${apiUrl}`, editedRSVP, {
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
         },
       });
       setEditingRow(null);
       setEditedRSVP(null);
       const response = await axios.get<RSVP[]>(`${apiUrl}?lastName=sirias`, {
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
         },
       });
       setRsvpData(response.data);
-      setFilteredData(response.data); // Update the filtered data after saving
+      setFilteredData(response.data);  // Update the filtered data after saving
     } catch (error) {
       console.error("Error updating RSVP", error);
     }
   };
 
-  // ADD NEW FUNCTION TO HANDLE FORM SUBMISSION
   const handleSubmitRSVP: SubmitHandler<FormData> = async (data) => {
     try {
       await axios.post(`${apiUrl}`, data, {
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
         },
       });
       handleCloseModal();
@@ -212,7 +220,7 @@ export const Dashboard: React.FC = () => {
 
   const handleDownloadExcel = () => {
     if (!rsvpData) return;
-  
+
     const formattedData = rsvpData.flatMap((rsvp) => {
       return rsvp.guests.map((guest) => ({
         rsvpId: rsvp.rsvpId,
@@ -225,11 +233,11 @@ export const Dashboard: React.FC = () => {
         foodRestrictions: guest.foodRestrictions || 'None',
       }));
     });
-  
+
     const worksheet = XLSX.utils.json_to_sheet(formattedData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "RSVP Data");
-  
+
     XLSX.writeFile(workbook, "RSVP_Data.xlsx");
   };
 
@@ -291,11 +299,11 @@ export const Dashboard: React.FC = () => {
               <Typography variant="h6">Navigation</Typography>
               <Box mt={2}>
                 <Typography><a href="#" onClick={handleOpenModal}>Add RSVP</a></Typography>
-                <Typography><a href="https://clientportal.totalpartyplanner.com/?id=IOvVDYamb4wF4DV1me+UyuT7r7GyZ16Cy8HAOO+9k3RmpYX0KlzApsvqR9NDMEQh9Su1a5iWBEJugDVSCILdPYhAjbgnSmVFjuhTFBubmJ53CBTRZjFmlzaImSFVzloAD+mLyUycXzEHScnzFcpQ2/+5O/wszg2rsJjnZqznFvjtsApvI8Ce3r5ICQy0ydcrhsIz3lH8L4sXjfl8QR+4UPNrqMVvt0h5bAi/Nyg1q34EJ5ARW22UC4Y0kykBUBwK">Venue Portal</a></Typography>
-                <Typography><a href="https://booking.weddings-unlimited.com/manage?id=5028&surname=Sirias">Video/DJ Portal</a></Typography>
-                <Typography><a href="https://vibodj.app.link/OzzBZq4eqLb">DJ Portal</a></Typography>
-                <Typography><a href="https://studioclient.com/invoice/7eba7edfd3a77ba04bee8d1e63afbd1d">Photography Portal</a></Typography>
-                <Typography><a href="https://tuxedo.josbank.com/wedding-tracker?utm_source=JAB&utm_medium=Ecomm&utm_campaign=TopNav&utm_terms=WedGroupManager&_gl=1*bm7jp3*_ga*MTA0MTQ3MTQ2MC4xNzI0Nzk5MTI1*_ga_T6SWH68K36*MTcyNDc5OTIzNC4xLjEuMTcyNDc5OTI0Ni4wLjAuMA..">Grooms Portal</a></Typography>
+                <Typography><a href="https://clientportal.totalpartyplanner.com/">Venue Portal</a></Typography>
+                <Typography><a href="https://booking.weddings-unlimited.com/">Video/DJ Portal</a></Typography>
+                <Typography><a href="https://vibodj.app.link/">DJ Portal</a></Typography>
+                <Typography><a href="https://studioclient.com/">Photography Portal</a></Typography>
+                <Typography><a href="https://tuxedo.josbank.com/">Grooms Portal</a></Typography>
               </Box>
             </Paper>
           </Grid>
@@ -311,7 +319,7 @@ export const Dashboard: React.FC = () => {
               <Grid container justifyContent="space-between" sx={{ marginBottom: 2 }}>
                 <Button
                   variant="contained"
-                  sx={{ backgroundColor: '#5d7a66', color: '#fff' }} // Custom green color
+                  sx={{ backgroundColor: '#5d7a66', color: '#fff' }}  // Custom green color
                   onClick={handleDownloadExcel}
                 >
                   Download Excel
@@ -337,28 +345,20 @@ export const Dashboard: React.FC = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                {filteredData
-                  .sort((a, b) => {
+                  {filteredData.sort((a, b) => {
                     // Sort by whether all guests have declined
                     const aHasDeclinedAllGuests = a.guests.every(guest => !guest.attending);
                     const bHasDeclinedAllGuests = b.guests.every(guest => !guest.attending);
-                    
-                    // RSVPs with declined guests (red) go to the bottom
-                    return aHasDeclinedAllGuests === bHasDeclinedAllGuests
-                      ? 0
-                      : aHasDeclinedAllGuests
-                      ? 1
-                      : -1;
-                  })
-                  .map((rsvp) => {
-                    const hasDeclinedAllGuests = rsvp.guests.every(guest => !guest.attending); // True if all guests declined
+                    return aHasDeclinedAllGuests === bHasDeclinedAllGuests ? 0 : aHasDeclinedAllGuests ? 1 : -1;
+                  }).map((rsvp) => {
+                    const hasDeclinedAllGuests = rsvp.guests.every(guest => !guest.attending);
                     const hasFoodRestrictions = rsvp.guests.some(guest => guest.foodRestrictions !== 'None');
 
                     return (
                       <React.Fragment key={rsvp.rsvpId}>
                         <TableRow
                           sx={{
-                            backgroundColor: hasDeclinedAllGuests ? '#ef9a9a' : 'transparent', // Set background color if all guests declined
+                            backgroundColor: hasDeclinedAllGuests ? '#ef9a9a' : 'transparent',  // Highlight rows where all guests declined
                           }}
                         >
                           <TableCell>
@@ -368,9 +368,7 @@ export const Dashboard: React.FC = () => {
                           </TableCell>
                           <TableCell>
                             {rsvp.rsvpId}
-                            {hasFoodRestrictions && (
-                              <SetMealIcon sx={{ ml: 1, color: '#ff6f00' }} />
-                            )}
+                            {hasFoodRestrictions && <SetMealIcon sx={{ ml: 1, color: '#ff6f00' }} />}
                           </TableCell>
                           <TableCell>{rsvp.lastName}</TableCell>
                           <TableCell>{rsvp.email}</TableCell>
@@ -413,7 +411,6 @@ export const Dashboard: React.FC = () => {
                     );
                   })}
                 </TableBody>
-
               </Table>
             </Paper>
           </Grid>
@@ -424,9 +421,9 @@ export const Dashboard: React.FC = () => {
           <Box sx={{
             position: 'absolute', top: '50%', left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 600, maxHeight: '80vh', // Set a max height for the modal
+            width: 600, maxHeight: '80vh',  // Set a max height for the modal
             bgcolor: 'background.paper', borderRadius: 2,
-            boxShadow: 24, p: 4, overflowY: 'auto' // Enable vertical scrolling
+            boxShadow: 24, p: 4, overflowY: 'auto'  // Enable vertical scrolling
           }}>
             <Typography variant="h6" component="h2">
               Add New RSVP
