@@ -23,7 +23,7 @@ interface Guest {
   firstName: string;
   lastName: string;
   attending: "Yes" | "No";  // Strict type
-  foodRestrictions: 'None' | 'Chicken' | 'Vegan' | 'Vegetarian';
+  foodRestrictions: 'None' | 'Vegan' | 'Vegetarian';
 }
 
 interface FormData {
@@ -46,7 +46,7 @@ const schema = yup.object().shape({
       firstName: yup.string().required('First Name is required'),
       lastName: yup.string().required('Last Name is required'),
       attending: yup.string().oneOf(['Yes', 'No']).required('Attending status is required'),
-      foodRestrictions: yup.string().oneOf(['None', 'Chicken', 'Vegan', 'Vegetarian']).required('Food Restriction is required'),
+      foodRestrictions: yup.string().oneOf(['None', 'Vegan', 'Vegetarian']).required('Food Restriction is required'),
     })
   ).required(),
 });
@@ -237,7 +237,6 @@ export const RSVP: React.FC = () => {
                                 defaultValue={fields[index].foodRestrictions}
                               >
                                 <MenuItem value="None">None</MenuItem>
-                                <MenuItem value="Chicken">Chicken</MenuItem>
                                 <MenuItem value="Vegan">Vegan</MenuItem>
                                 <MenuItem value="Vegetarian">Vegetarian</MenuItem>
                               </Select>
@@ -290,7 +289,6 @@ export const RSVP: React.FC = () => {
                                         defaultValue={fields[index].foodRestrictions}
                                       >
                                         <MenuItem value="None">None</MenuItem>
-                                        <MenuItem value="Chicken">Chicken</MenuItem>
                                         <MenuItem value="Vegan">Vegan</MenuItem>
                                         <MenuItem value="Vegetarian">Vegetarian</MenuItem>
                                       </Select>
@@ -305,11 +303,11 @@ export const RSVP: React.FC = () => {
                       <Typography variant="body2" color="textSecondary">
                       <strong>Our curated menu for the night consists of:</strong><br />
 
-                      ENTRÉE: Filet Mignon à la Porcini Cognac
+                      ENTRÉE: Filet Mignon Steak à la Porcini Cognac
                       Served with Sautéed Mixed Vegetables finished with Olive Oil and Garlic
                       and Three Cheese Scalloped Potatoes with Parmesan, Mozzarella, and Cheddar.<br /><br /> 
 
-                      If you have any dietary restrictions, we kindly ask that you inform us above, and we will work to accommodate them.
+                      This is not a split menu. However, if you have any dietary restrictions, we kindly ask that you inform us above, and we will work to accommodate them.
                       </Typography>
                     </Grid>
                   </Grid>
