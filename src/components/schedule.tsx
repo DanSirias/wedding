@@ -65,7 +65,7 @@ const events = [
     address: "901 W. 34th Houston, TX 77018",
     addressUrl: "https://maps.app.goo.gl/126eeE7g5ysRqM8MA",
     image: Bell,
-    attire: "Black Tie-Optional",
+    attire: "Formal, Black Tie Optional",
     transport: "The charter bus will depart from the Marriott lobby starting at 4:50PM and 5:20PM"
   },
   {
@@ -76,8 +76,8 @@ const events = [
     address: "Main Water Wall Courtyard and Garden",
     addressUrl: "https://maps.app.goo.gl/126eeE7g5ysRqM8MA",
     image: Waterfall,
-    attire: "Black Tie-Optional",
-    transport: "Self/Rideshare"
+    attire: "Formal, Black Tie Optional",
+    transport: "N/A"
   },
   {
     title: "Wedding Reception",
@@ -87,8 +87,8 @@ const events = [
     address: "Carillon Ballroom",
     addressUrl: "https://maps.app.goo.gl/126eeE7g5ysRqM8MA",
     image: Bell2,
-    attire: "Black Tie-Optional",
-    transport: "Self/Rideshare"
+    attire: "Formal, Black Tie Optional",
+    transport: "A shuttle service will be available to return guests to the Marriott Lobby after the reception."
   },
 ];
 
