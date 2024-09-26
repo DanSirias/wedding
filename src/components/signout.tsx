@@ -18,6 +18,7 @@ export const SignOut = () => {
 
   useEffect(() => {
     if (confirmed) {
+      
       // Clear session storage or any other storage where the tokens are stored
       sessionStorage.removeItem('id_token');
       sessionStorage.removeItem('access_token');
@@ -26,10 +27,12 @@ export const SignOut = () => {
       // AWS Cognito sign-out URL
       const cognitoDomain = process.env.REACT_APP_API_COGNITODOMAIN;
       const clientId = process.env.REACT_APP_API_CLIENTID;
-      const logoutUrl = `https://${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${window.location.origin}`;
+
+      const logoutUrl = `https://${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${window.location.origin}/`;
 
       // Redirect to AWS Cognito logout URL
       window.location.href = logoutUrl;
+
     }
   }, [confirmed]);
 
