@@ -224,6 +224,7 @@ export const RSVP: React.FC = () => {
                             />
                             <FormControl fullWidth sx={{ marginTop: 1 }}>
                               <Select
+                                label="Attending"
                                 {...register(`guests.${index}.attending` as const)}
                                 defaultValue={fields[index].attending}
                               >
@@ -233,6 +234,7 @@ export const RSVP: React.FC = () => {
                             </FormControl>
                             <FormControl fullWidth sx={{ marginTop: 1 }}>
                               <Select
+                                label="Dietary Restrictions"
                                 {...register(`guests.${index}.foodRestrictions` as const)}
                                 defaultValue={fields[index].foodRestrictions}
                               >
