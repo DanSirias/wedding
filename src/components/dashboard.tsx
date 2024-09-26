@@ -337,15 +337,28 @@ export const Dashboard: React.FC = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {filteredData.map((rsvp) => {
-                    const hasDeclinedGuest = rsvp.guests.some(guest => !guest.attending);
+                {filteredData
+                  .sort((a, b) => {
+                    // Sort by whether all guests have declined
+                    const aHasDeclinedAllGuests = a.guests.every(guest => !guest.attending);
+                    const bHasDeclinedAllGuests = b.guests.every(guest => !guest.attending);
+                    
+                    // RSVPs with declined guests (red) go to the bottom
+                    return aHasDeclinedAllGuests === bHasDeclinedAllGuests
+                      ? 0
+                      : aHasDeclinedAllGuests
+                      ? 1
+                      : -1;
+                  })
+                  .map((rsvp) => {
+                    const hasDeclinedAllGuests = rsvp.guests.every(guest => !guest.attending); // True if all guests declined
                     const hasFoodRestrictions = rsvp.guests.some(guest => guest.foodRestrictions !== 'None');
 
                     return (
                       <React.Fragment key={rsvp.rsvpId}>
                         <TableRow
                           sx={{
-                            backgroundColor: hasDeclinedGuest ? '#ef9a9a' : 'transparent', // Set background color if any guest declined
+                            backgroundColor: hasDeclinedAllGuests ? '#ef9a9a' : 'transparent', // Set background color if all guests declined
                           }}
                         >
                           <TableCell>
@@ -355,9 +368,8 @@ export const Dashboard: React.FC = () => {
                           </TableCell>
                           <TableCell>
                             {rsvp.rsvpId}
-                            {/* Show SetMeal icon if any guest has foodRestrictions other than "None" */}
                             {hasFoodRestrictions && (
-                              <SetMealIcon sx={{ ml: 1, color: '#ff6f00' }} />  // Add icon with margin-left
+                              <SetMealIcon sx={{ ml: 1, color: '#ff6f00' }} />
                             )}
                           </TableCell>
                           <TableCell>{rsvp.lastName}</TableCell>
@@ -366,7 +378,6 @@ export const Dashboard: React.FC = () => {
                           <TableCell>{rsvp.comments || ''}</TableCell>
                         </TableRow>
 
-                        {/* Expandable Guests Table */}
                         <TableRow>
                           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                             <Collapse in={openRow[rsvp.rsvpId]} timeout="auto" unmountOnExit>
@@ -386,101 +397,14 @@ export const Dashboard: React.FC = () => {
                                   <TableBody>
                                     {rsvp.guests.map((guest, index) => (
                                       <TableRow key={index}>
-                                        <TableCell>
-                                          {editingRow === rsvp.rsvpId ? (
-                                            <TextField
-                                              fullWidth
-                                              value={editedRSVP?.guests[index]?.firstName || ''}
-                                              onChange={(e) => handleGuestChange(index, e, 'firstName')}
-                                            />
-                                          ) : (
-                                            guest.firstName
-                                          )}
-                                        </TableCell>
-                                        <TableCell>
-                                          {editingRow === rsvp.rsvpId ? (
-                                            <TextField
-                                              fullWidth
-                                              value={editedRSVP?.guests[index]?.lastName || ''}
-                                              onChange={(e) => handleGuestChange(index, e, 'lastName')}
-                                            />
-                                          ) : (
-                                            guest.lastName
-                                          )}
-                                        </TableCell>
-                                        <TableCell>
-                                          {editingRow === rsvp.rsvpId ? (
-                                            <FormControl fullWidth>
-                                              <Select
-                                                value={editedRSVP?.guests?.[index]?.attending ? "Yes" : "No"}
-                                                onChange={(e) => {
-                                                  if (editedRSVP && editedRSVP.guests) {
-                                                    const updatedGuests = [...editedRSVP.guests];
-                                                    updatedGuests[index] = {
-                                                      ...updatedGuests[index],
-                                                      attending: e.target.value === "Yes",
-                                                    };
-                                                    setEditedRSVP({
-                                                      ...editedRSVP,
-                                                      guests: updatedGuests,
-                                                      rsvpId: editedRSVP.rsvpId,
-                                                    });
-                                                  }
-                                                }}
-                                              >
-                                                <MenuItem value="Yes">Yes</MenuItem>
-                                                <MenuItem value="No">No</MenuItem>
-                                              </Select>
-                                            </FormControl>
-                                          ) : (
-                                            guest.attending ? "Yes" : "No"
-                                          )}
-                                        </TableCell>
-
-                                        <TableCell>
-                                          {editingRow === rsvp.rsvpId ? (
-                                            <FormControl fullWidth>
-                                              <Select
-                                                value={editedRSVP?.guests?.[index]?.foodRestrictions || 'None'}
-                                                onChange={(e) => {
-                                                  if (editedRSVP && editedRSVP.guests) {
-                                                    const updatedGuests = [...editedRSVP.guests];
-                                                    updatedGuests[index] = {
-                                                      ...updatedGuests[index],
-                                                      foodRestrictions: e.target.value as FoodRestrictions,
-                                                    };
-                                                    setEditedRSVP({
-                                                      ...editedRSVP,
-                                                      guests: updatedGuests,
-                                                      rsvpId: editedRSVP.rsvpId,
-                                                    });
-                                                  }
-                                                }}
-                                              >
-                                                <MenuItem value="None">None</MenuItem>
-                                                <MenuItem value="Chicken">Chicken</MenuItem>
-                                                <MenuItem value="Vegan">Vegan</MenuItem>
-                                                <MenuItem value="Vegetarian">Vegetarian</MenuItem>
-                                              </Select>
-                                            </FormControl>
-                                          ) : (
-                                            guest.foodRestrictions || 'None'
-                                          )}
-                                        </TableCell>
+                                        <TableCell>{guest.firstName}</TableCell>
+                                        <TableCell>{guest.lastName}</TableCell>
+                                        <TableCell>{guest.attending ? "Yes" : "No"}</TableCell>
+                                        <TableCell>{guest.foodRestrictions || 'None'}</TableCell>
                                       </TableRow>
                                     ))}
                                   </TableBody>
                                 </Table>
-                                {editingRow === rsvp.rsvpId ? (
-                                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                                    <Button variant="contained" color="primary" onClick={handleUpdate}>Update</Button>
-                                    <Button variant="contained" color="secondary" onClick={handleCancelEdit} sx={{ ml: 2 }}>Cancel</Button>
-                                  </Box>
-                                ) : (
-                                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                                    <Button variant="contained" color="primary" onClick={() => handleEdit(rsvp.rsvpId)}>Edit</Button>
-                                  </Box>
-                                )}
                               </Box>
                             </Collapse>
                           </TableCell>
@@ -489,6 +413,7 @@ export const Dashboard: React.FC = () => {
                     );
                   })}
                 </TableBody>
+
               </Table>
             </Paper>
           </Grid>
