@@ -12,7 +12,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
   
   if (!isAuthenticated) {
     // If not authenticated, redirect to login
-    return <Navigate to="https://siriaswedding.auth.us-east-1.amazoncognito.com/login?client_id=5bfvpm9fvjgbh5c2s32oiv9d6h&response_type=token&scope=email+openid+phone+profile&redirect_uri=https%3A%2F%2Fwww.siriaswedding.com%2Fdashboard" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   // Otherwise, render the protected component
