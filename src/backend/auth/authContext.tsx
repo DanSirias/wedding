@@ -11,7 +11,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 // AuthProvider using React.FC to include children
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   const login = () => setIsAuthenticated(true);
   const logout = () => setIsAuthenticated(false);
