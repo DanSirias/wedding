@@ -5,7 +5,7 @@ import { CircularProgress, Box, Typography } from '@mui/material';  // MUI Spinn
 
 // Function to invoke the combined API Gateway call
 async function invokeAPIGateway(idToken: string) {
-    const url = `https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/userAuth/?id_token=${encodeURIComponent(idToken)}`;
+    const url = `https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/userAuth/?access_token=${encodeURIComponent(idToken)}`;
 
     try {
         const response = await fetch(url, {
