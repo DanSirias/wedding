@@ -80,7 +80,7 @@ const Callback: React.FC = () => {
                         // Fallback to '/dashboard' if no result or user data is available
                         navigate('/dashboard');
                     }
-                }, 2000);  // 2 seconds delay to simulate processing time
+                }, 5000);  // 2 seconds delay to simulate processing time
 
             } catch (error: any) {
                 console.error('Error:', error.message);
