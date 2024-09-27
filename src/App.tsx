@@ -17,7 +17,7 @@ import { Images } from './components/images';
 import Navbar from './components/navbar';
 import ProtectedRoute from './backend/auth/ProtectedRoute';  // Import ProtectedRoute
 import { AuthProvider } from './backend/auth/authContext';  // Import Auth Context
-
+import Callback from './backend/auth/callback';  // Import Callback Component
 
 const App: React.FC = () => {
   return (
@@ -39,6 +39,9 @@ const App: React.FC = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/signout" element={<SignOut />} />
             <Route path="/images" element={<Images />} />
+
+            {/* Callback Route for handling login response */}
+            <Route path="/callback" element={<Callback />} /> {/* Add this route */}
 
             {/* Protected Route */}
             <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
