@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/authContext';  // Import the useAuth hook
+import { CircularProgress, Box, Typography } from '@mui/material';  // MUI Spinner
 
 // Function to invoke the combined API Gateway call
 async function invokeAPIGateway(idToken: string) {
@@ -43,7 +44,8 @@ function encodeData(data: any) {
 
 const Callback: React.FC = () => {
     const navigate = useNavigate();
-    const { login } = useAuth(); // Use the login function from AuthContext
+    const { login } = useAuth();  // Use the login function from AuthContext
+    const [loading, setLoading] = useState(true);  // State to manage loading spinner
 
     useEffect(() => {
         // Main function to get id token, invoke the API, and set the cookie
@@ -56,35 +58,65 @@ const Callback: React.FC = () => {
                     throw new Error('No ID token found in URL');
                 }
 
-                // Invoke the combined API Gateway call
-                const result = await invokeAPIGateway(idToken);
+                // Simulate processing time with a timeout (e.g., 2 seconds)
+                setTimeout(async () => {
+                    // Invoke the combined API Gateway call
+                    const result = await invokeAPIGateway(idToken);
 
-                if (result && result.userData) {
-                    // Encode the token and user data before storing them in a cookie
-                    const cookieValue = encodeData({ idToken, userData: result.userData });
+                    if (result && result.userData) {
+                        // Encode the token and user data before storing them in a cookie
+                        const cookieValue = encodeData({ idToken, userData: result.userData });
 
-                    // Store the user session data in a cookie for 30 minutes
-                    setCookie('userSession', cookieValue, 30);
+                        // Store the user session data in a cookie for 30 minutes
+                        setCookie('userSession', cookieValue, 30);
 
-                    // Call the login function from AuthContext to update the authentication state
-                    login();
+                        // Call the login function from AuthContext to update the authentication state
+                        login();
 
-                    // Redirect to the provided redirectUrl or fallback to '/dashboard'
-                    const redirectUrl = result.redirectUrl || '/dashboard';
-                    window.location.href = redirectUrl;
-                } else {
-                    // Fallback to '/dashboard' if no result or user data is available
-                    navigate('/dashboard');
-                }
+                        // Redirect to the provided redirectUrl or fallback to '/dashboard'
+                        const redirectUrl = result.redirectUrl || '/dashboard';
+                        window.location.href = redirectUrl;
+                    } else {
+                        // Fallback to '/dashboard' if no result or user data is available
+                        navigate('/dashboard');
+                    }
+                }, 2000);  // 2 seconds delay to simulate processing time
+
             } catch (error: any) {
                 console.error('Error:', error.message);
+            } finally {
+                // Stop the loading spinner once processing is complete
+                setLoading(false);
             }
         }
 
         main();
     }, [navigate, login]);
 
-    return <div>Processing login...</div>;
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+            }}
+        >
+            {loading ? (
+                <>
+                    <CircularProgress />
+                    <Typography variant="h6" sx={{ mt: 2 }}>
+                        Processing login...
+                    </Typography>
+                </>
+            ) : (
+                <Typography variant="h6">
+                    Redirecting...
+                </Typography>
+            )}
+        </Box>
+    );
 };
 
 export default Callback;
