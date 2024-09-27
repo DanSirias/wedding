@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/authContext';  // Import the useAuth hook
 
 // Function to invoke the combined API Gateway call
 async function invokeAPIGateway(idToken: string) {
@@ -42,6 +43,7 @@ function encodeData(data: any) {
 
 const Callback: React.FC = () => {
     const navigate = useNavigate();
+    const { login } = useAuth(); // Use the login function from AuthContext
 
     useEffect(() => {
         // Main function to get id token, invoke the API, and set the cookie
@@ -64,6 +66,9 @@ const Callback: React.FC = () => {
                     // Store the user session data in a cookie for 30 minutes
                     setCookie('userSession', cookieValue, 30);
 
+                    // Call the login function from AuthContext to update the authentication state
+                    login();
+
                     // Redirect to the provided redirectUrl or fallback to '/dashboard'
                     const redirectUrl = result.redirectUrl || '/dashboard';
                     window.location.href = redirectUrl;
@@ -77,7 +82,7 @@ const Callback: React.FC = () => {
         }
 
         main();
-    }, [navigate]);
+    }, [navigate, login]);
 
     return <div>Processing login...</div>;
 };
