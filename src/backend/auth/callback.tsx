@@ -52,7 +52,7 @@ const Callback: React.FC = () => {
         async function main() {
             try {
                 const hashParams = new URLSearchParams(window.location.hash.substring(1));
-                const idToken = hashParams.get('access_token');
+                const idToken = hashParams.get('id_token');
 
                 if (!idToken) {
                     throw new Error('No ID token found in URL');
