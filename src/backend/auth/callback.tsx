@@ -4,8 +4,8 @@ import { useAuth } from '../auth/authContext';  // Import the useAuth hook
 import { CircularProgress, Box, Typography } from '@mui/material';  // MUI Spinner
 
 // Function to invoke the combined API Gateway call
-async function invokeAPIGateway(idToken: string) {
-    const url = `https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/userAuth/?access_token=${encodeURIComponent(idToken)}`;
+async function invokeAPIGateway(accessToken: string) {
+    const url = `https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/userAuth/?access_token=${encodeURIComponent(accessToken)}`;
 
     try {
         const response = await fetch(url, {
@@ -48,24 +48,24 @@ const Callback: React.FC = () => {
     const [loading, setLoading] = useState(true);  // State to manage loading spinner
 
     useEffect(() => {
-        // Main function to get id token, invoke the API, and set the cookie
+        // Main function to get access token, invoke the API, and set the cookie
         async function main() {
             try {
                 const hashParams = new URLSearchParams(window.location.hash.substring(1));
-                const idToken = hashParams.get('access_token');
+                const accessToken = hashParams.get('access_token');
 
-                if (!idToken) {
-                    throw new Error('No ID token found in URL');
+                if (!accessToken) {
+                    throw new Error('No access token found in URL');
                 }
 
-                // Simulate processing time with a timeout (e.g., 2 seconds)
+                // Simulate processing time with a timeout (e.g., 5 seconds)
                 setTimeout(async () => {
                     // Invoke the combined API Gateway call
-                    const result = await invokeAPIGateway(idToken);
+                    const result = await invokeAPIGateway(accessToken);
 
                     if (result && result.userData) {
                         // Encode the token and user data before storing them in a cookie
-                        const cookieValue = encodeData({ idToken, userData: result.userData });
+                        const cookieValue = encodeData({ accessToken, userData: result.userData });
 
                         // Store the user session data in a cookie for 30 minutes
                         setCookie('userSession', cookieValue, 30);
@@ -80,10 +80,10 @@ const Callback: React.FC = () => {
                         const redirectUrl = result.redirectUrl || '/dashboard';
                         window.location.href = redirectUrl;
                     } else {
-                        // Fallback to '/dashboard' if no result or user data is available
+                        // Fallback to '/' if no result or user data is available
                         navigate('/');
                     }
-                }, 5000);  // 2 seconds delay to simulate processing time
+                }, 5000);  // 5 seconds delay to simulate processing time
 
             } catch (error: any) {
                 console.error('Error:', error.message);
