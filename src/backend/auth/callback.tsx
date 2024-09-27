@@ -70,15 +70,18 @@ const Callback: React.FC = () => {
                         // Store the user session data in a cookie for 30 minutes
                         setCookie('userSession', cookieValue, 30);
 
+                        console.log("cookie created"); 
+
                         // Call the login function from AuthContext to update the authentication state
                         login();
 
+                        console.log("Login Func Updated")
                         // Redirect to the provided redirectUrl or fallback to '/dashboard'
                         const redirectUrl = result.redirectUrl || '/dashboard';
                         window.location.href = redirectUrl;
                     } else {
                         // Fallback to '/dashboard' if no result or user data is available
-                        navigate('/dashboard');
+                        navigate('/');
                     }
                 }, 5000);  // 2 seconds delay to simulate processing time
 
