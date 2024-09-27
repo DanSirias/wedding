@@ -9,7 +9,6 @@ import { GiftRegistry } from './components/gift';
 import { Dashboard } from "./components/dashboard";
 import { Login } from "./components/login";
 import { RSVP } from './components/rsvp';
-import { Guests } from './components/guests';
 import { WeddingParty } from './components/weddingparty';
 import { Schedule } from "./components/schedule";
 import { SignOut } from "./components/signout";
@@ -30,7 +29,6 @@ const App: React.FC = () => {
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/rsvp" element={<RSVP />} />
-            <Route path="/guests" element={<Guests />} />
             <Route path="/events" element={<Events />} />
             <Route path="/weddingparty" element={<WeddingParty />} />
             <Route path="/travel" element={<Travel />} />
