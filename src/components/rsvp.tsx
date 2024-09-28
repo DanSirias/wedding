@@ -32,7 +32,7 @@ interface FormData {
   lastName: string;
   email: string;
   phone: string;
-  comments?: string;
+  comments: string;
   guests: Guest[];
 }
 
@@ -41,6 +41,7 @@ const schema = yup.object().shape({
   rsvpId: yup.string().required('RSVP Pin is required'),
   lastName: yup.string().required('Last Name is required'),
   email: yup.string().email('Invalid email format').required('Email is required'),
+  comments: yup.string().required('Please leave a note.'),
   phone: yup.string().required('Phone number is required'),
   guests: yup.array().of(
     yup.object().shape({
