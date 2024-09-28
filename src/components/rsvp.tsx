@@ -195,9 +195,11 @@ export const RSVP: React.FC = () => {
                       />
                       <TextField
                         label="Comments"
-                        {...register('comments')}
+                        {...register('comments', { required: 'Comments are required' })} // Making comments required
+                        error={!!errors.comments} // Display error if comments field is empty
+                        helperText={errors.comments?.message} // Show the error message
                         multiline
-                        rows={2}
+                        rows={3}
                         fullWidth
                         sx={{ marginBottom: 2 }}
                       />
