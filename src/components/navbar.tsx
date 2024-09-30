@@ -15,7 +15,7 @@ const pages = [
   { text: 'Home', href: '/', icon: Home },
   { text: 'RSVP', href: '/rsvp', icon: ConfirmationNumber },
   { text: 'Wedding Party', href: '/weddingparty', icon: People },
-  { text: 'Travel', href: '/travel', icon: Flight },
+  { text: 'Hotel', href: '/travel', icon: Flight },
   { text: 'Schedule', href: '/schedule', icon: CalendarTodayIcon },
   { text: 'Memories', href: '/images', icon: PhotoLibrary },
   { text: 'Registry', href: '/gift', icon: CardGiftcard },

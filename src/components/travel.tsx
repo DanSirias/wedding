@@ -263,7 +263,7 @@ export const Travel: React.FC = () => {
                       Residence Inn Houston by The Galleria
                     </Typography>
                     <Typography variant="subtitle1" color="primary">
-                      <Button href="https://www.marriott.com/en-us/hotels/hougl-residence-inn-houston-by-the-galleria/overview/" size="small">View Hotel...</Button>
+                      <Button href="https://www.marriott.com/event-reservations/reservation-link.mi?id=1727195621507&key=GRP&guestreslink2=true" size="small">View Hotel...</Button>
                     </Typography>
                   </CardContent>
                 </Card>
