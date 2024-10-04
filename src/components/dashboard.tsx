@@ -7,7 +7,7 @@ import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import SetMealIcon from '@mui/icons-material/SetMeal';  // Import SetMealIcon
+import SetMealIcon from '@mui/icons-material/SetMeal';
 import * as XLSX from 'xlsx';
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -67,8 +67,8 @@ export const Dashboard: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [editingRow, setEditingRow] = useState<string | null>(null);
   const [editedRSVP, setEditedRSVP] = useState<RSVP | null>(null);
-  const [searchQuery, setSearchQuery] = useState(""); // State to hold the search query
-  const [filteredData, setFilteredData] = useState<RSVP[]>([]); // State to hold the filtered data
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredData, setFilteredData] = useState<RSVP[]>([]);
 
   const { register, handleSubmit, formState: { errors }, control, setValue, reset } = useForm<FormData>({
     resolver: yupResolver(schema),
@@ -78,7 +78,7 @@ export const Dashboard: React.FC = () => {
     },
   });
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "guests"
   });
@@ -91,35 +91,16 @@ export const Dashboard: React.FC = () => {
     total + rsvp.guests.filter(guest => !guest.attending).length, 0
   ) || 0;
 
-  // UseEffect to handle token extraction and data fetching
   useEffect(() => {
-    const getIdTokenFromUrl = (): string | null => {
-      const hash = window.location.hash.substring(1); // Remove the leading '#'
-      const params = new URLSearchParams(hash);
-      return params.get('id_token');
-    };
-
-    const storeIdTokenInSession = () => {
-      const idToken = getIdTokenFromUrl();
-      if (idToken) {
-        sessionStorage.setItem('id_token', idToken);
-        console.log('ID token stored in session storage');
-      } else {
-        console.log('No ID token found in URL');
-      }
-    };
-
-    storeIdTokenInSession();
-
     const fetchData = async () => {
       try {
-        const response = await axios.get<RSVP[]>(`${apiUrl}?lastName=sirias`, {
+        const response = await axios.get<RSVP[]>(`${apiUrl}`, {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem('id_token')}`,
           },
         });
         setRsvpData(response.data);
-        setFilteredData(response.data); // Set both rsvpData and filteredData initially
+        setFilteredData(response.data);
       } catch (error) {
         console.error("Error fetching data", error);
       }
@@ -135,17 +116,16 @@ export const Dashboard: React.FC = () => {
     }));
   };
 
-  // Handle search input change and filter data
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
 
     if (rsvpData) {
       const filtered = rsvpData.filter(rsvp =>
-        rsvp.rsvpId.toLowerCase().includes(query) ||  // Filter by RSVP ID
+        rsvp.rsvpId.toLowerCase().includes(query) ||  
         rsvp.guests.some(guest =>
-          guest.firstName.toLowerCase().includes(query) ||  // Filter by Guest First Name
-          guest.lastName.toLowerCase().includes(query)      // Filter by Guest Last Name
+          guest.firstName.toLowerCase().includes(query) ||
+          guest.lastName.toLowerCase().includes(query)
         )
       );
       setFilteredData(filtered);
@@ -156,7 +136,7 @@ export const Dashboard: React.FC = () => {
     setEditingRow(rsvpId);
     const rsvp = rsvpData?.find(r => r.rsvpId === rsvpId);
     if (rsvp) {
-      setEditedRSVP(rsvp);
+      setEditedRSVP({ ...rsvp, guests: [...rsvp.guests] });
     }
   };
 
@@ -165,6 +145,18 @@ export const Dashboard: React.FC = () => {
       const updatedGuests = [...editedRSVP.guests];
       updatedGuests[index] = { ...updatedGuests[index], [field]: event.target.value };
       setEditedRSVP({ ...editedRSVP, guests: updatedGuests });
+    }
+  };
+
+  const handleAddGuestInEdit = () => {
+    if (editedRSVP) {
+      setEditedRSVP({
+        ...editedRSVP,
+        guests: [
+          ...editedRSVP.guests,
+          { firstName: '', lastName: '', attending: false, foodRestrictions: 'None' } // New guest object
+        ],
+      });
     }
   };
 
@@ -184,19 +176,18 @@ export const Dashboard: React.FC = () => {
       });
       setEditingRow(null);
       setEditedRSVP(null);
-      const response = await axios.get<RSVP[]>(`${apiUrl}?lastName=sirias`, {
+      const response = await axios.get<RSVP[]>(`${apiUrl}`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
         },
       });
       setRsvpData(response.data);
-      setFilteredData(response.data); // Update the filtered data after saving
+      setFilteredData(response.data);
     } catch (error) {
       console.error("Error updating RSVP", error);
     }
   };
 
-  // ADD NEW FUNCTION TO HANDLE FORM SUBMISSION
   const handleSubmitRSVP: SubmitHandler<FormData> = async (data) => {
     try {
       await axios.post(`${apiUrl}`, data, {
@@ -218,9 +209,9 @@ export const Dashboard: React.FC = () => {
         rsvpId: rsvp.rsvpId,
         firstName: guest.firstName,
         lastName: guest.lastName,
-        email: rsvp.email,          // Shared RSVP info
-        phone: rsvp.phone,          // Shared RSVP info
-        comments: rsvp.comments || '',  // Shared RSVP info
+        email: rsvp.email,
+        phone: rsvp.phone,
+        comments: rsvp.comments || '',
         attending: guest.attending ? "Yes" : "No",
         foodRestrictions: guest.foodRestrictions || 'None',
       }));
@@ -245,7 +236,6 @@ export const Dashboard: React.FC = () => {
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container maxWidth="lg" sx={{ marginTop: 4 }}>
-        {/* Cards Section */}
         <Grid container spacing={4}>
           <Grid item xs={12} sm={6} md={3}>
             <Card>
@@ -283,34 +273,26 @@ export const Dashboard: React.FC = () => {
           </Grid>
         </Grid>
 
-        {/* Table and Data Section */}
         <Grid container spacing={4} sx={{ marginTop: 4 }}>
-          {/* Navigation Section */}
           <Grid item xs={12} md={3}>
             <Paper elevation={3} sx={{ padding: 2 }}>
               <Typography variant="h6">Navigation</Typography>
               <Box mt={2}>
                 <Typography><a href="#" onClick={handleOpenModal}>Add RSVP</a></Typography>
-                <Typography><a href="https://clientportal.totalpartyplanner.com/?id=IOvVDYamb4wF4DV1me+UyuT7r7GyZ16Cy8HAOO+9k3RmpYX0KlzApsvqR9NDMEQh9Su1a5iWBEJugDVSCILdPYhAjbgnSmVFjuhTFBubmJ53CBTRZjFmlzaImSFVzloAD+mLyUycXzEHScnzFcpQ2/+5O/wszg2rsJjnZqznFvjtsApvI8Ce3r5ICQy0ydcrhsIz3lH8L4sXjfl8QR+4UPNrqMVvt0h5bAi/Nyg1q34EJ5ARW22UC4Y0kykBUBwK">Venue Portal</a></Typography>
-                <Typography><a href="https://booking.weddings-unlimited.com/manage?id=5028&surname=Sirias">Video/DJ Portal</a></Typography>
-                <Typography><a href="https://vibodj.app.link/OzzBZq4eqLb">DJ Portal</a></Typography>
-                <Typography><a href="https://studioclient.com/invoice/7eba7edfd3a77ba04bee8d1e63afbd1d">Photography Portal</a></Typography>
-                <Typography><a href="https://tuxedo.josbank.com/wedding-tracker?utm_source=JAB&utm_medium=Ecomm&utm_campaign=TopNav&utm_terms=WedGroupManager&_gl=1*bm7jp3*_ga*MTA0MTQ3MTQ2MC4xNzI0Nzk5MTI1*_ga_T6SWH68K36*MTcyNDc5OTIzNC4xLjEuMTcyNDc5OTI0Ni4wLjAuMA..">Grooms Portal</a></Typography>
               </Box>
             </Paper>
           </Grid>
-          {/* Table Section */}
+
           <Grid item xs={12} md={9}>
             <Paper elevation={3} sx={{ padding: 2 }}>
               <Typography variant="h6" gutterBottom>
                 RSVP Data
               </Typography>
 
-              {/* Search Bar and Download Button */}
               <Grid container justifyContent="space-between" sx={{ marginBottom: 2 }}>
                 <Button
                   variant="contained"
-                  sx={{ backgroundColor: '#5d7a66', color: '#fff' }} // Custom green color
+                  sx={{ backgroundColor: '#5d7a66', color: '#fff' }}
                   onClick={handleDownloadExcel}
                 >
                   Download Excel
@@ -338,11 +320,9 @@ export const Dashboard: React.FC = () => {
                 <TableBody>
                   {filteredData
                     .sort((a, b) => {
-                      // Sort by whether all guests have declined
                       const aHasDeclinedAllGuests = a.guests.every(guest => !guest.attending);
                       const bHasDeclinedAllGuests = b.guests.every(guest => !guest.attending);
                       
-                      // RSVPs with declined guests (red) go to the bottom
                       return aHasDeclinedAllGuests === bHasDeclinedAllGuests
                         ? 0
                         : aHasDeclinedAllGuests
@@ -350,14 +330,14 @@ export const Dashboard: React.FC = () => {
                         : -1;
                     })
                     .map((rsvp) => {
-                      const hasDeclinedAllGuests = rsvp.guests.every(guest => !guest.attending); // True if all guests declined
+                      const hasDeclinedAllGuests = rsvp.guests.every(guest => !guest.attending);
                       const hasFoodRestrictions = rsvp.guests.some(guest => guest.foodRestrictions !== 'None');
 
                       return (
                         <React.Fragment key={rsvp.rsvpId}>
                           <TableRow
                             sx={{
-                              backgroundColor: hasDeclinedAllGuests ? '#ef9a9a' : 'transparent', // Set background color if all guests declined
+                              backgroundColor: hasDeclinedAllGuests ? '#ef9a9a' : 'transparent',
                             }}
                           >
                             <TableCell>
@@ -377,7 +357,6 @@ export const Dashboard: React.FC = () => {
                             <TableCell>{rsvp.comments || ''}</TableCell>
                           </TableRow>
 
-                          {/* Expandable Guests Table */}
                           <TableRow>
                             <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                               <Collapse in={openRow[rsvp.rsvpId]} timeout="auto" unmountOnExit>
@@ -395,16 +374,81 @@ export const Dashboard: React.FC = () => {
                                       </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                      {rsvp.guests.map((guest, index) => (
+                                      {editedRSVP?.guests.map((guest, index) => (
                                         <TableRow key={index}>
-                                          <TableCell>{guest.firstName}</TableCell>
-                                          <TableCell>{guest.lastName}</TableCell>
-                                          <TableCell>{guest.attending ? "Yes" : "No"}</TableCell>
-                                          <TableCell>{guest.foodRestrictions || 'None'}</TableCell>
+                                          <TableCell>
+                                            {editingRow === rsvp.rsvpId ? (
+                                              <TextField
+                                                fullWidth
+                                                value={guest.firstName || ''}
+                                                onChange={(e) => handleGuestChange(index, e, 'firstName')}
+                                              />
+                                            ) : (
+                                              guest.firstName
+                                            )}
+                                          </TableCell>
+                                          <TableCell>
+                                            {editingRow === rsvp.rsvpId ? (
+                                              <TextField
+                                                fullWidth
+                                                value={guest.lastName || ''}
+                                                onChange={(e) => handleGuestChange(index, e, 'lastName')}
+                                              />
+                                            ) : (
+                                              guest.lastName
+                                            )}
+                                          </TableCell>
+                                          <TableCell>
+                                            {editingRow === rsvp.rsvpId ? (
+                                              <FormControl fullWidth>
+                                                <Select
+                                                  value={guest.attending ? "Yes" : "No"}
+                                                  onChange={(e) => handleGuestChange(index, e, 'attending')}
+                                                >
+                                                  <MenuItem value="Yes">Yes</MenuItem>
+                                                  <MenuItem value="No">No</MenuItem>
+                                                </Select>
+                                              </FormControl>
+                                            ) : (
+                                              guest.attending ? "Yes" : "No"
+                                            )}
+                                          </TableCell>
+                                          <TableCell>
+                                            {editingRow === rsvp.rsvpId ? (
+                                              <FormControl fullWidth>
+                                                <Select
+                                                  value={guest.foodRestrictions || 'None'}
+                                                  onChange={(e) => handleGuestChange(index, e, 'foodRestrictions')}
+                                                >
+                                                  <MenuItem value="None">None</MenuItem>
+                                                  <MenuItem value="Chicken">Chicken</MenuItem>
+                                                  <MenuItem value="Vegan">Vegan</MenuItem>
+                                                  <MenuItem value="Vegetarian">Vegetarian</MenuItem>
+                                                </Select>
+                                              </FormControl>
+                                            ) : (
+                                              guest.foodRestrictions || 'None'
+                                            )}
+                                          </TableCell>
                                         </TableRow>
                                       ))}
                                     </TableBody>
                                   </Table>
+                                  {editingRow === rsvp.rsvpId && (
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                                      <Button onClick={handleAddGuestInEdit} variant="outlined">
+                                        Add Another Guest
+                                      </Button>
+                                      <Box>
+                                        <Button variant="contained" color="primary" onClick={handleUpdate}>
+                                          Update
+                                        </Button>
+                                        <Button variant="contained" color="secondary" onClick={handleCancelEdit} sx={{ ml: 2 }}>
+                                          Cancel
+                                        </Button>
+                                      </Box>
+                                    </Box>
+                                  )}
                                 </Box>
                               </Collapse>
                             </TableCell>
@@ -418,14 +462,13 @@ export const Dashboard: React.FC = () => {
           </Grid>
         </Grid>
 
-        {/* Modal Section */}
         <Modal open={openModal} onClose={handleCloseModal}>
           <Box sx={{
             position: 'absolute', top: '50%', left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 600, maxHeight: '80vh', // Set a max height for the modal
+            width: 600, maxHeight: '80vh',
             bgcolor: 'background.paper', borderRadius: 2,
-            boxShadow: 24, p: 4, overflowY: 'auto' // Enable vertical scrolling
+            boxShadow: 24, p: 4, overflowY: 'auto'
           }}>
             <Typography variant="h6" component="h2">
               Add New RSVP
@@ -463,7 +506,9 @@ export const Dashboard: React.FC = () => {
                   </Grid>
                 </Grid>
               ))}
-              <Button onClick={() => append({ firstName: '', lastName: '', attending: false, foodRestrictions: 'None' })} sx={{ marginTop: 2 }}>Add Another Guest</Button>
+              <Button onClick={() => append({ firstName: '', lastName: '', attending: false, foodRestrictions: 'None' })} sx={{ marginTop: 2 }}>
+                Add Another Guest
+              </Button>
               <Button
                 variant="contained"
                 color="primary"
