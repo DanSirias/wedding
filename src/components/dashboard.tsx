@@ -8,7 +8,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import SetMealIcon from '@mui/icons-material/SetMeal';
-import PersonAddIcon from '@mui/icons-material/PersonAdd'; // Import add user icon
 import * as XLSX from 'xlsx';
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -71,7 +70,7 @@ export const Dashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState<RSVP[]>([]);
 
-  const { register, handleSubmit, formState: { errors }, control, reset } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors }, control, setValue, reset } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
       rsvpId: '',
@@ -137,27 +136,15 @@ export const Dashboard: React.FC = () => {
     setEditingRow(rsvpId);
     const rsvp = rsvpData?.find(r => r.rsvpId === rsvpId);
     if (rsvp) {
-      setEditedRSVP({ ...rsvp, guests: [...rsvp.guests] });
+      setEditedRSVP(rsvp);
     }
   };
 
-  const handleGuestChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | { target: { value: string } }, field: string) => {
+  const handleGuestChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { value: unknown }>, field: string) => {
     if (editedRSVP) {
       const updatedGuests = [...editedRSVP.guests];
       updatedGuests[index] = { ...updatedGuests[index], [field]: event.target.value };
       setEditedRSVP({ ...editedRSVP, guests: updatedGuests });
-    }
-  };
-
-  const handleAddGuestInEdit = () => {
-    if (editedRSVP) {
-      setEditedRSVP({
-        ...editedRSVP,
-        guests: [
-          ...editedRSVP.guests,
-          { firstName: '', lastName: '', attending: false, foodRestrictions: 'None' }
-        ],
-      });
     }
   };
 
@@ -280,11 +267,6 @@ export const Dashboard: React.FC = () => {
               <Typography variant="h6">Navigation</Typography>
               <Box mt={2}>
                 <Typography><a href="#" onClick={handleOpenModal}>Add RSVP</a></Typography>
-                <Typography><a href="https://clientportal.totalpartyplanner.com">Venue Portal</a></Typography>
-                <Typography><a href="https://booking.weddings-unlimited.com">Video/DJ Portal</a></Typography>
-                <Typography><a href="https://vibodj.app.link">DJ Portal</a></Typography>
-                <Typography><a href="https://studioclient.com">Photography Portal</a></Typography>
-                <Typography><a href="https://tuxedo.josbank.com">Grooms Portal</a></Typography>
               </Box>
             </Paper>
           </Grid>
@@ -380,13 +362,13 @@ export const Dashboard: React.FC = () => {
                                       </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                      {editedRSVP?.guests.map((guest, index) => (
+                                      {rsvp.guests.map((guest, index) => (
                                         <TableRow key={index}>
                                           <TableCell>
                                             {editingRow === rsvp.rsvpId ? (
                                               <TextField
                                                 fullWidth
-                                                value={guest.firstName || ''}
+                                                value={editedRSVP?.guests[index]?.firstName || ''}
                                                 onChange={(e) => handleGuestChange(index, e, 'firstName')}
                                               />
                                             ) : (
@@ -397,7 +379,7 @@ export const Dashboard: React.FC = () => {
                                             {editingRow === rsvp.rsvpId ? (
                                               <TextField
                                                 fullWidth
-                                                value={guest.lastName || ''}
+                                                value={editedRSVP?.guests[index]?.lastName || ''}
                                                 onChange={(e) => handleGuestChange(index, e, 'lastName')}
                                               />
                                             ) : (
@@ -408,8 +390,20 @@ export const Dashboard: React.FC = () => {
                                             {editingRow === rsvp.rsvpId ? (
                                               <FormControl fullWidth>
                                                 <Select
-                                                  value={guest.attending ? "Yes" : "No"}
-                                                  onChange={(e) => handleGuestChange(index, { target: { value: e.target.value } }, 'attending')}
+                                                  value={editedRSVP?.guests?.[index]?.attending ? "Yes" : "No"}
+                                                  onChange={(e) => {
+                                                    if (editedRSVP && editedRSVP.guests) {
+                                                      const updatedGuests = [...editedRSVP.guests];
+                                                      updatedGuests[index] = {
+                                                        ...updatedGuests[index],
+                                                        attending: e.target.value === "Yes",
+                                                      };
+                                                      setEditedRSVP({
+                                                        ...editedRSVP,
+                                                        guests: updatedGuests,
+                                                      });
+                                                    }
+                                                  }}
                                                 >
                                                   <MenuItem value="Yes">Yes</MenuItem>
                                                   <MenuItem value="No">No</MenuItem>
@@ -423,8 +417,20 @@ export const Dashboard: React.FC = () => {
                                             {editingRow === rsvp.rsvpId ? (
                                               <FormControl fullWidth>
                                                 <Select
-                                                  value={guest.foodRestrictions || 'None'}
-                                                  onChange={(e) => handleGuestChange(index, { target: { value: e.target.value } }, 'foodRestrictions')}
+                                                  value={editedRSVP?.guests?.[index]?.foodRestrictions || 'None'}
+                                                  onChange={(e) => {
+                                                    if (editedRSVP && editedRSVP.guests) {
+                                                      const updatedGuests = [...editedRSVP.guests];
+                                                      updatedGuests[index] = {
+                                                        ...updatedGuests[index],
+                                                        foodRestrictions: e.target.value as FoodRestrictions,
+                                                      };
+                                                      setEditedRSVP({
+                                                        ...editedRSVP,
+                                                        guests: updatedGuests,
+                                                      });
+                                                    }
+                                                  }}
                                                 >
                                                   <MenuItem value="None">None</MenuItem>
                                                   <MenuItem value="Chicken">Chicken</MenuItem>
@@ -441,18 +447,13 @@ export const Dashboard: React.FC = () => {
                                     </TableBody>
                                   </Table>
                                   {editingRow === rsvp.rsvpId && (
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                                      <IconButton onClick={handleAddGuestInEdit} color="primary" aria-label="add guest">
-                                        <PersonAddIcon />
-                                      </IconButton>
-                                      <Box>
-                                        <Button variant="contained" color="primary" onClick={handleUpdate}>
-                                          Update
-                                        </Button>
-                                        <Button variant="contained" color="secondary" onClick={handleCancelEdit} sx={{ ml: 2 }}>
-                                          Cancel
-                                        </Button>
-                                      </Box>
+                                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                                      <Button variant="contained" color="primary" onClick={handleUpdate}>
+                                        Update
+                                      </Button>
+                                      <Button variant="contained" color="secondary" onClick={handleCancelEdit} sx={{ ml: 2 }}>
+                                        Cancel
+                                      </Button>
                                     </Box>
                                   )}
                                 </Box>
