@@ -8,6 +8,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import SetMealIcon from '@mui/icons-material/SetMeal';
+import PersonAddIcon from '@mui/icons-material/PersonAdd'; // Import add user icon
 import * as XLSX from 'xlsx';
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -70,7 +71,7 @@ export const Dashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState<RSVP[]>([]);
 
-  const { register, handleSubmit, formState: { errors }, control, setValue, reset } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors }, control, reset } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
       rsvpId: '',
@@ -78,7 +79,7 @@ export const Dashboard: React.FC = () => {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control,
     name: "guests"
   });
@@ -140,7 +141,7 @@ export const Dashboard: React.FC = () => {
     }
   };
 
-  const handleGuestChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { value: unknown }>, field: string) => {
+  const handleGuestChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | { target: { value: string } }, field: string) => {
     if (editedRSVP) {
       const updatedGuests = [...editedRSVP.guests];
       updatedGuests[index] = { ...updatedGuests[index], [field]: event.target.value };
@@ -154,7 +155,7 @@ export const Dashboard: React.FC = () => {
         ...editedRSVP,
         guests: [
           ...editedRSVP.guests,
-          { firstName: '', lastName: '', attending: false, foodRestrictions: 'None' } // New guest object
+          { firstName: '', lastName: '', attending: false, foodRestrictions: 'None' }
         ],
       });
     }
@@ -279,6 +280,11 @@ export const Dashboard: React.FC = () => {
               <Typography variant="h6">Navigation</Typography>
               <Box mt={2}>
                 <Typography><a href="#" onClick={handleOpenModal}>Add RSVP</a></Typography>
+                <Typography><a href="https://clientportal.totalpartyplanner.com">Venue Portal</a></Typography>
+                <Typography><a href="https://booking.weddings-unlimited.com">Video/DJ Portal</a></Typography>
+                <Typography><a href="https://vibodj.app.link">DJ Portal</a></Typography>
+                <Typography><a href="https://studioclient.com">Photography Portal</a></Typography>
+                <Typography><a href="https://tuxedo.josbank.com">Grooms Portal</a></Typography>
               </Box>
             </Paper>
           </Grid>
@@ -401,10 +407,10 @@ export const Dashboard: React.FC = () => {
                                           <TableCell>
                                             {editingRow === rsvp.rsvpId ? (
                                               <FormControl fullWidth>
-                                                  <Select
-                                                    value={guest.attending ? "Yes" : "No"}
-                                                    onChange={(e) => handleGuestChange(index, { target: { value: e.target.value } } as React.ChangeEvent<HTMLInputElement>, 'attending')}
-                                                  >
+                                                <Select
+                                                  value={guest.attending ? "Yes" : "No"}
+                                                  onChange={(e) => handleGuestChange(index, { target: { value: e.target.value } }, 'attending')}
+                                                >
                                                   <MenuItem value="Yes">Yes</MenuItem>
                                                   <MenuItem value="No">No</MenuItem>
                                                 </Select>
@@ -416,10 +422,10 @@ export const Dashboard: React.FC = () => {
                                           <TableCell>
                                             {editingRow === rsvp.rsvpId ? (
                                               <FormControl fullWidth>
-                                                    <Select
-                                                      value={guest.foodRestrictions || 'None'}
-                                                      onChange={(e) => handleGuestChange(index, { target: { value: e.target.value } } as React.ChangeEvent<HTMLInputElement>, 'foodRestrictions')}
-                                                    >
+                                                <Select
+                                                  value={guest.foodRestrictions || 'None'}
+                                                  onChange={(e) => handleGuestChange(index, { target: { value: e.target.value } }, 'foodRestrictions')}
+                                                >
                                                   <MenuItem value="None">None</MenuItem>
                                                   <MenuItem value="Chicken">Chicken</MenuItem>
                                                   <MenuItem value="Vegan">Vegan</MenuItem>
@@ -436,9 +442,9 @@ export const Dashboard: React.FC = () => {
                                   </Table>
                                   {editingRow === rsvp.rsvpId && (
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                                      <Button onClick={handleAddGuestInEdit} variant="outlined">
-                                        Add Another Guest
-                                      </Button>
+                                      <IconButton onClick={handleAddGuestInEdit} color="primary" aria-label="add guest">
+                                        <PersonAddIcon />
+                                      </IconButton>
                                       <Box>
                                         <Button variant="contained" color="primary" onClick={handleUpdate}>
                                           Update
