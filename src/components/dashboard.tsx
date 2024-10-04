@@ -401,10 +401,10 @@ export const Dashboard: React.FC = () => {
                                           <TableCell>
                                             {editingRow === rsvp.rsvpId ? (
                                               <FormControl fullWidth>
-                                                <Select
-                                                  value={guest.attending ? "Yes" : "No"}
-                                                  onChange={(e) => handleGuestChange(index, e, 'attending')}
-                                                >
+                                                  <Select
+                                                    value={guest.attending ? "Yes" : "No"}
+                                                    onChange={(e) => handleGuestChange(index, { target: { value: e.target.value } } as React.ChangeEvent<HTMLInputElement>, 'attending')}
+                                                  >
                                                   <MenuItem value="Yes">Yes</MenuItem>
                                                   <MenuItem value="No">No</MenuItem>
                                                 </Select>
@@ -416,10 +416,10 @@ export const Dashboard: React.FC = () => {
                                           <TableCell>
                                             {editingRow === rsvp.rsvpId ? (
                                               <FormControl fullWidth>
-                                                <Select
-                                                  value={guest.foodRestrictions || 'None'}
-                                                  onChange={(e) => handleGuestChange(index, e, 'foodRestrictions')}
-                                                >
+                                                    <Select
+                                                      value={guest.foodRestrictions || 'None'}
+                                                      onChange={(e) => handleGuestChange(index, { target: { value: e.target.value } } as React.ChangeEvent<HTMLInputElement>, 'foodRestrictions')}
+                                                    >
                                                   <MenuItem value="None">None</MenuItem>
                                                   <MenuItem value="Chicken">Chicken</MenuItem>
                                                   <MenuItem value="Vegan">Vegan</MenuItem>
