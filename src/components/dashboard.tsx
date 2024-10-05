@@ -452,7 +452,9 @@ export const Dashboard: React.FC = () => {
                                       ))}
                                     </TableBody>
                                   </Table>
-                                  {editingRow === rsvp.rsvpId && (
+
+                                  {/* Always show Update and Cancel buttons if the row is opened */}
+                                  {openRow[rsvp.rsvpId] && (
                                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                                       <Button variant="contained" color="primary" onClick={handleUpdate}>
                                         Update
@@ -466,6 +468,7 @@ export const Dashboard: React.FC = () => {
                               </Collapse>
                             </TableCell>
                           </TableRow>
+
                         </React.Fragment>
                       );
                     })}
