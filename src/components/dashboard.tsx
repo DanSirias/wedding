@@ -133,7 +133,6 @@ export const Dashboard: React.FC = () => {
       setFilteredData(filtered);
     }
   };
-
   const handleEdit = (rsvpId: string) => {
     setEditingRow(rsvpId);
     const rsvp = rsvpData?.find(r => r.rsvpId === rsvpId);
@@ -142,22 +141,10 @@ export const Dashboard: React.FC = () => {
     }
   };
 
-  const handleGuestChange = (
-    index: number, 
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>, 
-    field: string
-  ) => {
+  const handleGuestChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { value: unknown }>, field: string) => {
     if (editedRSVP) {
       const updatedGuests = [...editedRSVP.guests];
-  
-      // Handling both cases: SelectChangeEvent and normal ChangeEvent
-      const value = event.target.value; 
-  
-      updatedGuests[index] = { 
-        ...updatedGuests[index], 
-        [field]: field === "attending" ? value === "Yes" : value  // Ensure boolean for 'attending'
-      };
-  
+      updatedGuests[index] = { ...updatedGuests[index], [field]: event.target.value };
       setEditedRSVP({ ...editedRSVP, guests: updatedGuests });
     }
   };
@@ -178,19 +165,18 @@ export const Dashboard: React.FC = () => {
       });
       setEditingRow(null);
       setEditedRSVP(null);
-
-      // Re-fetch the updated data after successful update
-      const response = await axios.get<RSVP[]>(`${apiUrl}`, {
+      const response = await axios.get<RSVP[]>(`${apiUrl}?lastName=sirias`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
         },
       });
       setRsvpData(response.data);
-      setFilteredData(response.data);
+      setFilteredData(response.data); // Update the filtered data after saving
     } catch (error) {
       console.error("Error updating RSVP", error);
     }
   };
+
 
   const handleSubmitRSVP: SubmitHandler<FormData> = async (data) => {
     try {
@@ -383,99 +369,123 @@ export const Dashboard: React.FC = () => {
                           </TableRow>
 
                           <TableRow>
-                            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                              <Collapse in={openRow[rsvp.rsvpId]} timeout="auto" unmountOnExit>
-                                <Box margin={2}>
-                                  <Typography variant="h6" gutterBottom component="div">
-                                    Guests
-                                  </Typography>
-                                  <Table size="small" aria-label="guests">
-                                    <TableHead>
-                                      <TableRow>
-                                        <TableCell sx={{ fontWeight: '900' }}>First Name</TableCell>
-                                        <TableCell sx={{ fontWeight: '900' }}>Last Name</TableCell>
-                                        <TableCell sx={{ fontWeight: '900' }}>Attending</TableCell>
-                                        <TableCell sx={{ fontWeight: '900' }}>Food Restrictions</TableCell>
+                          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                            <Collapse in={openRow[rsvp.rsvpId]} timeout="auto" unmountOnExit>
+                              <Box margin={2}>
+                                <Typography variant="h6" gutterBottom component="div">
+                                  Guests
+                                </Typography>
+                                <Table size="small" aria-label="guests">
+                                  <TableHead>
+                                    <TableRow>
+                                      <TableCell sx={{ fontWeight: '900' }}>First Name</TableCell>
+                                      <TableCell sx={{ fontWeight: '900' }}>Last Name</TableCell>
+                                      <TableCell sx={{ fontWeight: '900' }}>Attending</TableCell>
+                                      <TableCell sx={{ fontWeight: '900' }}>Food Restrictions</TableCell>
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody>
+                                    {rsvp.guests.map((guest, index) => (
+                                      <TableRow key={index}>
+                                        <TableCell>
+                                          {editingRow === rsvp.rsvpId ? (
+                                            <TextField
+                                              fullWidth
+                                              value={editedRSVP?.guests[index]?.firstName || ''}
+                                              onChange={(e) => handleGuestChange(index, e, 'firstName')}
+                                            />
+                                          ) : (
+                                            guest.firstName
+                                          )}
+                                        </TableCell>
+                                        <TableCell>
+                                          {editingRow === rsvp.rsvpId ? (
+                                            <TextField
+                                              fullWidth
+                                              value={editedRSVP?.guests[index]?.lastName || ''}
+                                              onChange={(e) => handleGuestChange(index, e, 'lastName')}
+                                            />
+                                          ) : (
+                                            guest.lastName
+                                          )}
+                                        </TableCell>
+                                        <TableCell>
+                                          {editingRow === rsvp.rsvpId ? (
+                                            <FormControl fullWidth>
+                                              <Select
+                                                value={editedRSVP?.guests?.[index]?.attending ? "Yes" : "No"}
+                                                onChange={(e) => {
+                                                  if (editedRSVP && editedRSVP.guests) {
+                                                    const updatedGuests = [...editedRSVP.guests];
+                                                    updatedGuests[index] = {
+                                                      ...updatedGuests[index],
+                                                      attending: e.target.value === "Yes",
+                                                    };
+                                                    setEditedRSVP({
+                                                      ...editedRSVP,
+                                                      guests: updatedGuests,
+                                                      rsvpId: editedRSVP.rsvpId,
+                                                    });
+                                                  }
+                                                }}
+                                              >
+                                                <MenuItem value="Yes">Yes</MenuItem>
+                                                <MenuItem value="No">No</MenuItem>
+                                              </Select>
+                                            </FormControl>
+                                          ) : (
+                                            guest.attending ? "Yes" : "No"
+                                          )}
+                                        </TableCell>
+
+                                        <TableCell>
+                                          {editingRow === rsvp.rsvpId ? (
+                                            <FormControl fullWidth>
+                                              <Select
+                                                value={editedRSVP?.guests?.[index]?.foodRestrictions || 'None'}
+                                                onChange={(e) => {
+                                                  if (editedRSVP && editedRSVP.guests) {
+                                                    const updatedGuests = [...editedRSVP.guests];
+                                                    updatedGuests[index] = {
+                                                      ...updatedGuests[index],
+                                                      foodRestrictions: e.target.value as FoodRestrictions,
+                                                    };
+                                                    setEditedRSVP({
+                                                      ...editedRSVP,
+                                                      guests: updatedGuests,
+                                                      rsvpId: editedRSVP.rsvpId,
+                                                    });
+                                                  }
+                                                }}
+                                              >
+                                                <MenuItem value="None">None</MenuItem>
+                                                <MenuItem value="Chicken">Chicken</MenuItem>
+                                                <MenuItem value="Vegan">Vegan</MenuItem>
+                                                <MenuItem value="Vegetarian">Vegetarian</MenuItem>
+                                              </Select>
+                                            </FormControl>
+                                          ) : (
+                                            guest.foodRestrictions || 'None'
+                                          )}
+                                        </TableCell>
                                       </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                      {rsvp.guests.map((guest, index) => (
-                                        <TableRow key={index}>
-                                          <TableCell>
-                                            {editingRow === rsvp.rsvpId ? (
-                                              <TextField
-                                                fullWidth
-                                                value={editedRSVP?.guests[index]?.firstName || ''}
-                                                onChange={(e) => handleGuestChange(index, e, 'firstName')}
-                                              />
-                                            ) : (
-                                              guest.firstName
-                                            )}
-                                          </TableCell>
-                                          <TableCell>
-                                            {editingRow === rsvp.rsvpId ? (
-                                              <TextField
-                                                fullWidth
-                                                value={editedRSVP?.guests[index]?.lastName || ''}
-                                                onChange={(e) => handleGuestChange(index, e, 'lastName')}
-                                              />
-                                            ) : (
-                                              guest.lastName
-                                            )}
-                                          </TableCell>
-                                          <TableCell>
-                                            {editingRow === rsvp.rsvpId ? (
-                                              <FormControl fullWidth>
-                                                    <Select
-                                                      value={editedRSVP?.guests?.[index]?.attending ? "Yes" : "No"}
-                                                      onChange={(e: SelectChangeEvent) => handleGuestChange(index, e, 'attending')} // Specify SelectChangeEvent type
-                                                    >
-                                                  <MenuItem value="Yes">Yes</MenuItem>
-                                                  <MenuItem value="No">No</MenuItem>
-                                                </Select>
-                                              </FormControl>
-                                            ) : (
-                                              guest.attending ? "Yes" : "No"
-                                            )}
-                                          </TableCell>
-                                          <TableCell>
-                                            {editingRow === rsvp.rsvpId ? (
-                                              <FormControl fullWidth>
-                                                <Select
-                                                  value={editedRSVP?.guests?.[index]?.foodRestrictions || 'None'}
-                                                  onChange={(e) => handleGuestChange(index, e, 'foodRestrictions')}
-                                                >
-                                                  <MenuItem value="None">None</MenuItem>
-                                                  <MenuItem value="Chicken">Chicken</MenuItem>
-                                                  <MenuItem value="Vegan">Vegan</MenuItem>
-                                                  <MenuItem value="Vegetarian">Vegetarian</MenuItem>
-                                                </Select>
-                                              </FormControl>
-                                            ) : (
-                                              guest.foodRestrictions || 'None'
-                                            )}
-                                          </TableCell>
-                                        </TableRow>
-                                      ))}
-                                    </TableBody>
-                                  </Table>
-
-                                  {/* Always show Update and Cancel buttons if the row is opened */}
-                                  {openRow[rsvp.rsvpId] && (
-                                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                                      <Button variant="contained" color="primary" onClick={handleUpdate}>
-                                        Update
-                                      </Button>
-                                      <Button variant="contained" color="secondary" onClick={handleCancelEdit} sx={{ ml: 2 }}>
-                                        Cancel
-                                      </Button>
-                                    </Box>
-                                  )}
-                                </Box>
-                              </Collapse>
-                            </TableCell>
-                          </TableRow>
-
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                                {editingRow === rsvp.rsvpId ? (
+                                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                                    <Button variant="contained" color="primary" onClick={handleUpdate}>Update</Button>
+                                    <Button variant="contained" color="secondary" onClick={handleCancelEdit} sx={{ ml: 2 }}>Cancel</Button>
+                                  </Box>
+                                ) : (
+                                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                                    <Button variant="contained" color="primary" onClick={() => handleEdit(rsvp.rsvpId)}>Edit</Button>
+                                  </Box>
+                                )}
+                              </Box>
+                            </Collapse>
+                          </TableCell>
+                        </TableRow>
                         </React.Fragment>
                       );
                     })}
