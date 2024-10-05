@@ -12,6 +12,7 @@ import * as XLSX from 'xlsx';
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { SelectChangeEvent } from '@mui/material/Select';
 
 const defaultTheme = createTheme({
   palette: {
@@ -141,13 +142,22 @@ export const Dashboard: React.FC = () => {
     }
   };
 
-  const handleGuestChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { value: unknown }>, field: string) => {
+  const handleGuestChange = (
+    index: number, 
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>, 
+    field: string
+  ) => {
     if (editedRSVP) {
       const updatedGuests = [...editedRSVP.guests];
+  
+      // Handling both cases: SelectChangeEvent and normal ChangeEvent
+      const value = event.target.value; 
+  
       updatedGuests[index] = { 
         ...updatedGuests[index], 
-        [field]: field === "attending" ? event.target.value === "Yes" : event.target.value 
-      }; // Ensure attending field is boolean
+        [field]: field === "attending" ? value === "Yes" : value  // Ensure boolean for 'attending'
+      };
+  
       setEditedRSVP({ ...editedRSVP, guests: updatedGuests });
     }
   };
@@ -416,10 +426,10 @@ export const Dashboard: React.FC = () => {
                                           <TableCell>
                                             {editingRow === rsvp.rsvpId ? (
                                               <FormControl fullWidth>
-                                                <Select
-                                                  value={editedRSVP?.guests?.[index]?.attending ? "Yes" : "No"}
-                                                  onChange={(e) => handleGuestChange(index, e, 'attending')}
-                                                >
+                                                    <Select
+                                                      value={editedRSVP?.guests?.[index]?.attending ? "Yes" : "No"}
+                                                      onChange={(e: SelectChangeEvent) => handleGuestChange(index, e, 'attending')} // Specify SelectChangeEvent type
+                                                    >
                                                   <MenuItem value="Yes">Yes</MenuItem>
                                                   <MenuItem value="No">No</MenuItem>
                                                 </Select>
