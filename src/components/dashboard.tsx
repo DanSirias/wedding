@@ -144,7 +144,10 @@ export const Dashboard: React.FC = () => {
   const handleGuestChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { value: unknown }>, field: string) => {
     if (editedRSVP) {
       const updatedGuests = [...editedRSVP.guests];
-      updatedGuests[index] = { ...updatedGuests[index], [field]: event.target.value };
+      updatedGuests[index] = { 
+        ...updatedGuests[index], 
+        [field]: field === "attending" ? event.target.value === "Yes" : event.target.value 
+      }; // Ensure attending field is boolean
       setEditedRSVP({ ...editedRSVP, guests: updatedGuests });
     }
   };
@@ -165,6 +168,8 @@ export const Dashboard: React.FC = () => {
       });
       setEditingRow(null);
       setEditedRSVP(null);
+
+      // Re-fetch the updated data after successful update
       const response = await axios.get<RSVP[]>(`${apiUrl}`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
@@ -263,20 +268,36 @@ export const Dashboard: React.FC = () => {
         </Grid>
 
         <Grid container spacing={4} sx={{ marginTop: 4 }}>
+          {/* Left Navigation */}
           <Grid item xs={12} md={3}>
             <Paper elevation={3} sx={{ padding: 2 }}>
               <Typography variant="h6">Navigation</Typography>
               <Box mt={2}>
-                <Typography><a href="#" onClick={handleOpenModal}>Add RSVP</a></Typography>
-                <Typography><a href="https://clientportal.totalpartyplanner.com/?id=IOvVDYamb4wF4DV1me+UyuT7r7GyZ16Cy8HAOO+9k3RmpYX0KlzApsvqR9NDMEQh9Su1a5iWBEJugDVSCILdPYhAjbgnSmVFjuhTFBubmJ53CBTRZjFmlzaImSFVzloAD+mLyUycXzEHScnzFcpQ2/+5O/wszg2rsJjnZqznFvjtsApvI8Ce3r5ICQy0ydcrhsIz3lH8L4sXjfl8QR+4UPNrqMVvt0h5bAi/Nyg1q34EJ5ARW22UC4Y0kykBUBwK">Venue Portal</a></Typography>
-                <Typography><a href="https://booking.weddings-unlimited.com/manage?id=5028&surname=Sirias">Video/DJ Portal</a></Typography>
-                <Typography><a href="https://vibodj.app.link/OzzBZq4eqLb">DJ Portal</a></Typography>
-                <Typography><a href="https://studioclient.com/invoice/7eba7edfd3a77ba04bee8d1e63afbd1d">Photography Portal</a></Typography>
-                <Typography><a href="https://tuxedo.josbank.com/wedding-tracker?utm_source=JAB&utm_medium=Ecomm&utm_campaign=TopNav&utm_terms=WedGroupManager&_gl=1*bm7jp3*_ga*MTA0MTQ3MTQ2MC4xNzI0Nzk5MTI1*_ga_T6SWH68K36*MTcyNDc5OTIzNC4xLjEuMTcyNDc5OTI0Ni4wLjAuMA..">Grooms Portal</a></Typography>
+                <Typography>
+                  <a href="#" onClick={handleOpenModal}>Add RSVP</a>
+                </Typography>
+                <Typography>
+                  <a href="https://clientportal.totalpartyplanner.com/?id=IOvVDYamb4wF4DV1me+UyuT7r7GyZ16Cy8HAOO+9k3RmpYX0KlzApsvqR9NDMEQh9Su1a5iWBEJugDVSCILdPYhAjbgnSmVFjuhTFBubmJ53CBTRZjFmlzaImSFVzloAD+mLyUycXzEHScnzFcpQ2/+5O/wszg2rsJjnZqznFvjtsApvI8Ce3r5ICQy0ydcrhsIz3lH8L4sXjfl8QR+4UPNrqMVvt0h5bAi/Nyg1q34EJ5ARW22UC4Y0kykBUBwK">
+                    Venue Portal
+                  </a>
+                </Typography>
+                <Typography>
+                  <a href="https://booking.weddings-unlimited.com/manage?id=5028&surname=Sirias">Video/DJ Portal</a>
+                </Typography>
+                <Typography>
+                  <a href="https://vibodj.app.link/OzzBZq4eqLb">DJ Portal</a>
+                </Typography>
+                <Typography>
+                  <a href="https://studioclient.com/invoice/7eba7edfd3a77ba04bee8d1e63afbd1d">Photography Portal</a>
+                </Typography>
+                <Typography>
+                  <a href="https://tuxedo.josbank.com/wedding-tracker?utm_source=JAB&utm_medium=Ecomm&utm_campaign=TopNav&utm_terms=WedGroupManager&_gl=1*bm7jp3*_ga*MTA0MTQ3MTQ2MC4xNzI0Nzk5MTI1*_ga_T6SWH68K36*MTcyNDc5OTIzNC4xLjEuMTcyNDc5OTI0Ni4wLjAuMA..">Grooms Portal</a>
+                </Typography>
               </Box>
             </Paper>
           </Grid>
 
+          {/* Main Content */}
           <Grid item xs={12} md={9}>
             <Paper elevation={3} sx={{ padding: 2 }}>
               <Typography variant="h6" gutterBottom>
@@ -397,19 +418,7 @@ export const Dashboard: React.FC = () => {
                                               <FormControl fullWidth>
                                                 <Select
                                                   value={editedRSVP?.guests?.[index]?.attending ? "Yes" : "No"}
-                                                  onChange={(e) => {
-                                                    if (editedRSVP && editedRSVP.guests) {
-                                                      const updatedGuests = [...editedRSVP.guests];
-                                                      updatedGuests[index] = {
-                                                        ...updatedGuests[index],
-                                                        attending: e.target.value === "Yes",
-                                                      };
-                                                      setEditedRSVP({
-                                                        ...editedRSVP,
-                                                        guests: updatedGuests,
-                                                      });
-                                                    }
-                                                  }}
+                                                  onChange={(e) => handleGuestChange(index, e, 'attending')}
                                                 >
                                                   <MenuItem value="Yes">Yes</MenuItem>
                                                   <MenuItem value="No">No</MenuItem>
@@ -424,19 +433,7 @@ export const Dashboard: React.FC = () => {
                                               <FormControl fullWidth>
                                                 <Select
                                                   value={editedRSVP?.guests?.[index]?.foodRestrictions || 'None'}
-                                                  onChange={(e) => {
-                                                    if (editedRSVP && editedRSVP.guests) {
-                                                      const updatedGuests = [...editedRSVP.guests];
-                                                      updatedGuests[index] = {
-                                                        ...updatedGuests[index],
-                                                        foodRestrictions: e.target.value as FoodRestrictions,
-                                                      };
-                                                      setEditedRSVP({
-                                                        ...editedRSVP,
-                                                        guests: updatedGuests,
-                                                      });
-                                                    }
-                                                  }}
+                                                  onChange={(e) => handleGuestChange(index, e, 'foodRestrictions')}
                                                 >
                                                   <MenuItem value="None">None</MenuItem>
                                                   <MenuItem value="Chicken">Chicken</MenuItem>
