@@ -36,7 +36,6 @@ export const RetrivedImages = () => {
       }
       const data = await response.json();
 
-      // Check if the response has an "images" property that is an array
       if (data && Array.isArray(data.images)) {
         setPostList(data.images as imagePost[]);
       } else {
@@ -61,11 +60,6 @@ export const RetrivedImages = () => {
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const getFormattedDate = (dateUploaded: string): string => {
-    const date = new Date(dateUploaded);
-    return date.toLocaleDateString(); // Customize this to your preferred format
   };
 
   return (
@@ -114,9 +108,14 @@ export const RetrivedImages = () => {
               ))}
             </Grid>
           </Box>
-          <Dialog open={open} onClose={handleClose} maxWidth="md">
-            <DialogContent>
-              <img src={selectedImage} alt="Large Image" style={{ width: 'auto', height: 'auto' }} />
+          {/* Updated Dialog */}
+          <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+            <DialogContent style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <img
+                src={selectedImage}
+                alt="Selected"
+                style={{ maxHeight: '70vh', objectFit: 'contain' }} // Responsiveness: image scales to dialog size
+              />
             </DialogContent>
           </Dialog>
         </Container>
