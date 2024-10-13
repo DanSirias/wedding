@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Container, Grid, Typography, Box, Card, CardMedia, Dialog, DialogContent, DialogActions, Button,
 } from '@mui/material';
+import axios from 'axios';  // Import axios
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const defaultTheme = createTheme({
@@ -29,21 +30,11 @@ export const EditImages: React.FC = () =>  {
   const [selectedImage, setSelectedImage] = useState('');
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);  // State for selected image ID
 
-  // Fetch the images from the API
+  // Fetch the images from the API using axios
   const getPosts = async () => {
     try {
-      const response = await fetch('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images');
-      if (!response.ok) {
-        throw new Error(`Error fetching data: ${response.statusText}`);
-      }
-      const data = await response.json();
-
-      if (data && Array.isArray(data.images)) {
-        setPostList(data.images as imagePost[]);
-      } else {
-        console.error("API did not return an array of images:", data);
-        setPostList([]); // Fallback to an empty array
-      }
+      const response = await axios.get('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images');
+      setPostList(response.data.images);  // Set the images from the response
     } catch (error) {
       console.error("Failed to fetch images:", error);
       setPostList([]); // Fallback to an empty array in case of error
@@ -66,32 +57,25 @@ export const EditImages: React.FC = () =>  {
     setOpen(false);
   };
 
-  // Function to hide the image by updating its hidden attribute in the database
+  // Function to hide the image by sending a PATCH request using axios
   const handleHideImage = async (imageId: string) => {
     try {
       console.log('Sending PATCH request with imageId:', imageId);
   
-      // Send the PATCH request to the API
-      const response = await fetch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images/${imageId}`, {
-        method: 'PATCH',  // Changed to PATCH method
-        headers: {
-          'Content-Type': 'application/json',  // Set content type to JSON
-        },
-        body: JSON.stringify({ imageId }),  // Send imageId as JSON in the body
+      // Send the PATCH request using axios
+      const response = await axios.patch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images/${imageId}`, {
+        imageId  // Send imageId in the request body
       });
   
       console.log('Response status:', response.status);
+      console.log('Response data:', response.data);
   
-      // Parse the response body to check for errors or success
-      const responseBody = await response.json();
-      console.log('Response body:', responseBody);
-  
-      if (response.ok) {
+      if (response.status === 200) {
         console.log('Image hidden successfully');
         setOpen(false);  // Close the dialog after hiding the image
         getPosts();  // Refresh the posts list to reflect changes
       } else {
-        console.error('Failed to hide the image:', responseBody);
+        console.error('Failed to hide the image:', response.data);
         alert('Failed to hide the image. Please try again.');
       }
     } catch (error) {
