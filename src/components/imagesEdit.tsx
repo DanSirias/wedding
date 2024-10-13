@@ -69,11 +69,11 @@ export const EditImages: React.FC = () =>  {
   // Function to hide the image by updating its hidden attribute in the database
   const handleHideImage = async (imageId: string) => {
     try {
-      console.log('Sending PUT request with imageId:', imageId);
+      console.log('Sending PATCH request with imageId:', imageId);
   
-      // Send the PUT request to the API
+      // Send the PATCH request to the API
       const response = await fetch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images/${imageId}`, {
-        method: 'PUT',  // Using PUT method
+        method: 'PATCH',  // Changed to PATCH method
         headers: {
           'Content-Type': 'application/json',  // Set content type to JSON
         },
@@ -100,6 +100,7 @@ export const EditImages: React.FC = () =>  {
       alert('An error occurred while hiding the image.');
     }
   };
+  
   return (
     <div className="" style={{ padding: 0, height: "100%", width: "100%", backgroundColor: "#fff8e4", marginTop: 30 }}>
       <ThemeProvider theme={defaultTheme}>
