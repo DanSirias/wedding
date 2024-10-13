@@ -57,34 +57,46 @@ export const EditImages: React.FC = () =>  {
     setOpen(false);
   };
 
-  // Function to hide the image by sending a PATCH request using axios
-  const handleHideImage = async (imageId: string) => {
-    try {
-      console.log('Sending PUT request with imageId:', imageId);
+// Function to hide the image by sending a PUT request using axios
+const handleHideImage = async (imageId: string) => {
+  try {
+    // Find the selected post to get the lastName
+    const selectedPost = postsList.find(post => post.imageId === imageId);
+    const lastName = selectedPost ? selectedPost.lastName : '';
 
-      // Send the PATCH request using axios, include the httpMethod and imageId in the body
-      const response = await axios.put('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', {
-        httpMethod: 'PUT',
-        imageId,  // Send imageId in the request body
-      });
-  
-      console.log('Response status:', response.status);
-      console.log('Response data:', response.data);
-
-      if (response.status === 200) {
-        console.log('Image hidden successfully');
-        setOpen(false);  // Close the dialog after hiding the image
-        getPosts();  // Refresh the posts list to reflect changes
-      } else {
-        console.error('Failed to hide the image:', response.data);
-        alert('Failed to hide the image. Please try again.');
-      }
-    } catch (error) {
-      // Handle any unexpected errors
-      console.error('Error hiding the image:', error);
-      alert('An error occurred while hiding the image.');
+    if (!lastName) {
+      console.error("Last name is missing for this image.");
+      alert('Last name is required to hide the image.');
+      return;
     }
-  };
+
+    console.log('Sending PUT request with imageId:', imageId, 'and lastName:', lastName);
+
+    // Send the PUT request using axios, include the imageId and lastName in the body
+    const response = await axios.put('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', {
+      httpMethod: 'PUT',
+      imageId,  // Send imageId in the request body
+      lastName  // Include the lastName in the request body
+    });
+
+    console.log('Response status:', response.status);
+    console.log('Response data:', response.data);
+
+    if (response.status === 200) {
+      console.log('Image hidden successfully');
+      setOpen(false);  // Close the dialog after hiding the image
+      getPosts();  // Refresh the posts list to reflect changes
+    } else {
+      console.error('Failed to hide the image:', response.data);
+      alert('Failed to hide the image. Please try again.');
+    }
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error('Error hiding the image:', error);
+    alert('An error occurred while hiding the image.');
+  }
+};
+
 
   return (
     <div className="" style={{ padding: 0, height: "100%", width: "100%", backgroundColor: "#fff8e4", marginTop: 30 }}>
