@@ -58,28 +58,40 @@ export const EditImages: React.FC = () =>  {
   };
 
 // Function to hide the image by sending a PUT request using axios with enhanced error handling
-// Function to hide the image by sending a PUT request using axios with enhanced error handling
 const handleHideImage = async (imageId: string) => {
   try {
     // Find the selected post to get the lastName
     const selectedPost = postsList.find(post => post.imageId === imageId);
-    const lastName = selectedPost ? selectedPost.lastName : '';
 
+    // Validate if the post is found
+    if (!selectedPost) {
+      console.error(`No post found with imageId: ${imageId}`);
+      alert('No post found for this image.');
+      return;
+    }
+
+    const { lastName } = selectedPost;
+
+    // Validate if the lastName is present
     if (!lastName) {
       console.error("Last name is missing for this image.");
       alert('Last name is required to hide the image.');
       return;
     }
 
-    console.log('Sending PUT request with imageId:', imageId, 'and lastName:', lastName);
+    // Prepare the data in a structured object, similar to the RSVP method
+    const updateData = {
+      imageId,  // The image's unique ID
+      lastName, // Last name of the uploader
+      disableImage: true  // We want to disable this image
+    };
+
+    console.log('Sending PUT request with updateData:', updateData);
 
     // Send the PUT request using axios
     const response = await axios.put(
       'https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', 
-      { 
-        imageId,  // Send imageId in the request body
-        lastName  // Include the lastName in the request body
-      },
+      updateData,  // Sending the structured data
       {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,  // Ensure proper authorization
@@ -90,24 +102,20 @@ const handleHideImage = async (imageId: string) => {
 
     console.log('Response status:', response.status);
 
-    // Parse the response body to check for errors or success
-    const responseBody = response.data;
-    console.log('Response body:', responseBody);
-
     if (response.status >= 200 && response.status < 300) {
-      // Status code 2xx indicates success
+      // Success: Image was hidden
       console.log('Image hidden successfully');
       setOpen(false);  // Close the dialog after hiding the image
       getPosts();  // Refresh the posts list to reflect changes
     } else {
       // If status is not 2xx, treat it as an error
-      console.error('Failed to hide the image:', responseBody);
+      console.error('Failed to hide the image:', response.data);
       alert('Failed to hide the image. Please try again.');
     }
   } catch (error: any) {
     // Handle any unexpected errors
     console.error('Error during PUT request:', error);
-
+    
     if (error.response) {
       // Server responded with a status code outside the 2xx range
       console.error('Server error response:', error.response.status, error.response.data);
