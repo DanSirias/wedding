@@ -101,19 +101,20 @@ const handleHideImage = async (imageId: string) => {
     );
 
     console.log('Response status:', response.status);
+  
+    // Parse the response body to check for errors or success
+    const responseBody = response.data;
+    console.log('Response body:', responseBody);
 
     if (response.status >= 200 && response.status < 300) {
-      // Success: Image was hidden
       console.log('Image hidden successfully');
       setOpen(false);  // Close the dialog after hiding the image
       getPosts();  // Refresh the posts list to reflect changes
     } else {
-      // If status is not 2xx, treat it as an error
-      console.error('Failed to hide the image:', response.data);
+      console.error('Failed to hide the image:', responseBody);
       alert('Failed to hide the image. Please try again.');
     }
   } catch (error: any) {
-    // Handle any unexpected errors
     console.error('Error during PUT request:', error);
     
     if (error.response) {
