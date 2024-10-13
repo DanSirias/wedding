@@ -63,7 +63,7 @@ export const EditImages: React.FC = () =>  {
       console.log('Sending PATCH request with imageId:', imageId);
   
       // Send the PATCH request using axios
-      const response = await axios.patch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images/${imageId}`, {
+      const response = await axios.patch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images`, {
         imageId  // Send imageId in the request body
       });
   
