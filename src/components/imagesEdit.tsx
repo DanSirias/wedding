@@ -58,6 +58,7 @@ export const EditImages: React.FC = () =>  {
   };
 
 // Function to hide the image by sending a PUT request using axios with enhanced error handling
+// Function to hide the image by sending a PUT request using axios with enhanced error handling
 const handleHideImage = async (imageId: string) => {
   try {
     // Find the selected post to get the lastName
@@ -72,8 +73,8 @@ const handleHideImage = async (imageId: string) => {
 
     console.log('Sending PUT request with imageId:', imageId, 'and lastName:', lastName);
 
-    // Send the PUT request using axios with the updated format
-    await axios.put(
+    // Send the PUT request using axios
+    const response = await axios.put(
       'https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', 
       { 
         imageId,  // Send imageId in the request body
@@ -87,30 +88,43 @@ const handleHideImage = async (imageId: string) => {
       }
     );
 
-    console.log('Image hidden successfully');
-    setOpen(false);  // Close the dialog after hiding the image
-    getPosts();  // Refresh the posts list to reflect changes
+    console.log('Response status:', response.status);
+
+    // Parse the response body to check for errors or success
+    const responseBody = response.data;
+    console.log('Response body:', responseBody);
+
+    if (response.status >= 200 && response.status < 300) {
+      // Status code 2xx indicates success
+      console.log('Image hidden successfully');
+      setOpen(false);  // Close the dialog after hiding the image
+      getPosts();  // Refresh the posts list to reflect changes
+    } else {
+      // If status is not 2xx, treat it as an error
+      console.error('Failed to hide the image:', responseBody);
+      alert('Failed to hide the image. Please try again.');
+    }
   } catch (error: any) {
-    // Log the entire error for debugging
+    // Handle any unexpected errors
     console.error('Error during PUT request:', error);
 
-    // Handle errors during the PUT request
     if (error.response) {
       // Server responded with a status code outside the 2xx range
       console.error('Server error response:', error.response.status, error.response.data);
       const errorMessage = error.response.data?.message || 'An error occurred while hiding the image.';
       alert(`Failed to hide the image. Status: ${error.response.status}. Message: ${errorMessage}`);
     } else if (error.request) {
-      // Request was made but no response received
+      // Request was made but no response was received
       console.error('No response received from server:', error.request);
       alert('Failed to hide the image. No response received from server.');
     } else {
       // Other errors, such as request setup issues
-      console.error('Request error:', error.message);
+      console.error('Error setting up the request:', error.message);
       alert(`Error setting up the request: ${error.message}`);
     }
   }
 };
+
 
   return (
     <div className="" style={{ padding: 0, height: "100%", width: "100%", backgroundColor: "#fff8e4", marginTop: 30 }}>
