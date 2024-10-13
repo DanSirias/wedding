@@ -57,47 +57,63 @@ export const EditImages: React.FC = () =>  {
     setOpen(false);
   };
 
-// Function to hide the image by sending a PUT request using axios
-// Function to hide the image by sending a PUT request using axios
-// Function to hide the image by sending a PUT request using axios
-const handleHideImage = async (imageId: string) => {
-  try {
-    // Find the selected post to get the lastName
-    const selectedPost = postsList.find(post => post.imageId === imageId);
-    const lastName = selectedPost ? selectedPost.lastName : '';
+  // Function to hide the image by sending a PUT request using axios with enhanced error handling
+  const handleHideImage = async (imageId: string) => {
+    try {
+      // Find the selected post to get the lastName
+      const selectedPost = postsList.find(post => post.imageId === imageId);
+      const lastName = selectedPost ? selectedPost.lastName : '';
 
-    if (!lastName) {
-      console.error("Last name is missing for this image.");
-      alert('Last name is required to hide the image.');
-      return;
-    }
-
-    console.log('Sending PUT request with imageId:', imageId, 'and lastName:', lastName);
-
-    // Send the PUT request using axios with the updated format
-    await axios.put('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', 
-      { 
-        imageId,  // Send imageId in the request body
-        lastName  // Include the lastName in the request body
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,  // Ensure proper authorization
-        },
+      if (!lastName) {
+        console.error("Last name is missing for this image.");
+        alert('Last name is required to hide the image.');
+        return;
       }
-    );
 
-    console.log('Image hidden successfully');
-    setOpen(false);  // Close the dialog after hiding the image
-    getPosts();  // Refresh the posts list to reflect changes
-  } catch (error) {
-    // Handle any unexpected errors
-    console.error('Error hiding the image:', error);
-    alert('An error occurred while hiding the image.');
-  }
-};
+      console.log('Sending PUT request with imageId:', imageId, 'and lastName:', lastName);
 
+      // Send the PUT request using axios with the updated format
+      await axios.put(
+        'https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', 
+        { 
+          imageId,  // Send imageId in the request body
+          lastName  // Include the lastName in the request body
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,  // Ensure proper authorization
+            'Content-Type': 'application/json', // Include the content type for JSON
+          },
+        }
+      );
 
+      console.log('Image hidden successfully');
+      setOpen(false);  // Close the dialog after hiding the image
+      getPosts();  // Refresh the posts list to reflect changes
+    } catch (error) {
+      // Handle errors during the PUT request
+      if (axios.isAxiosError(error)) {
+        // Axios-specific error handling
+        if (error.response) {
+          // Server responded with a status other than 200 range
+          console.error('Server responded with error:', error.response.status, error.response.data);
+          alert(`Failed to hide the image. Server responded with status: ${error.response.status}`);
+        } else if (error.request) {
+          // Request was made but no response received
+          console.error('No response received from server:', error.request);
+          alert('Failed to hide the image. No response received from server.');
+        } else {
+          // Other errors like request setup
+          console.error('Error setting up the request:', error.message);
+          alert(`Error setting up the request: ${error.message}`);
+        }
+      } else {
+        // Non-Axios error handling
+        console.error('Unexpected error:', error);
+        alert('An unexpected error occurred while hiding the image.');
+      }
+    }
+  };
 
   return (
     <div className="" style={{ padding: 0, height: "100%", width: "100%", backgroundColor: "#fff8e4", marginTop: 30 }}>
