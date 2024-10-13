@@ -13,6 +13,7 @@ import { WeddingParty } from './components/weddingparty';
 import { Schedule } from "./components/schedule";
 import { SignOut } from "./components/signout";
 import { Images } from './components/images';
+import { EditImages } from './components/imagesEdit';
 import Navbar from './components/navbar';
 import ProtectedRoute from './backend/auth/ProtectedRoute';  // Import ProtectedRoute
 import { AuthProvider } from './backend/auth/authContext';  // Import Auth Context
@@ -37,7 +38,7 @@ const App: React.FC = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/signout" element={<SignOut />} />
             <Route path="/images" element={<Images />} />
-
+            <Route path="/editimages" element={<EditImages />} />
             {/* Callback Route for handling login response */}
             <Route path="/callback" element={<Callback />} /> {/* Add this route */}
 
