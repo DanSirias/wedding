@@ -58,6 +58,7 @@ export const EditImages: React.FC = () =>  {
   };
 
 // Function to hide the image by sending a PUT request using axios
+// Function to hide the image by sending a PUT request using axios
 const handleHideImage = async (imageId: string) => {
   try {
     // Find the selected post to get the lastName
@@ -72,12 +73,20 @@ const handleHideImage = async (imageId: string) => {
 
     console.log('Sending PUT request with imageId:', imageId, 'and lastName:', lastName);
 
-    // Send the PUT request using axios, include the imageId and lastName in the body
-    const response = await axios.put('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', {
-      httpMethod: 'PUT',
-      imageId,  // Send imageId in the request body
-      lastName  // Include the lastName in the request body
-    });
+    // Send the PUT request using axios, converting the body to a JSON string
+    const response = await axios.put(
+      'https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images',
+      JSON.stringify({
+        httpMethod: 'PUT',
+        imageId,  // Send imageId in the request body
+        lastName  // Include the lastName in the request body
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/json', // Ensure the content type is set to JSON
+        },
+      }
+    );
 
     console.log('Response status:', response.status);
     console.log('Response data:', response.data);
