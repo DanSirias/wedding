@@ -211,7 +211,7 @@ export const Images: React.FC = () => {
               Upload Image
             </Button>
             <Dialog open={open} onClose={handleClose}>
-              <DialogTitle>Thank you</DialogTitle>
+              <DialogTitle>Thank You for Sharing a Special Moment!</DialogTitle>
             </Dialog>
           </Box>
         </Container>
