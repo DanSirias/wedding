@@ -66,7 +66,7 @@ export const Images = () => {
         };
 
         // Send the POST request
-        const response = await fetch(`${apiUrl}`, {
+        const response = await fetch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images`, {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
