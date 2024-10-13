@@ -65,6 +65,7 @@ const handleHideImage = async (imageId: string) => {
     // Find the selected post to get the lastName
     const selectedPost = postsList.find(post => post.imageId === imageId);
     const lastName = selectedPost ? selectedPost.lastName : '';
+    const httpMethod = "PUT";
 
     if (!lastName) {
       console.error("Last name is missing for this image.");
@@ -78,6 +79,7 @@ const handleHideImage = async (imageId: string) => {
     const response = await axios.put(
       'https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images',
       {
+        httpMethod, 
         imageId,  // Send imageId in the request body
         lastName  // Include the lastName in the request body
       },
