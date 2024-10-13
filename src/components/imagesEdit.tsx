@@ -61,15 +61,16 @@ export const EditImages: React.FC = () =>  {
   const handleHideImage = async (imageId: string) => {
     try {
       console.log('Sending PATCH request with imageId:', imageId);
-  
-      // Send the PATCH request using axios
-      const response = await axios.patch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images`, {
-        imageId  // Send imageId in the request body
+
+      // Send the PATCH request using axios, include the httpMethod and imageId in the body
+      const response = await axios.patch('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', {
+        httpMethod: 'PATCH',
+        imageId,  // Send imageId in the request body
       });
   
       console.log('Response status:', response.status);
       console.log('Response data:', response.data);
-  
+
       if (response.status === 200) {
         console.log('Image hidden successfully');
         setOpen(false);  // Close the dialog after hiding the image
@@ -84,7 +85,7 @@ export const EditImages: React.FC = () =>  {
       alert('An error occurred while hiding the image.');
     }
   };
-  
+
   return (
     <div className="" style={{ padding: 0, height: "100%", width: "100%", backgroundColor: "#fff8e4", marginTop: 30 }}>
       <ThemeProvider theme={defaultTheme}>
