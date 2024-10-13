@@ -60,11 +60,11 @@ export const EditImages: React.FC = () =>  {
   // Function to hide the image by sending a PATCH request using axios
   const handleHideImage = async (imageId: string) => {
     try {
-      console.log('Sending PATCH request with imageId:', imageId);
+      console.log('Sending PUT request with imageId:', imageId);
 
       // Send the PATCH request using axios, include the httpMethod and imageId in the body
-      const response = await axios.patch('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', {
-        httpMethod: 'PATCH',
+      const response = await axios.put('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', {
+        httpMethod: 'PUT',
         imageId,  // Send imageId in the request body
       });
   
