@@ -69,30 +69,30 @@ export const EditImages: React.FC = () =>  {
   // Function to hide the image by updating its hidden attribute in the database
   const handleHideImage = async (imageId: string) => {
     try {
-      console.log(imageId); 
+      console.log('Sending PUT request with imageId:', imageId);
+  
+      // Send the PUT request to the API
       const response = await fetch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images/${imageId}`, {
-        method: 'PUT',  // Using PUT as per your API
+        method: 'PUT',  // Using PUT method
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json',  // Set content type to JSON
         },
-        body: JSON.stringify({ imageId }),  // Ensure imageId is included in the request body
+        body: JSON.stringify({ imageId }),  // Send imageId as JSON in the body
       });
-
+  
+      console.log('Response status:', response.status);
+  
+      // Parse the response body to check for errors or success
+      const responseBody = await response.json();
+      console.log('Response body:', responseBody);
+  
       if (response.ok) {
         console.log('Image hidden successfully');
         setOpen(false);  // Close the dialog after hiding the image
-        getPosts();  // Refresh the posts list to hide the image in the UI
+        getPosts();  // Refresh the posts list to reflect changes
       } else {
-        // Handle error response
-        const errorData = await response.json();
-        console.error('Failed to hide the image:', errorData);
-
-        // Check if imageId is missing and show an appropriate error message
-        if (errorData.message === 'imageId is required') {
-          alert(`Error: Missing imageId. Received body: ${JSON.stringify(errorData.received_body)}`);
-        } else {
-          alert('Failed to hide the image. Please try again.');
-        }
+        console.error('Failed to hide the image:', responseBody);
+        alert('Failed to hide the image. Please try again.');
       }
     } catch (error) {
       // Handle any unexpected errors
@@ -100,7 +100,6 @@ export const EditImages: React.FC = () =>  {
       alert('An error occurred while hiding the image.');
     }
   };
-
   return (
     <div className="" style={{ padding: 0, height: "100%", width: "100%", backgroundColor: "#fff8e4", marginTop: 30 }}>
       <ThemeProvider theme={defaultTheme}>
