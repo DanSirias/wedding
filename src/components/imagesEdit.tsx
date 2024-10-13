@@ -74,31 +74,22 @@ const handleHideImage = async (imageId: string) => {
 
     console.log('Sending PUT request with imageId:', imageId, 'and lastName:', lastName);
 
-    // Send the PUT request using axios
-    const response = await axios.put(
-      'https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images',
-      {
+    // Send the PUT request using axios with the updated format
+    await axios.put('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', 
+      { 
         imageId,  // Send imageId in the request body
         lastName  // Include the lastName in the request body
       },
       {
         headers: {
-          'Content-Type': 'application/json', // Ensure the content type is set to JSON
+          Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,  // Ensure proper authorization
         },
       }
     );
 
-    console.log('Response status:', response.status);
-    console.log('Response data:', response.data);
-
-    if (response.status === 200) {
-      console.log('Image hidden successfully');
-      setOpen(false);  // Close the dialog after hiding the image
-      getPosts();  // Refresh the posts list to reflect changes
-    } else {
-      console.error('Failed to hide the image:', response.data);
-      alert('Failed to hide the image. Please try again.');
-    }
+    console.log('Image hidden successfully');
+    setOpen(false);  // Close the dialog after hiding the image
+    getPosts();  // Refresh the posts list to reflect changes
   } catch (error) {
     // Handle any unexpected errors
     console.error('Error hiding the image:', error);
