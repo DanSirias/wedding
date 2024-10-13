@@ -67,39 +67,39 @@ export const EditImages: React.FC = () =>  {
   };
 
   // Function to hide the image by updating its hidden attribute in the database
-// Function to hide the image by updating its hidden attribute in the database
-const handleHideImage = async (imageId: string) => {
-  try {
-    const response = await fetch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images/${imageId}`, {
-      method: 'PUT',  // Using PUT as per your API
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ imageId }),  // Ensure imageId is included in the request body
-    });
+  const handleHideImage = async (imageId: string) => {
+    try {
+      console.log(imageId); 
+      const response = await fetch(`https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images/${imageId}`, {
+        method: 'PUT',  // Using PUT as per your API
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imageId }),  // Ensure imageId is included in the request body
+      });
 
-    if (response.ok) {
-      console.log('Image hidden successfully');
-      setOpen(false);  // Close the dialog after hiding the image
-      getPosts();  // Refresh the posts list to hide the image in the UI
-    } else {
-      // Handle error response
-      const errorData = await response.json();
-      console.error('Failed to hide the image:', errorData);
-
-      // Check if imageId is missing and show an appropriate error message
-      if (errorData.message === 'imageId is required') {
-        alert(`Error: Missing imageId. Received body: ${JSON.stringify(errorData.received_body)}`);
+      if (response.ok) {
+        console.log('Image hidden successfully');
+        setOpen(false);  // Close the dialog after hiding the image
+        getPosts();  // Refresh the posts list to hide the image in the UI
       } else {
-        alert('Failed to hide the image. Please try again.');
+        // Handle error response
+        const errorData = await response.json();
+        console.error('Failed to hide the image:', errorData);
+
+        // Check if imageId is missing and show an appropriate error message
+        if (errorData.message === 'imageId is required') {
+          alert(`Error: Missing imageId. Received body: ${JSON.stringify(errorData.received_body)}`);
+        } else {
+          alert('Failed to hide the image. Please try again.');
+        }
       }
+    } catch (error) {
+      // Handle any unexpected errors
+      console.error('Error hiding the image:', error);
+      alert('An error occurred while hiding the image.');
     }
-  } catch (error) {
-    // Handle any unexpected errors
-    console.error('Error hiding the image:', error);
-    alert('An error occurred while hiding the image.');
-  }
-};
+  };
 
   return (
     <div className="" style={{ padding: 0, height: "100%", width: "100%", backgroundColor: "#fff8e4", marginTop: 30 }}>
