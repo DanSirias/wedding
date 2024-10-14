@@ -6,7 +6,7 @@ import Sam from "../images/party/sam.jpg";
 import Chris from "../images/party/chris.jpg";
 import Patrick from "../images/party/patrick.jpg";
 import Rafael from "../images/party/rafael.jpg";
-import Zach from "../images/party/zach.jpg";
+import Zach from "../images/party/zach2.jpg";
 import Julie from "../images/party/julie.jpg";
 import Francien from "../images/party/francien.jpg";
 import Dina from "../images/party/dina.jpg";
