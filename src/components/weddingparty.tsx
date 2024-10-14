@@ -133,7 +133,70 @@ const MemberCard: React.FC<{ member: WeddingMember }> = ({ member }) => {
 export const WeddingParty: React.FC = () => {
   return (
     <div style={{ padding: 20, height: "100%" }}>
+      <ThemeProvider theme={defaultTheme}>
+        <Container
+          sx={{
+            border: 1,
+            borderColor: "lightgray",
+            boxShadow: 4,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          className="imageShare"
+          component="main"
+          maxWidth="lg"
+        >
+          <CssBaseline />
+        <Typography 
+          id="reccs" 
+          component="h2" 
+          variant="h5"
+          sx={{
+            fontSize: 30,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: 4,
+          }}
+        >
+          The Wedding Party
+        </Typography>
 
+        <Typography variant="body1" gutterBottom sx={{ marginTop: 4 }}>       
+        Our wedding party is a perfect reflection of the crazy, beautiful journey that brought us here.
+        The groomsmen, a band of brothers forged through hometown memories, college adventures, and military service, are a perfect blend of loyalty, laughter, and just enough chaos to keep things interesting.        
+        The bridesmaids, each one a shining star in the bride’s life, are like a force of nature—graceful, strong, and armed with tissues for every tear that might fall. 
+        From sleepovers and late-night talks, to standing by her through life’s biggest moments, they’re always ready with a smile, a story, and strong support. 
+        Together, they represent not just our past, but our future: laughter, love, and a whole lot of unforgettable memories waiting to be made.
+        </Typography>
+
+
+        {/* Bridesmaids Section */}
+        <Typography variant="h4" gutterBottom sx={{ marginTop: 4 }}>
+          Bridesmaids
+        </Typography>
+        <Grid container spacing={2}>
+          {bridesmaids.map((bridesmaid, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <MemberCard member={bridesmaid} />
+            </Grid>
+          ))}
+        </Grid>
+        {/* Groomsmen Section */}
+        <Typography variant="h4" gutterBottom>
+          Groomsmen
+        </Typography>
+        <Grid container spacing={2}>
+          {groomsmen.map((groomsman, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <MemberCard member={groomsman} />
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    </ThemeProvider>
     </div>
   );
 };
