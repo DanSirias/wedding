@@ -89,9 +89,7 @@ const handleHideImage = async (imageId: string) => {
     console.log('Sending PUT request with updateData:', updateData);
 
     // Send the PUT request using axios
-    const response = await axios.put(
-      'https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', 
-      updateData,  // Sending the structured data
+    const response = await axios.put('https://eqlh2tuls9.execute-api.us-east-1.amazonaws.com/PROD/images', updateData,  // Sending the structured data
       {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,  // Ensure proper authorization
