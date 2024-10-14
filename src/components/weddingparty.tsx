@@ -3,7 +3,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Container, Typography, Card, CardContent, CardMedia, Grid, Box } from '@mui/material';
 import CssBaseline from "@mui/material/CssBaseline";
 import Sam from "../images/party/sam.jpg";
-import Chris from "../images/party/chris.jpg";
+import Chris from "../images/party/chris2.jpg";
 import Patrick from "../images/party/patrick.jpg";
 import Rafael from "../images/party/rafael.jpg";
 import Zach from "../images/party/zach2.jpg";
