@@ -22,6 +22,22 @@ interface WeddingMember {
 }
 
 // Sample data for groomsmen and bridesmaids
+const children: WeddingMember[] = [
+  {
+    name: 'Ethan Ramos',
+    weddingPosition: 'The Ring Bearer',
+    hometown: 'Houston, TX',
+    imageUrl: Sam,
+  },
+  {
+    name: 'Victoria Ramos',
+    weddingPosition: 'Groomsman',
+    hometown: 'Houston, TX',
+    imageUrl: Chris,
+  }
+];
+
+// Sample data for groomsmen and bridesmaids
 const groomsmen: WeddingMember[] = [
   {
     name: 'Samuel Aguirre',
@@ -59,7 +75,7 @@ const bridesmaids: WeddingMember[] = [
   {
     name: 'Julie Watters',
     weddingPosition: 'Matron of Honor',
-    hometown: 'Panama City, FL',
+    hometown: 'Ooltewah, TN',
     imageUrl: Julie,
   },
   {
@@ -174,7 +190,10 @@ export const WeddingParty: React.FC = () => {
 
 
         {/* Bridesmaids Section */}
-        <Typography variant="h4" gutterBottom sx={{ marginTop: 4 }}>
+        <Typography           
+          id="reccs" 
+          component="h2" 
+          variant="h4" gutterBottom sx={{ marginTop: 4 }}>
           Bridesmaids
         </Typography>
         <Grid container spacing={2}>
@@ -185,7 +204,10 @@ export const WeddingParty: React.FC = () => {
           ))}
         </Grid>
         {/* Groomsmen Section */}
-        <Typography variant="h4" gutterBottom>
+        <Typography
+          id="reccs" 
+          component="h2" 
+          variant="h4" gutterBottom>
           Groomsmen
         </Typography>
         <Grid container spacing={2}>
