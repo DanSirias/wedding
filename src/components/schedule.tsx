@@ -52,7 +52,7 @@ const events = [
     date: "November 9, 2024",
     location: "Postino Uptown Park",
     time: "6:00PM-8:00PM",
-    description: "The rehearsal cocktail social will be an intimate gathering exclusively for the wedding party and the immediate families of the bride and groom.",
+    description: "The rehearsal cocktail social will be an intimate gathering exclusively for the wedding party and the parents of the bride and groom.",
     address: "1151 Uptown Park Blvd Ste. 12, Houston, TX 77056",
     addressUrl: "https://maps.app.goo.gl/Y3FBR8HpJQPHauDm6",
     image: Rehersal,
