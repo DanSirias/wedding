@@ -37,6 +37,7 @@ const events = [
   {
     title: "Welcome Gathering",
     date: "November 8, 2024",
+    location: "The Rustic",
     time: "6:30PM-8:30PM",
     description: "We invite those of you who will be in Houston on Friday evening to gather with us! Come join for some food and drinks as we welcome you to the Great State of Texas.",
     address: "1836 Polk St, Houston, TX 77003",
@@ -49,6 +50,7 @@ const events = [
   {
     title: "Rehearsal Cocktail Social",
     date: "November 9, 2024",
+    location: "Postino Uptown Park",
     time: "6:00PM-8:00PM",
     description: "The rehearsal cocktail social will be an intimate gathering exclusively for the wedding party and the immediate families of the bride and groom.",
     address: "1151 Uptown Park Blvd Ste. 12, Houston, TX 77056",
@@ -60,6 +62,7 @@ const events = [
   {
     title: "Wedding Ceremony",
     date: "November 10, 2024",
+    location: "The Campanile Chapel",
     time: "6:00PM-11:00PM",
     description: "We are delighted to invite you to join us for a day of celebration and love as we exchange our vows at the stunning Bell Tower on 34th. Surrounded by the timeless elegance of this iconic venue, we will begin our new journey together amidst the grandeur of its beautiful gardens and classic architecture.",
     address: "901 W. 34th Houston, TX 77018",
@@ -71,6 +74,7 @@ const events = [
   {
     title: "Cocktail Hour",
     date: "November 10, 2024",
+    location: "The Waterwall",
     time: "6:30PM-7:00PM",
     description: "Please join us for a cocktail hour by The Waterwall, designed to evoke a sense of tranquility and elegance. As water gracefully flows down the large stone structure, the mesmerizing effect and soothing sound create a serene ambiance, enhancing the experience of this special evening.",
     address: "Main Water Wall Courtyard and Garden",
@@ -82,6 +86,7 @@ const events = [
   {
     title: "Wedding Reception",
     date: "November 10, 2024",
+    location: "The Carillon Ballroom",
     time: "7:00PM-11:00PM",
     description: "We warmly invite you to a formal reception at the distinguished Carillon Ballroom. The Carillon Ballroom offers an atmosphere of timeless elegance. The classic design, featuring intricate details and rich textures, creates the perfect setting for an evening of celebration and joy.",    
     address: "Carillon Ballroom",
@@ -188,6 +193,9 @@ export const Schedule: React.FC = () => {
                     <CardContent sx={{ flex: 1 }}>
                       <Typography id="reccs" component="h2" variant="h5">
                         {event.title}
+                      </Typography>
+                      <Typography variant="subtitle1" color="text.secondary" paragraph>
+                        {event.location}
                       </Typography>
                       <Typography variant="subtitle1" color="text.secondary" paragraph>
                         {event.date} | {event.time}
