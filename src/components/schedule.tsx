@@ -39,7 +39,7 @@ const events = [
     date: "November 8, 2024",
     location: "The Rustic",
     time: "6:30PM-8:30PM",
-    description: "We invite those of you who will be in Houston on Friday evening to gather with us! Come join for some food and drinks as we welcome you to the Great State of Texas.",
+    description: "We invite everyone who will be in Houston on Friday evening to gather with us! Come join for some food and drinks as we welcome you to the Great State of Texas.",
     address: "1836 Polk St, Houston, TX 77003",
     addressUrl: "https://maps.app.goo.gl/chbkBVnG32a9u9UK8",
     image: Rustic,
